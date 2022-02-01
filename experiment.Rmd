@@ -1,0 +1,235 @@
+---
+title: "Analysis for Teacher-like-me Paper"
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    extra_dependencies: ["dcolumn", "booktabs", "caption"]
+    toc: yes
+    toc_depth: 4
+    keep_tex: yes
+---
+
+\captionsetup[table]{labelformat=empty}
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, message = F, warning = F, fig.retina = 4)
+```
+
+```{r message=FALSE, warning=FALSE}
+# Libraries
+pacman::p_load(tidyverse, haven, estimatr, extrafont, texreg, janitor, hrbrthemes)
+extrafont::loadfonts()
+
+# Data
+df_stu <- 
+  read_dta(here::here("data", "stu_admin_all_latest.dta")) %>%
+  mutate(
+    reservation = dplyr::recode(reservation, "Non-reservation" = 0L, "Reservation" = 1L, .default = NA_integer_)
+  )
+
+df <- 
+  read_dta(here::here("data", "all_appended.dta")) %>% 
+  distinct(stdid, course_name, facid, .keep_all = T) %>% 
+  left_join(
+    df_stu %>% 
+      select(stdid, classid, department_id, reservation, ea_stud_group_criteria, grade),
+    by = "stdid"
+  ) %>%
+  filter(ea_stud_group_criteria == 2, grade == 2) %>%
+  left_join(read_dta(here::here("data/fac_covariates.dta")), by = "facid")
+  # inner_join(read_dta(here::here("data/df_grades_clean.dta")), by = c("department_id", "course_name")) %>%
+  # left_join(read_dta(here::here("data/df_grades_clean.dta")), by = c("stdid", "course_name"))
+
+
+# fixing for course cleaning done by sk in sep 2021
+df <-
+  df %>% 
+  left_join(
+    read_dta(here::here("data/students_clean.dta")),
+    by = c("department_id", "course_name")
+  ) %>% 
+  mutate(
+    course_name = if_else(!is.na(course_clean_sk), course_clean_sk, course_name)
+  )
+
+
+# grade data after veda's work
+df_grades <-
+  read_dta(here::here("data/30jan2022/df_gradefac.dta")) %>% 
+  filter(facid != "") %>% 
+  left_join(df_stu %>% select(stdid, department_id, reservation), by = "stdid") %>%
+  left_join(read_dta("data/controls.dta"), by = "stdid") %>%
+  left_join(read_dta(here::here("data/fac_covariates.dta")), by = "facid") %>% 
+  arrange(department_id, course_name, course_grade_clean) %>% 
+  group_by(department_id, course_name) %>% 
+  mutate(
+    course_rank = (scale(course_grade_clean) %>% pnorm() * 100) %>% as.vector
+  ) %>% 
+  ungroup() %>% 
+  mutate(
+    father_college = if_else(father_ed_ind > 3 & !is.na(father_ed_ind), 1L, 0L),
+    father_college = if_else(is.na(father_ed_ind), NA_integer_, father_college),
+    mother_college = if_else(mother_ed_ind > 3 & !is.na(mother_ed_ind), 1L, 0L),
+    mother_college = if_else(is.na(mother_ed_ind), NA_integer_, mother_college),
+    ses = ses %>% as.integer()
+  ) %>%
+  relocate(department_id, course_name, stdid, course_rank) %>% 
+  rename(reservation_stu = reservation, fac_teaching = fac_tpi_score7_z)
+
+# df_grades %>% drop_na() %>% glimpse()
+
+df_grades %>% distinct(stdid)
+```
+
+
+## Background
+
+- Our student survey involved collecting data on the coursework completed by students at the time of taking the survey, as well as the faculty who taught these courses. We then mapped this information to the data collected from surveying faculty, where we also gained information on whether a faculty member belonged to an affirmative action (i.e. reservation) category or not.
+
+- Within a given department and year, each course can be taught by one or more faculty. In case more than one faculty teaches a given course, they do so as part of course 'sections' defined within that course. Students assigned the same course sections complete their coursework together and are taught by the same faculty for the entire six-month semester. Further, students within a given department enroll in the same set of courses prescribed during the first two years of college.
+
+- We also conducted detailed administrator surveys where we asked department heads if students were assigned sections within courses based on a formal randomization algorithm. We found that in 37 of the 100 surveyed departments, students were randomly assigned 'sections' for all courses taken within a given department during the first two years of college. This random allocation of students to course sections within department ensures that students do not self select into sections with varying compositions (in terms of reservation status) of both classmates and faculty.
+
+- The long-term student outcome analysis is conducted for 2407 students from 37 department who took our math and physics exams by the end of their second college year.
+
+- The class-wise student outcome analysis is conducted for 2268 students from 20 departments (a subset of the 37 departments). For these 20 departments, we have obtained course-level grade data for 87.4% student-course observations.
+
+
+
+
+\newpage
+
+## Class-wise student outcomes
+
+Models:
+
+Base: $Y_{ic} = \alpha+ \beta_1R_i + \beta_2RT_c + \beta_3R_i*RT_c + \lambda_{ud} + \epsilon_{ic}$
+
+With Controls: $Y_{ic} = \alpha+ \beta_1R_i + \beta_2RT_c + \beta_3R_i*RT_c +\gamma_1X_i +\gamma_2T_c  + \lambda_{ud} + \epsilon_{ic}$
+
+$Y_{ic}$ is the percentile rank [0-100] for student $i$ in class $c$.
+
+```{r, results='asis'}
+lm_base <-
+  df_grades %>%
+  lm_robust(course_rank ~ reservation_stu * reservation_fac, data = ., fixed_effects = ~ department_id, se_type = "stata")
+
+lm_stu <-
+  df_grades %>%
+  lm_robust(course_rank ~ reservation_stu * reservation_fac + female + age + ses + area + father_college + mother_college, data = ., fixed_effects = ~ department_id, se_type = "stata")
+
+lm_fac <-
+  df_grades %>%
+  lm_robust(course_rank ~ reservation_stu * reservation_fac + fac_degree_college_elite + fac_publications + fac_fulltime + fac_yearsinhighed + fac_female + fac_age + fac_teaching, data = ., fixed_effects = ~ department_id, se_type = "stata")
+
+lm_stufac <-
+  df_grades %>%
+  lm_robust(course_rank ~ reservation_stu * reservation_fac + female + age + ses + area + father_college + mother_college + fac_degree_college_elite + fac_publications + fac_fulltime + fac_yearsinhighed + fac_female + fac_age + fac_teaching, data = ., fixed_effects = ~ department_id, se_type = "stata")
+
+
+knitreg(list(lm_base, lm_stu, lm_fac, lm_stufac), custom.note = "%stars \n All models control for university-department fixed effects. HC1 standard errors used.", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, custom.model.names = c("Base", "Student controls", "Faculty controls", "Student and Faculty controls"), dcolumn = TRUE, booktabs = TRUE, float.pos = "h")
+```
+
+\newpage
+
+Fixed effects models:
+
+Model 1: $Y_{ic} = \alpha+ \beta_2RT_{c} + \lambda_i + \epsilon_{ic}$
+
+Model 2: $Y_{ic} = \alpha + \beta_2RT_{c} + \lambda_i + \lambda_c  \epsilon_{ic}$
+
+```{r, results='asis'}
+lm_fe1 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>% 
+  lm_robust(course_rank ~ reservation_fac, data = ., fixed_effects = ~ stdid, se_type = "stata")
+
+lm_fe2 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>% 
+  lm_robust(course_rank ~ reservation_fac, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata")
+
+knitreg(list(lm_fe1, lm_fe2), custom.note = "%stars \n All models control for university-department fixed effects. HC1 standard errors used.", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, custom.model.names = c("Student FE", "Student and dept-course FE"), dcolumn = TRUE, booktabs = TRUE, float.pos = "h")
+```
+
+
+\newpage
+
+
+
+## Long-term student outcomes
+
+Models:
+
+Base: $Y_{i} = \alpha+ \beta_1R_i + \beta_2\overline{RT_i} + \beta_3R_i*\overline{RT_i} + \lambda_{ud} + \epsilon_{ic}$
+
+With Controls: $Y_{i} = \alpha+ \beta_1R_i + \beta_2\overline{RT_i} + \beta_3R_i*\overline{RT_i} +\gamma_1X_i +\gamma_2T_i  + \lambda_{ud} + \epsilon_{i}$
+
+$Y_{i}$ is the standardized math/physics test score for student $i$.
+
+```{r}
+seg_scores <-
+  df %>%
+  group_by(stdid, reservation) %>% 
+  summarize(
+    reservation_fac_avg = sum(reservation_fac * credits, na.rm = TRUE) / sum(credits, na.rm = TRUE),
+    fac_degree_elite = sum(fac_degree_college_elite * credits, na.rm = TRUE) / sum(credits, na.rm = TRUE),
+    fac_publications = sum(fac_publications * credits, na.rm = TRUE) / sum(credits, na.rm = TRUE),
+    fac_fulltime = sum(fac_fulltime * credits, na.rm = TRUE) / sum(credits, na.rm = TRUE),
+    fac_yearsinhighed = sum(fac_yearsinhighed * credits, na.rm = TRUE) / sum(credits, na.rm = TRUE),
+    fac_age = sum(fac_age * credits, na.rm = TRUE) / sum(credits, na.rm = TRUE),
+    fac_female = sum(fac_female * credits, na.rm = TRUE) / sum(credits, na.rm = TRUE),
+    fac_teaching = sum(fac_tpi_score7_z * credits, na.rm = TRUE) / sum(credits, na.rm = TRUE), 
+  ) %>%
+  ungroup() %>% 
+  left_join(df_stu %>% select(stdid, classid, department_id, elite, grade, contains("score")), by = "stdid") %>% 
+  left_join(read_dta("data/controls.dta"), by = "stdid") %>% 
+  mutate(
+    father_college = if_else(father_ed_ind > 3 & !is.na(father_ed_ind), 1L, 0L),
+    father_college = if_else(is.na(father_ed_ind), NA_integer_, father_college),
+    mother_college = if_else(mother_ed_ind > 3 & !is.na(mother_ed_ind), 1L, 0L),
+    mother_college = if_else(is.na(mother_ed_ind), NA_integer_, mother_college),
+    ses = ses %>% as.integer(),
+    univcode = str_sub(classid, 1, 5)
+  ) %>% 
+  mutate_at(
+    vars("b_math_g1_score", "e_math_g3_score", "b_physics_g1_score", "e_physics_g3_score", "fac_yearsinhighed", "fac_age"),
+    ~ scale(.) %>% as.vector
+  ) %>% 
+  rename(reservation_stu = reservation)
+```
+
+
+
+
+
+```{r, results='asis'}
+lm1 <-
+  seg_scores %>%
+  lm_robust(e_math_g3_score ~ reservation_stu * reservation_fac_avg, data = ., fixed_effects = ~ department_id, se_type = "stata")
+
+lm2 <-
+  seg_scores %>%
+  lm_robust(e_physics_g3_score ~ reservation_stu * reservation_fac_avg, data = ., fixed_effects = ~ department_id, se_type = "stata")
+
+lm3 <-
+  seg_scores %>%
+  lm_robust(e_math_g3_score ~ reservation_stu * reservation_fac_avg + b_math_g1_score + female + age + ses + area + father_college + mother_college, data = ., fixed_effects = ~ department_id, se_type = "stata")
+
+lm4 <-
+  seg_scores %>%
+  lm_robust(e_physics_g3_score ~ reservation_stu * reservation_fac_avg + b_physics_g1_score + female + age + ses + area + father_college + mother_college, data = ., fixed_effects = ~ department_id, se_type = "stata")
+
+lm5 <-
+  seg_scores %>%
+  lm_robust(e_math_g3_score ~ reservation_stu * reservation_fac_avg + b_math_g1_score + female + age + ses + area + father_college + mother_college + fac_degree_elite + fac_publications + fac_fulltime + fac_yearsinhighed + fac_age + fac_female + fac_teaching, data = ., fixed_effects = ~ department_id, se_type = "stata")
+
+lm6 <-
+  seg_scores %>%
+  lm_robust(e_physics_g3_score ~ reservation_stu * reservation_fac_avg + b_physics_g1_score + female + age + ses + area + father_college + mother_college + fac_degree_elite + fac_publications + fac_fulltime + fac_yearsinhighed + fac_age + fac_female + fac_teaching, data = ., fixed_effects = ~ department_id, se_type = "stata")
+
+knitreg(list(lm1, lm2, lm3, lm4, lm5, lm6), custom.note = "%stars \n All models control for department fixed effects. HC1 standard errors used.", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, custom.model.names = c("Math (Base)", "Physics (Base)", "Math (Student controls)", "Physics (Student controls)", "Math (Stu-fac controls)", "Physics (Stu-fac controls)"), dcolumn = TRUE, booktabs = TRUE, float.pos = "h")
+```
+
+
