@@ -154,7 +154,7 @@ lm_fe3 <-
   mutate(fe_var = str_c(department_id, course_name, facid, sep = "_")) %>% 
   lm_robust(course_rank ~ reservation_stu * reservation_fac, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata")
 
-knitreg(list(lm_fe1, lm_fe2, lm_fe3), custom.note = "%stars \n HC1 standard errors used.", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, custom.model.names = c("Student FE", "Student and course FE", "Student and classroom FE"), dcolumn = TRUE, booktabs = TRUE, float.pos = "h", caption = "")
+knitreg(list(lm_fe1, lm_fe2, lm_fe3), custom.note = "%stars \n HC1 standard errors used.", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, custom.model.names = c("Student FE", "Student and course FE", "Student and classroom FE"), dcolumn = TRUE, booktabs = TRUE, float.pos = "h", caption = "", omit.coef = "^reservation_stu$")
 ```
 
 
@@ -245,7 +245,7 @@ knitreg(list(lm1, lm2, lm3, lm4, lm5, lm6), custom.note = "%stars \n All models 
 ```{r}
 df_grades %>%
   select(sort(current_vars())) %>% 
-  papeR::summarize(type = "numeric") %>%
+  papeR::summarize(type = "numeric") #%>%
   xtable()
 ```
 
@@ -255,15 +255,32 @@ df_grades %>%
 ### Means split by student reservation status
 
 ```{r}
-df_grades %>% 
+temp1 <-
+  df_grades %>% 
   drop_na(reservation_stu) %>% 
+  distinct(stdid, .keep_all = T) %>% 
+  count(reservation_stu, name = "n_students")
+
+temp2 <-
+  df_grades %>% 
+  drop_na(reservation_stu) %>% 
+  count(reservation_stu, name = "n_rows")
+
+
+df_grades %>% 
+  drop_na(reservation_stu) %>%
   group_by(reservation_stu) %>%
   select_if(is.numeric) %>% 
-  summarize_all(~ mean(., na.rm = T)) %>% 
+  summarize_all(~ mean(., na.rm = T)) %>%
+  select(sort(current_vars())) %>% 
+  left_join(temp1, by = "reservation_stu") %>% 
+  left_join(temp2, by = "reservation_stu") %>%
+  rename(course_pctile_score = course_rank) %>% 
+  select(-c(course_grade_clean, score, area)) %>% 
   pivot_longer(cols = -reservation_stu) %>% 
   pivot_wider(names_from = reservation_stu, values_from = value) %>% 
+  mutate_if(is.numeric, ~ round(., 2)) %>% 
   select(`Variable` = name, `Reservation Students` = `1`, `Non-reservation Students` = `0`) %>% 
-  arrange(Variable) %>% 
   knitr::kable()
 ```
 
@@ -273,15 +290,31 @@ df_grades %>%
 ### Means split by faculty reservation status
 
 ```{r}
-df_grades %>% 
+temp1 <-
+  df_grades %>% 
   drop_na(reservation_fac) %>% 
+  distinct(facid, .keep_all = T) %>% 
+  count(reservation_fac, name = "n_faculty")
+
+temp2 <-
+  df_grades %>% 
+  drop_na(reservation_fac) %>% 
+  count(reservation_fac, name = "n_rows")
+
+df_grades %>% 
+  drop_na(reservation_fac) %>%
   group_by(reservation_fac) %>%
   select_if(is.numeric) %>% 
-  summarize_all(~ mean(., na.rm = T)) %>% 
+  summarize_all(~ mean(., na.rm = T)) %>%
+  select(sort(current_vars())) %>% 
+  left_join(temp1, by = "reservation_fac") %>% 
+  left_join(temp2, by = "reservation_fac") %>%
+  rename(course_pctile_score = course_rank) %>% 
+  select(-c(course_grade_clean, score, area)) %>%
   pivot_longer(cols = -reservation_fac) %>% 
   pivot_wider(names_from = reservation_fac, values_from = value) %>% 
+  mutate_if(is.numeric, ~ round(., 2)) %>% 
   select(`Variable` = name, `Reservation Faculty` = `1`, `Non-reservation Faculty` = `0`) %>% 
-  arrange(Variable) %>% 
   knitr::kable()
 ```
 
