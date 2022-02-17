@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2022/dev) (preloaded format=pdflatex 2022.2.1)  16 FEB 2022 11:54
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2022/dev) (preloaded format=pdflatex 2022.2.1)  16 FEB 2022 12:53
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**experiment.tex
-(./experiment.tex
+**experiment_gender.tex
+(./experiment_gender.tex
 LaTeX2e <2021-11-15> patch level 1
 L3 programming layer <2022-01-21> (/Users/saurabh/Library/TinyTeX/texmf-dist/te
 x/latex/base/article.cls
@@ -401,7 +401,7 @@ Package: ltcaption 2020/05/30 v1.4b longtable captions (AR)
 File: l3backend-pdftex.def 2022-01-12 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count299
 \l__pdf_internal_box=\box60
-) (./experiment.aux
+) (./experiment_gender.aux
 
 LaTeX Warning: Label `table:coefficients' multiply defined.
 
@@ -409,7 +409,7 @@ LaTeX Warning: Label `table:coefficients' multiply defined.
 LaTeX Warning: Label `table:coefficients' multiply defined.
 
 )
-\openout1 = `experiment.aux'.
+\openout1 = `experiment_gender.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 82.
 LaTeX Font Info:    ... okay on input line 82.
@@ -456,9 +456,9 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 82.
 LaTeX Info: Redefining \pageref on input line 82.
 LaTeX Info: Redefining \nameref on input line 82.
-(./experiment.out) (./experiment.out)
+(./experiment_gender.out) (./experiment_gender.out)
 \@outlinefile=\write3
-\openout3 = `experiment.out'.
+\openout3 = `experiment_gender.out'.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -531,7 +531,7 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 84.
 
 (/Users/saurabh/Library/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) (./experiment.toc
+) (./experiment_gender.toc
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <10> on input line 1.
 LaTeX Font Info:    External font `lmex10' loaded for size
@@ -540,7 +540,7 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <5> on input line 1.
 )
 \tf@toc=\write4
-\openout4 = `experiment.toc'.
+\openout4 = `experiment_gender.toc'.
 
 [1
 
@@ -550,251 +550,251 @@ LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 9
 (/Users/saurabh/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-<experiment_files/figure-latex/unnamed-chunk-2-1.pdf, id=49, 469.755pt x 325.21
-5pt>
-File: experiment_files/figure-latex/unnamed-chunk-2-1.pdf Graphic file (type pd
-f)
-<use experiment_files/figure-latex/unnamed-chunk-2-1.pdf>
-Package pdftex.def Info: experiment_files/figure-latex/unnamed-chunk-2-1.pdf  u
-sed on input line 118.
+<experiment_gender_files/figure-latex/unnamed-chunk-2-1.pdf, id=49, 469.755pt x
+ 325.215pt>
+File: experiment_gender_files/figure-latex/unnamed-chunk-2-1.pdf Graphic file (
+type pdf)
+<use experiment_gender_files/figure-latex/unnamed-chunk-2-1.pdf>
+Package pdftex.def Info: experiment_gender_files/figure-latex/unnamed-chunk-2-1
+.pdf  used on input line 117.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[2 <./experiment_files/figure-latex/unnamed-chunk-2-1.pdf>] [3]
-Overfull \hbox (50.49733pt too wide) in paragraph at lines 166--211
+[2 <./experiment_gender_files/figure-latex/unnamed-chunk-2-1.pdf>]
+Overfull \hbox (21.63576pt too wide) in paragraph at lines 164--209
  [] 
  []
 
-[4] [5]
-Overfull \hbox (331.83284pt too wide) in paragraph at lines 281--330
+[3] [4]
+Overfull \hbox (292.72029pt too wide) in paragraph at lines 278--327
  [] 
  []
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[6]
+[5]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 3
-44.
+41.
 (/Users/saurabh/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-Overfull \hbox (76.2434pt too wide) in paragraph at lines 397--397
+Overfull \hbox (76.2434pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   course\_pctile\_score & 37943 & 254 &  & 51.62 & 28.02 &
   & 0.00 & 27.60 & 57.05 & 74.55 & 99.99 \\[] 
  []
 
 
-Overfull \hbox (7.99359pt too wide) in paragraph at lines 397--397
+Overfull \hbox (7.99359pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_age & 38019 & 178 &  & 34.59 & 7.38 &  & 19.00 & 29
 .00 & 33.00 & 38.00 & 67.00 \\[] 
  []
 
 
-Overfull \hbox (65.74342pt too wide) in paragraph at lines 397--397
+Overfull \hbox (65.74342pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_assistant\_professor & 37979 & 218 &  & 0.69 & 0.46
  &  & 0.00 & 0.00 & 1.00 & 1.00 & 1.00 \\[] 
  []
 
 
-Overfull \hbox (65.74342pt too wide) in paragraph at lines 397--397
+Overfull \hbox (65.74342pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_associate\_professor & 37979 & 218 &  & 0.20 & 0.40
  &  & 0.00 & 0.00 & 0.00 & 0.00 & 1.00 \\[] 
  []
 
 
-Overfull \hbox (76.2434pt too wide) in paragraph at lines 397--397
+Overfull \hbox (76.2434pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_degree\_college\_elite & 38021 & 176 &  & 0.28 & 0.
 45 &  & 0.00 & 0.00 & 0.00 & 1.00 & 1.00 \\[] 
  []
 
 
-Overfull \hbox (2.7436pt too wide) in paragraph at lines 397--397
+Overfull \hbox (2.7436pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_fulltime & 37979 & 218 &  & 0.99 & 0.11 &  & 0.00 &
  1.00 & 1.00 & 1.00 & 1.00 \\[] 
  []
 
 
-Overfull \hbox (97.24333pt too wide) in paragraph at lines 397--397
+Overfull \hbox (97.24333pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_highest\_degree\_bachelors & 38197 &   0 &  & 0.02 
 & 0.12 &  & 0.00 & 0.00 & 0.00 & 0.00 & 1.00 \\[] 
  []
 
 
-Overfull \hbox (86.74336pt too wide) in paragraph at lines 397--397
+Overfull \hbox (86.74336pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_highest\_degree\_masters & 38197 &   0 &  & 0.54 & 
 0.50 &  & 0.00 & 0.00 & 1.00 & 1.00 & 1.00 \\[] 
  []
 
 
-Overfull \hbox (65.74342pt too wide) in paragraph at lines 397--397
+Overfull \hbox (65.74342pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_highest\_degree\_phd & 38197 &   0 &  & 0.26 & 0.44
  &  & 0.00 & 0.00 & 0.00 & 1.00 & 1.00 \\[] 
  []
 
 
-Overfull \hbox (118.24327pt too wide) in paragraph at lines 397--397
+Overfull \hbox (118.24327pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_highest\_degree\_phd\_in\_prog & 38197 &   0 &  & 0
 .18 & 0.38 &  & 0.00 & 0.00 & 0.00 & 0.00 & 1.00 \\[] 
  []
 
 
-Overfull \hbox (102.49332pt too wide) in paragraph at lines 397--397
+Overfull \hbox (102.49332pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_highest\_degree\_vocational & 38197 &   0 &  & 0.00
  & 0.01 &  & 0.00 & 0.00 & 0.00 & 0.00 & 1.00 \\[] 
  []
 
 
-Overfull \hbox (13.24358pt too wide) in paragraph at lines 397--397
+Overfull \hbox (13.24358pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_instructor & 37979 & 218 &  & 0.02 & 0.13 &  & 0.00
  & 0.00 & 0.00 & 0.00 & 1.00 \\[] 
  []
 
 
-Overfull \hbox (7.99359pt too wide) in paragraph at lines 397--397
+Overfull \hbox (7.99359pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_professor & 37979 & 218 &  & 0.09 & 0.29 &  & 0.00 
 & 0.00 & 0.00 & 0.00 & 1.00 \\[] 
  []
 
 
-Overfull \hbox (39.4935pt too wide) in paragraph at lines 397--397
+Overfull \hbox (39.4935pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_publications & 38197 &   0 &  & 6.93 & 13.96 &  & 0
 .00 & 0.00 & 3.00 & 8.00 & 208.00 \\[] 
  []
 
 
-Overfull \hbox (13.24358pt too wide) in paragraph at lines 397--397
+Overfull \hbox (13.24358pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_ra\_or\_ta & 37979 & 218 &  & 0.00 & 0.07 &  & 0.00
  & 0.00 & 0.00 & 0.00 & 1.00 \\[] 
  []
 
 
-Overfull \hbox (18.49356pt too wide) in paragraph at lines 397--397
+Overfull \hbox (18.49356pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_reservation & 38021 & 176 &  & 0.39 & 0.49 &  & 0.0
 0 & 0.00 & 0.00 & 1.00 & 1.00 \\[] 
  []
 
 
-Overfull \hbox (34.24352pt too wide) in paragraph at lines 397--397
+Overfull \hbox (34.24352pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_teaching & 38197 &   0 &  & 0.05 & 0.99 &  & $-$1.5
 0 & $-$0.75 & 0.76 & 0.76 & 1.51 \\[] 
  []
 
 
-Overfull \hbox (97.24333pt too wide) in paragraph at lines 397--397
+Overfull \hbox (97.24333pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_tpi\_score\_total\_z & 38197 &   0 &  & 0.24 & 0.93
  &  & $-$3.06 & $-$0.31 & 0.23 & 0.86 & 1.88 \\[] 
  []
 
 
-Overfull \hbox (65.74342pt too wide) in paragraph at lines 397--397
+Overfull \hbox (65.74342pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_tpi\_score1\_z & 38197 &   0 &  & 0.16 & 0.94 &  & 
 $-$1.91 & $-$0.44 & 0.53 & 1.02 & 1.02 \\[] 
  []
 
 
-Overfull \hbox (65.74342pt too wide) in paragraph at lines 397--397
+Overfull \hbox (65.74342pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_tpi\_score2\_z & 38197 &   0 &  & 0.21 & 0.94 &  & 
 $-$2.07 & $-$0.03 & 0.47 & 0.98 & 1.49 \\[] 
  []
 
 
-Overfull \hbox (65.74342pt too wide) in paragraph at lines 397--397
+Overfull \hbox (65.74342pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_tpi\_score3\_z & 38197 &   0 &  & 0.25 & 0.90 &  & 
 $-$2.95 & $-$0.36 & 0.28 & 0.93 & 1.90 \\[] 
  []
 
 
-Overfull \hbox (65.74342pt too wide) in paragraph at lines 397--397
+Overfull \hbox (65.74342pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_tpi\_score4\_z & 38197 &   0 &  & 0.13 & 0.94 &  & 
 $-$1.86 & $-$0.76 & 0.34 & 0.89 & 1.44 \\[] 
  []
 
 
-Overfull \hbox (81.49338pt too wide) in paragraph at lines 397--397
+Overfull \hbox (81.49338pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_tpi\_score5\_z & 38197 &   0 &  & 0.16 & 0.93 &  & 
 $-$2.78 & $-$0.35 & $-$0.00 & 1.04 & 1.74 \\[] 
  []
 
 
-Overfull \hbox (81.49338pt too wide) in paragraph at lines 397--397
+Overfull \hbox (81.49338pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_tpi\_score6\_z & 38197 &   0 &  & 0.16 & 1.01 &  & 
 $-$1.52 & $-$0.50 & $-$0.17 & 0.85 & 1.87 \\[] 
  []
 
 
-Overfull \hbox (65.74342pt too wide) in paragraph at lines 397--397
+Overfull \hbox (65.74342pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_tpi\_score8\_z & 38197 &   0 &  & 0.15 & 0.95 &  & 
 $-$2.53 & $-$0.65 & 0.59 & 0.59 & 1.22 \\[] 
  []
 
 
-Overfull \hbox (49.99347pt too wide) in paragraph at lines 397--397
+Overfull \hbox (49.99347pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   fac\_yearsinhighed & 37971 & 226 &  & 10.50 & 6.35 &  & 
 0.00 & 6.00 & 10.00 & 14.00 & 46.00 \\[] 
  []
 
 
-Overfull \hbox (13.24358pt too wide) in paragraph at lines 397--397
+Overfull \hbox (13.24358pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   father\_college & 38035 & 162 &  & 0.52 & 0.50 &  & 0.00
  & 0.00 & 1.00 & 1.00 & 1.00 \\[] 
  []
 
 
-Overfull \hbox (13.24358pt too wide) in paragraph at lines 397--397
+Overfull \hbox (13.24358pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   father\_ed\_ind & 38035 & 162 &  & 4.44 & 2.77 &  & 1.00
  & 2.00 & 4.00 & 7.00 & 8.00 \\[] 
  []
 
 
-Overfull \hbox (13.24358pt too wide) in paragraph at lines 397--397
+Overfull \hbox (13.24358pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   mother\_college & 38055 & 142 &  & 0.36 & 0.48 &  & 0.00
  & 0.00 & 0.00 & 1.00 & 1.00 \\[] 
  []
 
 
-Overfull \hbox (13.24358pt too wide) in paragraph at lines 397--397
+Overfull \hbox (13.24358pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   mother\_ed\_ind & 38055 & 142 &  & 3.66 & 2.72 &  & 1.00
  & 1.00 & 3.00 & 7.00 & 8.00 \\[] 
  []
 
 
-Overfull \hbox (18.49356pt too wide) in paragraph at lines 397--397
+Overfull \hbox (18.49356pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   reservation\_fac & 38021 & 176 &  & 0.39 & 0.49 &  & 0.0
 0 & 0.00 & 0.00 & 1.00 & 1.00 \\[] 
  []
 
 
-Overfull \hbox (18.49356pt too wide) in paragraph at lines 397--397
+Overfull \hbox (18.49356pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   reservation\_stu & 38148 &  49 &  & 0.53 & 0.50 &  & 0.0
 0 & 0.00 & 1.00 & 1.00 & 1.00 \\[] 
  []
 
 
-Overfull \hbox (70.99341pt too wide) in paragraph at lines 397--397
+Overfull \hbox (70.99341pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   school\_years\_english & 30851 & 7346 &  & 9.36 & 5.67 &
   & 0.00 & 4.00 & 12.00 & 14.00 & 16.00 \\[] 
  []
 
 
-Overfull \hbox (49.99347pt too wide) in paragraph at lines 397--397
+Overfull \hbox (49.99347pt too wide) in paragraph at lines 394--394
 []\T1/lmtt/m/n/10 ##   baseline\_achievement & 34959 & 3238 &  & 0.50 & 0.23 & 
  & 0.00 & 0.32 & 0.49 & 0.67 & 1.00 \\[] 
  []
 
-[7] [8] [9] [10] [11] [12] [13] (./experiment.aux)
+[6] [7] [8] [9] [10] [11] [12] (./experiment_gender.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package rerunfilecheck Info: File `experiment.out' has not changed.
-(rerunfilecheck)             Checksum: 8CE48D2D3D159B3FFBF02019CF8893CA;1336.
+Package rerunfilecheck Info: File `experiment_gender.out' has not changed.
+(rerunfilecheck)             Checksum: 9B4C1DE90C902A8978136782D6B5D652;1210.
  ) 
 Here is how much of TeX's memory you used:
- 12572 strings out of 480247
- 201391 string characters out of 5895130
- 535884 words of memory out of 5000000
+ 12571 strings out of 480247
+ 201546 string characters out of 5895130
+ 527973 words of memory out of 5000000
  30274 multiletter control sequences out of 15000+600000
  518220 words of font info for 69 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 60i,11n,63p,373b,470s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,11n,63p,380b,470s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/Use
 rs/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/Users/
 saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/Users/saurabh
@@ -812,10 +812,10 @@ type1/public/lm/lmr7.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1
 blic/lm/lmsy5.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public
 /lm/lmsy7.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/
 lmtt10.pfb>
-Output written on experiment.pdf (13 pages, 236376 bytes).
+Output written on experiment_gender.pdf (12 pages, 236930 bytes).
 PDF statistics:
- 203 PDF objects out of 1000 (max. 8388607)
- 157 compressed objects within 2 object streams
- 34 named destinations out of 1000 (max. 500000)
+ 198 PDF objects out of 1000 (max. 8388607)
+ 153 compressed objects within 2 object streams
+ 33 named destinations out of 1000 (max. 500000)
  62 words of extra memory for PDF output out of 10000 (max. 10000000)
 

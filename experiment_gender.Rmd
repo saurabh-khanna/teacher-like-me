@@ -1,5 +1,5 @@
 ---
-title: "Analysis for Teacher-like-me Paper"
+title: "Analysis for Teacher-like-me Paper (by Gender)"
 date: "`r Sys.Date()`"
 output:
   pdf_document:
@@ -25,15 +25,20 @@ extrafont::loadfonts()
 df_stu <- 
   read_dta(here::here("data", "stu_admin_all_latest.dta")) %>%
   mutate(
-    reservation = dplyr::recode(reservation, "Non-reservation" = 0L, "Reservation" = 1L, .default = NA_integer_)
+    reservation = dplyr::recode(reservation, "Non-reservation" = 0L, "Reservation" = 1L, .default = NA_integer_),
+    female_stu = gender - 1L
   )
+
+#df_stu %>% select(contains("gender"))
+#df_stu %>% count(female_stu)
+
 
 df <- 
   read_dta(here::here("data", "all_appended.dta")) %>% 
   distinct(stdid, course_name, facid, .keep_all = T) %>% 
   left_join(
     df_stu %>% 
-      select(stdid, classid, department_id, reservation, ea_stud_group_criteria, grade),
+      select(stdid, classid, department_id, reservation, female_stu, ea_stud_group_criteria, grade),
     by = "stdid"
   ) %>%
   filter(ea_stud_group_criteria == 2, grade == 2) %>%
@@ -57,7 +62,7 @@ df <-
 df_grades <-
   read_dta(here::here("data/30jan2022/df_gradefac.dta")) %>% 
   filter(facid != "") %>% 
-  left_join(df_stu %>% select(stdid, department_id, reservation), by = "stdid") %>%
+  left_join(df_stu %>% select(stdid, department_id, reservation, female_stu), by = "stdid") %>%
   left_join(read_dta("data/controls.dta"), by = "stdid") %>%
   left_join(read_dta(here::here("data/fac_covariates.dta")), by = "facid") %>% 
   arrange(department_id, course_name, course_grade_clean) %>% 
@@ -74,9 +79,10 @@ df_grades <-
     ses = ses %>% as.integer()
   ) %>%
   relocate(department_id, course_name, stdid, course_rank) %>% 
-  rename(reservation_stu = reservation, fac_teaching = fac_tpi_score7_z)
+  rename(female_fac = fac_female, reservation_stu = reservation, fac_teaching = fac_tpi_score7_z) %>% 
+  select(-female)
 
-# df_grades %>% drop_na() %>% glimpse()
+#df_grades %>% select(contains("female")) %>% glimpse()
 ```
 
 
@@ -84,7 +90,7 @@ df_grades <-
 
 ## Background
 
-- Our student survey involved collecting data on the coursework completed by students at the time of taking the survey, as well as the faculty who taught these courses. We then mapped this information to the data collected from surveying faculty, where we also gained information on whether a faculty member belonged to an affirmative action (i.e. reservation) category or not.
+- Our student survey involved collecting data on the coursework completed by students at the time of taking the survey, as well as the faculty who taught these courses. We then mapped this information to the data collected from surveying faculty, where we also gained information on faculty gender.
 
 - Within a given department and year, each course can be taught by one or more faculty. In case more than one faculty teaches a given course, they do so as part of course 'classrooms' defined within that course. Students assigned the same course classrooms complete their coursework together and are taught by the same faculty for the entire six-month semester. Further, students within a given department enroll in the same set of courses prescribed during the first two years of college. For the sample where we have course-level grade data available (20 departments), we have 1277 classrooms across 415 courses. The distribution of number of classrooms per course for this sample can be seen below.
 
@@ -105,11 +111,12 @@ df_grades %>%
     y = "Number of courses"
   )
 
-ggsave("classroom_dist.png")
+#ggsave("classroom_dist.png")
+#df_grades %>% tabyl(female_stu, female_fac)
 ```
 
 
-- We also conducted detailed administrator surveys where we asked department heads if students were assigned classrooms within courses based on a formal randomization algorithm. We found that in 37 of the 100 surveyed departments, students were randomly assigned 'classrooms' for all courses taken within a given department during the first two years of college. This random allocation of students to course classrooms within department ensures that students do not self select into classrooms with varying compositions (in terms of reservation status) of both classmates and faculty.
+- We also conducted detailed administrator surveys where we asked department heads if students were assigned classrooms within courses based on a formal randomization algorithm. We found that in 37 of the 100 surveyed departments, students were randomly assigned 'classrooms' for all courses taken within a given department during the first two years of college. This random allocation of students to course classrooms within department ensures that students do not self select into classrooms with varying compositions (in terms of gender) of both classmates and faculty.
 
 - The long-term student outcome analysis is conducted for 2407 students from 37 department who took our math and physics exams by the end of their second college year.
 
@@ -122,29 +129,29 @@ ggsave("classroom_dist.png")
 
 Models:
 
-Base: $Y_{ic} = \alpha+ \beta_1R_i + \beta_2RT_c + \beta_3R_i*RT_c + \lambda_{ud} + \epsilon_{ic}$
+Base: $Y_{ic} = \alpha+ \beta_1F_i + \beta_2FT_c + \beta_3F_i*FT_c + \lambda_{ud} + \epsilon_{ic}$
 
-With Controls: $Y_{ic} = \alpha+ \beta_1R_i + \beta_2RT_c + \beta_3R_i*RT_c +\gamma_1X_i +\gamma_2T_c  + \lambda_{ud} + \epsilon_{ic}$
+With Controls: $Y_{ic} = \alpha+ \beta_1F_i + \beta_2FT_c + \beta_3F_i*FT_c +\gamma_1X_i +\gamma_2T_c  + \lambda_{ud} + \epsilon_{ic}$
 
-$Y_{ic}$ is the percentile rank [0-100] for student $i$ in a given course within a given department. $R_i$ is the reservation status of the student (0, 1), $RT_c$ is the reservation status of the instructor for class $c$, $X_i$ are student characteristics, $T_c$ are instructor characteristics of class $c$, and $\epsilon_{ic}$ is the error term. $\lambda_{ud}$ are university-department fixed effects.
+$Y_{ic}$ is the percentile rank [0-100] for student $i$ in a given course within a given department. $F_i$ is the female status of the student (0, 1), $FT_c$ is the female status of the instructor for class $c$, $X_i$ are student characteristics, $T_c$ are instructor characteristics of class $c$, and $\epsilon_{ic}$ is the error term. $\lambda_{ud}$ are university-department fixed effects.
 
 
 ```{r, results='asis'}
 lm_base <-
   df_grades %>%
-  lm_robust(course_rank ~ reservation_stu * reservation_fac, data = ., fixed_effects = ~ department_id, se_type = "stata")
+  lm_robust(course_rank ~ female_stu * female_fac, data = ., fixed_effects = ~ department_id, se_type = "stata")
 
 lm_stu <-
   df_grades %>%
-  lm_robust(course_rank ~ reservation_stu * reservation_fac + female + age + ses + area + father_college + mother_college, data = ., fixed_effects = ~ department_id, se_type = "stata")
+  lm_robust(course_rank ~ female_stu * female_fac + reservation_stu + age + ses + area + father_college + mother_college, data = ., fixed_effects = ~ department_id, se_type = "stata")
 
 lm_fac <-
   df_grades %>%
-  lm_robust(course_rank ~ reservation_stu * reservation_fac + fac_degree_college_elite + fac_publications + fac_fulltime + fac_yearsinhighed + fac_female + fac_age + fac_teaching, data = ., fixed_effects = ~ department_id, se_type = "stata")
+  lm_robust(course_rank ~ female_stu * female_fac + fac_degree_college_elite + fac_publications + fac_fulltime + fac_yearsinhighed + reservation_fac + fac_age + fac_teaching, data = ., fixed_effects = ~ department_id, se_type = "stata")
 
 lm_stufac <-
   df_grades %>%
-  lm_robust(course_rank ~ reservation_stu * reservation_fac + female + age + ses + area + father_college + mother_college + fac_degree_college_elite + fac_publications + fac_fulltime + fac_yearsinhighed + fac_female + fac_age + fac_teaching, data = ., fixed_effects = ~ department_id, se_type = "stata")
+  lm_robust(course_rank ~ female_stu * female_fac + reservation_stu + age + ses + area + father_college + mother_college + fac_degree_college_elite + fac_publications + fac_fulltime + fac_yearsinhighed + reservation_fac + fac_age + fac_teaching, data = ., fixed_effects = ~ department_id, se_type = "stata")
 
 
 knitreg(list(lm_base, lm_stu, lm_fac, lm_stufac), custom.note = "%stars \n All models control for university-department fixed effects. HC1 standard errors used.", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, custom.model.names = c("Base", "Student controls", "Faculty controls", "Student and Faculty controls"), dcolumn = TRUE, booktabs = TRUE, float.pos = "h", caption = "")
@@ -154,31 +161,31 @@ knitreg(list(lm_base, lm_stu, lm_fac, lm_stufac), custom.note = "%stars \n All m
 
 Fixed effects models:
 
-Model 1: $Y_{ic} = \alpha+ \beta_2RT_{c} + \beta_3R_i*RT_{c} + \lambda_i + \epsilon_{ic}$
+Model 1: $Y_{ic} = \alpha+ \beta_2FT_{c} + \beta_3F_i*FT_{c} + \lambda_i + \epsilon_{ic}$
 
-Model 2: $Y_{ic} = \alpha + \beta_2RT_{c} + \beta_3R_i*RT_{c} + \lambda_i + \lambda_{course}  + \epsilon_{ic}$
+Model 2: $Y_{ic} = \alpha + \beta_2FT_{c} + \beta_3F_i*FT_{c} + \lambda_i + \lambda_{course}  + \epsilon_{ic}$
 
-Model 3: $Y_{ic} = \alpha + \beta_3R_i*RT_{c} + \lambda_i + \lambda_{c}  + \epsilon_{ic}$
+Model 3: $Y_{ic} = \alpha + \beta_3F_i*FT_{c} + \lambda_i + \lambda_{c}  + \epsilon_{ic}$
 
-$Y_{ic}$ is the percentile rank [0-100] for student $i$ in a given course within a given department. $RT_c$ is the reservation status of the instructor for class $c$. In this full fixed effect specification, $\lambda_i$ are student fixed effects, $\lambda_{course}$ are course fixed effects, and $\lambda_c$ are classroom fixed effects.
+$Y_{ic}$ is the percentile rank [0-100] for student $i$ in a given course within a given department. $FT_c$ is the female status of the instructor for class $c$. In this full fixed effect specification, $\lambda_i$ are student fixed effects, $\lambda_{course}$ are course fixed effects, and $\lambda_c$ are classroom fixed effects.
 
 ```{r, results='asis'}
 lm_fe1 <-
   df_grades %>%
-  lm_robust(course_rank ~ reservation_stu * reservation_fac, data = ., fixed_effects = ~ stdid, se_type = "stata")
+  lm_robust(course_rank ~ female_stu * female_fac, data = ., fixed_effects = ~ stdid, se_type = "stata")
 
 lm_fe2 <-
   df_grades %>%
   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>% 
-  lm_robust(course_rank ~ reservation_stu * reservation_fac , data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata")
+  lm_robust(course_rank ~ female_stu * female_fac , data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata")
 
 lm_fe3 <-
   df_grades %>%
   mutate(fe_var = str_c(department_id, course_name, facid, sep = "_")) %>%
   select(-starts_with("fac"), -course_grade_clean) %>%
-  lm_robust(course_rank ~ reservation_stu * reservation_fac, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata")
+  lm_robust(course_rank ~ female_stu * female_fac, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata")
 
-knitreg(list(lm_fe1, lm_fe2, lm_fe3), custom.note = "%stars \n HC1 standard errors used.", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, custom.model.names = c("Student FE", "Student and course FE", "Student and classroom FE"), dcolumn = TRUE, booktabs = TRUE, float.pos = "h", caption = "", omit.coef = "^reservation_stu$")
+knitreg(list(lm_fe1, lm_fe2, lm_fe3), custom.note = "%stars \n HC1 standard errors used.", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, custom.model.names = c("Student FE", "Student and course FE", "Student and classroom FE"), dcolumn = TRUE, booktabs = TRUE, float.pos = "h", caption = "", omit.coef = "^female_stu$")
 ```
 
 
@@ -190,28 +197,29 @@ knitreg(list(lm_fe1, lm_fe2, lm_fe3), custom.note = "%stars \n HC1 standard erro
 
 Models:
 
-Base: $Y_{i} = \alpha+ \beta_1R_i + \beta_2\overline{RT_i} + \beta_3R_i*\overline{RT_i} + \lambda_{ud} + \epsilon_{ic}$
+Base: $Y_{i} = \alpha+ \beta_1F_i + \beta_2\overline{FT_i} + \beta_3F_i*\overline{FT_i} + \lambda_{ud} + \epsilon_{ic}$
 
-With Controls: $Y_{i} = \alpha+ \beta_1R_i + \beta_2\overline{RT_i} + \beta_3R_i*\overline{RT_i} +\gamma_1X_i +\gamma_2T_i  + \lambda_{ud} + \epsilon_{i}$
+With Controls: $Y_{i} = \alpha+ \beta_1F_i + \beta_2\overline{FT_i} + \beta_3F_i*\overline{FT_i} +\gamma_1X_i +\gamma_2T_i  + \lambda_{ud} + \epsilon_{i}$
 
-\(Y_{i}\) is the standardized math/physics test score for student \(i\). Faculty reservation status ($\overline{RT_i}$) and covariates ($\overline{T_i}$) are aggregated (using course credits as weights) to the student $i$ level.
+\(Y_{i}\) is the standardized math/physics test score for student \(i\). Faculty female status ($\overline{FT_i}$) and covariates ($\overline{T_i}$) are aggregated (using course credits as weights) to the student $i$ level.
 
 ```{r}
 seg_scores <-
   df %>%
-  group_by(stdid, reservation) %>% 
+  group_by(stdid, female_stu) %>% 
   summarize(
-    reservation_fac_avg = sum(reservation_fac * credits, na.rm = TRUE) / sum(credits, na.rm = TRUE),
+    female_fac_avg = sum(fac_female * credits, na.rm = TRUE) / sum(credits, na.rm = TRUE),
+    fac_reservation = sum(fac_reservation * credits, na.rm = TRUE) / sum(credits, na.rm = TRUE),
     fac_degree_elite = sum(fac_degree_college_elite * credits, na.rm = TRUE) / sum(credits, na.rm = TRUE),
     fac_publications = sum(fac_publications * credits, na.rm = TRUE) / sum(credits, na.rm = TRUE),
     fac_fulltime = sum(fac_fulltime * credits, na.rm = TRUE) / sum(credits, na.rm = TRUE),
     fac_yearsinhighed = sum(fac_yearsinhighed * credits, na.rm = TRUE) / sum(credits, na.rm = TRUE),
     fac_age = sum(fac_age * credits, na.rm = TRUE) / sum(credits, na.rm = TRUE),
-    fac_female = sum(fac_female * credits, na.rm = TRUE) / sum(credits, na.rm = TRUE),
+    # fac_female = sum(fac_female * credits, na.rm = TRUE) / sum(credits, na.rm = TRUE),
     fac_teaching = sum(fac_tpi_score7_z * credits, na.rm = TRUE) / sum(credits, na.rm = TRUE), 
   ) %>%
   ungroup() %>% 
-  left_join(df_stu %>% select(stdid, classid, department_id, elite, grade, contains("score")), by = "stdid") %>% 
+  left_join(df_stu %>% select(stdid, classid, department_id, reservation, elite, grade, contains("score")), by = "stdid") %>% 
   left_join(read_dta("data/controls.dta"), by = "stdid") %>% 
   mutate(
     father_college = if_else(father_ed_ind > 3 & !is.na(father_ed_ind), 1L, 0L),
@@ -225,14 +233,8 @@ seg_scores <-
     vars("b_math_g1_score", "e_math_g3_score", "b_physics_g1_score", "e_physics_g3_score", "fac_yearsinhighed", "fac_age"),
     ~ scale(.) %>% as.vector
   ) %>% 
-  rename(reservation_stu = reservation)
-
-
-seg_scores %>% 
-  select(reservation_fac_avg) %>% 
-  ggplot(aes(reservation_fac_avg)) +
-  geom_histogram(alpha = 0.9) +
-  hrbrthemes::theme_ipsum()
+  rename(reservation_stu = reservation) %>% 
+  select(-female)
 ```
 
 
@@ -242,27 +244,27 @@ seg_scores %>%
 ```{r, results='asis'}
 lm1 <-
   seg_scores %>%
-  lm_robust(e_math_g3_score ~ reservation_stu * reservation_fac_avg, data = ., fixed_effects = ~ department_id, se_type = "stata")
+  lm_robust(e_math_g3_score ~ female_stu * female_fac_avg, data = ., fixed_effects = ~ department_id, se_type = "stata")
 
 lm2 <-
   seg_scores %>%
-  lm_robust(e_physics_g3_score ~ reservation_stu * reservation_fac_avg, data = ., fixed_effects = ~ department_id, se_type = "stata")
+  lm_robust(e_physics_g3_score ~ female_stu * female_fac_avg, data = ., fixed_effects = ~ department_id, se_type = "stata")
 
 lm3 <-
   seg_scores %>%
-  lm_robust(e_math_g3_score ~ reservation_stu * reservation_fac_avg + b_math_g1_score + female + age + ses + area + father_college + mother_college, data = ., fixed_effects = ~ department_id, se_type = "stata")
+  lm_robust(e_math_g3_score ~ female_stu * female_fac_avg + b_math_g1_score + reservation_stu + age + ses + area + father_college + mother_college, data = ., fixed_effects = ~ department_id, se_type = "stata")
 
 lm4 <-
   seg_scores %>%
-  lm_robust(e_physics_g3_score ~ reservation_stu * reservation_fac_avg + b_physics_g1_score + female + age + ses + area + father_college + mother_college, data = ., fixed_effects = ~ department_id, se_type = "stata")
+  lm_robust(e_physics_g3_score ~ female_stu * female_fac_avg + b_physics_g1_score + reservation_stu + age + ses + area + father_college + mother_college, data = ., fixed_effects = ~ department_id, se_type = "stata")
 
 lm5 <-
   seg_scores %>%
-  lm_robust(e_math_g3_score ~ reservation_stu * reservation_fac_avg + b_math_g1_score + female + age + ses + area + father_college + mother_college + fac_degree_elite + fac_publications + fac_fulltime + fac_yearsinhighed + fac_age + fac_female + fac_teaching, data = ., fixed_effects = ~ department_id, se_type = "stata")
+  lm_robust(e_math_g3_score ~ female_stu * female_fac_avg + b_math_g1_score + reservation_stu + age + ses + area + father_college + mother_college + fac_degree_elite + fac_publications + fac_fulltime + fac_yearsinhighed + fac_age + fac_reservation + fac_teaching, data = ., fixed_effects = ~ department_id, se_type = "stata")
 
 lm6 <-
   seg_scores %>%
-  lm_robust(e_physics_g3_score ~ reservation_stu * reservation_fac_avg + b_physics_g1_score + female + age + ses + area + father_college + mother_college + fac_degree_elite + fac_publications + fac_fulltime + fac_yearsinhighed + fac_age + fac_female + fac_teaching, data = ., fixed_effects = ~ department_id, se_type = "stata")
+  lm_robust(e_physics_g3_score ~ female_stu * female_fac_avg + b_physics_g1_score + reservation_stu + age + ses + area + father_college + mother_college + fac_degree_elite + fac_publications + fac_fulltime + fac_yearsinhighed + fac_age + fac_reservation + fac_teaching, data = ., fixed_effects = ~ department_id, se_type = "stata")
 
 knitreg(list(lm1, lm2, lm3, lm4, lm5, lm6), custom.note = "%stars \n All models control for department fixed effects. HC1 standard errors used.", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, custom.model.names = c("Math (Base)", "Physics (Base)", "Math (Student controls)", "Physics (Student controls)", "Math (Stu-fac controls)", "Physics (Stu-fac controls)"), dcolumn = TRUE, booktabs = TRUE, float.pos = "h", caption = "")
 ```
@@ -285,122 +287,122 @@ df_grades %>%
 
 \newpage
 
-### Means split by student reservation status
+### Means split by student gender
 
 ```{r}
 temp1 <-
   df_grades %>% 
-  drop_na(reservation_stu) %>% 
+  drop_na(female_stu) %>% 
   distinct(stdid, .keep_all = T) %>% 
-  count(reservation_stu, name = "n_students")
+  count(female_stu, name = "n_students")
 
 temp2 <-
   df_grades %>% 
-  drop_na(reservation_stu) %>% 
-  count(reservation_stu, name = "n_rows")
+  drop_na(female_stu) %>% 
+  count(female_stu, name = "n_rows")
 
 
 temp3 <-
   df_grades %>%
-  drop_na(reservation_stu) %>% 
+  drop_na(female_stu) %>% 
   distinct(stdid, .keep_all = T) %>%
   transmute(
-    reservation_stu,
+    female_stu,
     univcode = str_sub(department_id, 1, 5),
     majtype = str_sub(department_id, 6, 7)
   ) %>%
-  tabyl(reservation_stu, univcode) %>% 
+  tabyl(female_stu, univcode) %>% 
   as_tibble()
 
 temp4 <-
   df_grades %>%
-  drop_na(reservation_stu) %>% 
+  drop_na(female_stu) %>% 
   distinct(stdid, .keep_all = T) %>%
   transmute(
-    reservation_stu,
+    female_stu,
     univcode = str_sub(department_id, 1, 5),
     majtype = str_sub(department_id, 6, 7)
   ) %>%
-  tabyl(reservation_stu, majtype) %>% 
+  tabyl(female_stu, majtype) %>% 
   as_tibble()
 
 df_grades %>% 
-  drop_na(reservation_stu) %>%
-  group_by(reservation_stu) %>%
+  drop_na(female_stu) %>%
+  group_by(female_stu) %>%
   select_if(is.numeric) %>% 
   summarize_all(~ mean(., na.rm = T)) %>%
   select(sort(current_vars())) %>% 
-  left_join(temp1, by = "reservation_stu") %>% 
-  left_join(temp2, by = "reservation_stu") %>%
-  left_join(temp3, by = "reservation_stu") %>% 
-  left_join(temp4, by = "reservation_stu") %>%
+  left_join(temp1, by = "female_stu") %>% 
+  left_join(temp2, by = "female_stu") %>%
+  left_join(temp3, by = "female_stu") %>% 
+  left_join(temp4, by = "female_stu") %>%
   rename(course_pctile_score = course_rank, baseline_achievement = score) %>% 
   select(-c(course_grade_clean, area)) %>% 
-  pivot_longer(cols = -reservation_stu) %>% 
-  pivot_wider(names_from = reservation_stu, values_from = value) %>% 
+  pivot_longer(cols = -female_stu) %>% 
+  pivot_wider(names_from = female_stu, values_from = value) %>% 
   mutate_if(is.numeric, ~ round(., 2)) %>% 
-  select(`Variable` = name, `Reservation Students` = `1`, `Non-reservation Students` = `0`) %>% 
+  select(`Variable` = name, `Female Students` = `1`, `Male Students` = `0`) %>% 
   knitr::kable()
 ```
 
 
 \newpage
 
-### Means split by faculty reservation status
+### Means split by faculty gender
 
 ```{r}
 temp1 <-
   df_grades %>% 
-  drop_na(reservation_fac) %>% 
+  drop_na(female_fac) %>% 
   distinct(facid, .keep_all = T) %>% 
-  count(reservation_fac, name = "n_faculty")
+  count(female_fac, name = "n_faculty")
 
 temp2 <-
   df_grades %>% 
-  drop_na(reservation_fac) %>% 
-  count(reservation_fac, name = "n_rows")
+  drop_na(female_fac) %>% 
+  count(female_fac, name = "n_rows")
 
 temp3 <-
   df_grades %>%
-  drop_na(reservation_fac) %>% 
+  drop_na(female_fac) %>% 
   distinct(facid, .keep_all = T) %>%
   transmute(
-    reservation_fac,
+    female_fac,
     univcode = str_sub(department_id, 1, 5),
     majtype = str_sub(department_id, 6, 7)
   ) %>%
-  tabyl(reservation_fac, univcode) %>% 
+  tabyl(female_fac, univcode) %>% 
   as_tibble()
 
 temp4 <-
   df_grades %>%
-  drop_na(reservation_fac) %>% 
+  drop_na(female_fac) %>% 
   distinct(facid, .keep_all = T) %>%
   transmute(
-    reservation_fac,
+    female_fac,
     univcode = str_sub(department_id, 1, 5),
     majtype = str_sub(department_id, 6, 7)
   ) %>%
-  tabyl(reservation_fac, majtype) %>% 
+  tabyl(female_fac, majtype) %>% 
   as_tibble()
 
 
 df_grades %>% 
-  drop_na(reservation_fac) %>%
-  group_by(reservation_fac) %>%
+  drop_na(female_fac) %>%
+  group_by(female_fac) %>%
   select_if(is.numeric) %>% 
   summarize_all(~ mean(., na.rm = T)) %>%
   select(sort(current_vars())) %>% 
-  left_join(temp1, by = "reservation_fac") %>% 
-  left_join(temp2, by = "reservation_fac") %>%
-  left_join(temp3, by = "reservation_fac") %>% 
-  left_join(temp4, by = "reservation_fac") %>%
+  left_join(temp1, by = "female_fac") %>% 
+  left_join(temp2, by = "female_fac") %>%
+  left_join(temp3, by = "female_fac") %>% 
+  left_join(temp4, by = "female_fac") %>%
   rename(course_pctile_score = course_rank) %>% 
   select(-c(course_grade_clean, score, area)) %>%
-  pivot_longer(cols = -reservation_fac) %>% 
-  pivot_wider(names_from = reservation_fac, values_from = value) %>% 
+  pivot_longer(cols = -female_fac) %>% 
+  pivot_wider(names_from = female_fac, values_from = value) %>% 
   mutate_if(is.numeric, ~ round(., 2)) %>% 
-  select(`Variable` = name, `Reservation Faculty` = `1`, `Non-reservation Faculty` = `0`) %>% 
+  select(`Variable` = name, `Female Faculty` = `1`, `Male Faculty` = `0`) %>% 
   knitr::kable()
 ```
 
