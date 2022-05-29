@@ -112,7 +112,7 @@ df_grades %>%
   )
 
 #ggsave("classroom_dist.png")
-#df_grades %>% tabyl(female_stu, female_fac)
+df_grades %>% select(contains("fem"))
 ```
 
 
@@ -122,6 +122,62 @@ df_grades %>%
 
 - The class-wise student outcome analysis is conducted for 2268 students from 20 departments (a subset of the 37 departments). For these 20 departments, we have obtained course-level grade data for 87.4% student-course observations.
 
+
+\newpage
+
+
+## Balance tests
+
+Model:
+\(X_{ic} = \alpha + \beta_2FT_{c} + \lambda_{course} + \epsilon_{ic}\)
+
+where (ic) refers to the student $i$ in classroom $c$ 
+
+```{r, results='asis'}
+bal1 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_"),
+         clust_var = str_c(department_id, course_name, facid, sep = "_")) %>% 
+  lm_robust(reservation_stu ~ female_fac , data = ., fixed_effects = ~ fe_var, clusters = clust_var, se_type = "stata")
+
+bal2 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_"),
+         clust_var = str_c(department_id, course_name, facid, sep = "_")) %>%
+  lm_robust(female_stu ~ female_fac , data = ., fixed_effects = ~ fe_var, clusters = clust_var, se_type = "stata")
+
+bal3 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_"),
+         clust_var = str_c(department_id, course_name, facid, sep = "_")) %>%
+  lm_robust(age ~ female_fac , data = ., fixed_effects = ~ fe_var, clusters = clust_var, se_type = "stata")
+
+bal4 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_"),
+         clust_var = str_c(department_id, course_name, facid, sep = "_")) %>%
+  lm_robust(ses ~ female_fac , data = ., fixed_effects = ~ fe_var, clusters = clust_var, se_type = "stata")
+
+bal5 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_"),
+         clust_var = str_c(department_id, course_name, facid, sep = "_")) %>%
+  lm_robust(rural ~ female_fac , data = ., fixed_effects = ~ fe_var, clusters = clust_var, se_type = "stata")
+
+bal6 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_"),
+         clust_var = str_c(department_id, course_name, facid, sep = "_")) %>%
+  lm_robust(father_college ~ female_fac , data = ., fixed_effects = ~ fe_var, clusters = clust_var, se_type = "stata")
+
+bal7 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_"),
+         clust_var = str_c(department_id, course_name, facid, sep = "_")) %>%
+  lm_robust(mother_college ~ female_fac , data = ., fixed_effects = ~ fe_var, clusters = clust_var, se_type = "stata")
+
+knitreg(list(bal1, bal2, bal3, bal4, bal5, bal6, bal7), custom.note = "%stars \n All models control for course fixed effects. Standard errors clustered at classroom level.", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, custom.model.names = c("Reservation", "Female", "Age", "SES", "Rural", "Father colg", "Mother colg"), dcolumn = TRUE, booktabs = TRUE, float.pos = "h", caption = "", digits = 3)
+```
 
 \newpage
 

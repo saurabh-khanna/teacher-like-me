@@ -56,7 +56,7 @@ df <-
 # grade data after veda's work
 df_grades <-
   read_dta(here::here("data/30jan2022/df_gradefac.dta")) %>% 
-  filter(facid != "") %>% 
+  filter(facid != "") %>%
   left_join(df_stu %>% select(stdid, department_id, reservation), by = "stdid") %>%
   left_join(read_dta("data/controls.dta"), by = "stdid") %>%
   left_join(read_dta(here::here("data/fac_covariates.dta")), by = "facid") %>% 
@@ -77,6 +77,7 @@ df_grades <-
   rename(reservation_stu = reservation, fac_teaching = fac_tpi_score7_z)
 
 # df_grades %>% drop_na() %>% glimpse()
+# df_grades %>% select(contains("college"))
 ```
 
 
@@ -105,7 +106,7 @@ df_grades %>%
     y = "Number of courses"
   )
 
-ggsave("classroom_dist.png")
+# ggsave("classroom_dist.png")
 ```
 
 
@@ -114,6 +115,61 @@ ggsave("classroom_dist.png")
 - The long-term student outcome analysis is conducted for 2407 students from 37 department who took our math and physics exams by the end of their second college year.
 
 - The class-wise student outcome analysis is conducted for 2268 students from 20 departments (a subset of the 37 departments). For these 20 departments, we have obtained course-level grade data for 87.4% student-course observations.
+
+\newpage
+
+## Balance tests
+
+Model:
+\(X_{ic} = \alpha + \beta_2RT_{c} + \lambda_{course} + \epsilon_{ic}\)
+
+where (ic) refers to the student $i$ in classroom $c$. All models control for course fixed effects. Standard errors clustered at faculty level.
+
+```{r, results='asis'}
+bal1 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>% 
+  lm_robust(reservation_stu ~ reservation_fac , data = ., fixed_effects = ~ fe_var, se_type = "stata", clusters = facid)
+
+bal2 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(female ~ reservation_fac , data = ., fixed_effects = ~ fe_var, se_type = "stata", clusters = facid)
+
+bal3 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(age ~ reservation_fac , data = ., fixed_effects = ~ fe_var, se_type = "stata", clusters = facid)
+
+bal4 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(ses ~ reservation_fac , data = ., fixed_effects = ~ fe_var, se_type = "stata", clusters = facid)
+
+bal5 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(rural ~ reservation_fac , data = ., fixed_effects = ~ fe_var, se_type = "stata", clusters = facid)
+
+bal6 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(father_college ~ reservation_fac , data = ., fixed_effects = ~ fe_var, se_type = "stata", clusters = facid)
+
+bal7 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(mother_college ~ reservation_fac , data = ., fixed_effects = ~ fe_var, se_type = "stata", clusters = facid)
+
+knitreg(list(bal1, bal2, bal3, bal4, bal5, bal6, bal7), custom.note = "%stars \n All models control for course fixed effects. Standard errors clustered at classroom level.", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, custom.model.names = c("Reservation", "Female", "Age", "SES", "Rural", "Father colg", "Mother colg"), dcolumn = TRUE, booktabs = TRUE, float.pos = "h", caption = "", digits = 3)
+```
+
+```{r}
+# df_grades %>% 
+#   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>% 
+#   lm_robust(reservation_fac ~ reservation_stu + female + age + ses + area + father_college + mother_college, data = ., fixed_effects = ~ fe_var, se_type = "stata") %>% 
+#   summary()
+```
 
 
 \newpage
@@ -165,20 +221,31 @@ $Y_{ic}$ is the percentile rank [0-100] for student $i$ in a given course within
 ```{r, results='asis'}
 lm_fe1 <-
   df_grades %>%
-  lm_robust(course_rank ~ reservation_stu * reservation_fac, data = ., fixed_effects = ~ stdid, se_type = "stata")
+  lm_robust(course_rank ~ reservation_stu * reservation_fac + fac_degree_college_elite + fac_publications + fac_fulltime + fac_yearsinhighed + fac_female + fac_age + fac_teaching, data = ., fixed_effects = ~ stdid, se_type = "stata")
 
 lm_fe2 <-
   df_grades %>%
   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>% 
-  lm_robust(course_rank ~ reservation_stu * reservation_fac , data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata")
+  lm_robust(course_rank ~ reservation_stu * reservation_fac + female + age + ses + area + father_college + mother_college + fac_degree_college_elite + fac_publications + fac_fulltime + fac_yearsinhighed + fac_female + fac_age + fac_teaching, data = ., fixed_effects = ~ fe_var, se_type = "stata")
 
 lm_fe3 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>% 
+  lm_robust(course_rank ~ reservation_stu * reservation_fac + + fac_degree_college_elite + fac_publications + fac_fulltime + fac_yearsinhighed + fac_female + fac_age + fac_teaching, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata")
+
+lm_fe4 <-
   df_grades %>%
   mutate(fe_var = str_c(department_id, course_name, facid, sep = "_")) %>%
   select(-starts_with("fac"), -course_grade_clean) %>%
   lm_robust(course_rank ~ reservation_stu * reservation_fac, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata")
 
-knitreg(list(lm_fe1, lm_fe2, lm_fe3), custom.note = "%stars \n HC1 standard errors used.", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, custom.model.names = c("Student FE", "Student and course FE", "Student and classroom FE"), dcolumn = TRUE, booktabs = TRUE, float.pos = "h", caption = "", omit.coef = "^reservation_stu$")
+knitreg(list(lm_fe1, lm_fe2, lm_fe3, lm_fe4), custom.note = "%stars \n HC1 standard errors used.", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, custom.model.names = c("Student FE", "Course FE", "Student and course FE", "Student and classroom FE"), dcolumn = TRUE, booktabs = TRUE, float.pos = "h", caption = "")
+
+
+df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, facid, sep = "_")) %>%
+  select(-starts_with("fac"), -course_grade_clean) %>%
+  lm_robust(course_rank ~ reservation_stu * reservation_fac + stdid + fe_var, data = .)
 ```
 
 
@@ -226,13 +293,6 @@ seg_scores <-
     ~ scale(.) %>% as.vector
   ) %>% 
   rename(reservation_stu = reservation)
-
-
-seg_scores %>% 
-  select(reservation_fac_avg) %>% 
-  ggplot(aes(reservation_fac_avg)) +
-  geom_histogram(alpha = 0.9) +
-  hrbrthemes::theme_ipsum()
 ```
 
 
