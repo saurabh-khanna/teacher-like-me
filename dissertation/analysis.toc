@@ -1,0 +1,11 @@
+\contentsline {section}{Main Tables}{2}{section*.2}%
+\contentsline {subsection}{Table 1: Faculty and Student Characteristics, Faculty Differences, and Balance Checks}{2}{section*.3}%
+\contentsline {subsection}{Table 2: Regressions for Quality of Instruction by Reservation Faculty}{3}{section*.5}%
+\contentsline {subsection}{Table 3: Regressions for Quality of Instruction by Reservation Faculty with Reservation Student}{4}{section*.7}%
+\contentsline {subsection}{Table 4: Regressions for Quality of Instruction, Teacher-Like-Me Specifications}{5}{section*.9}%
+\contentsline {subsection}{Table 5: Regressions for Quality of Instruction by Reservation Faculty for Detailed Student Categories}{6}{section*.11}%
+\contentsline {subsection}{Table 6a: Regressions for Weekly Hours on Various Teaching-Related Activities}{7}{section*.13}%
+\contentsline {subsection}{Table 6b: Regressions for TPI Measures on Use of Teaching Practices}{8}{section*.15}%
+\contentsline {subsection}{Table 8: Regressions for Number of Publications per Year}{9}{section*.17}%
+\contentsline {section}{Appendix Tables}{10}{section*.19}%
+\contentsline {subsection}{Table A1}{10}{section*.20}%
