@@ -97,7 +97,15 @@ df_mechanism <-
   ) %>% 
   left_join(read_dta(here::here("data/fac_covars3.dta")), by = "facid") %>% 
   left_join(read_dta(here::here("data/fac_covars2.dta")), by = "facid") %>% 
-  mutate_at(vars(starts_with("weekly")), ~ parse_number(.))
+  mutate_at(vars(starts_with("weekly")), ~ parse_number(.)) %>%
+  mutate(
+    total_time =
+      pmap_dbl(
+        select(., weekly_hours_teaching_related, weekly_hours_advising_students, weekly_hours_research, weekly_hours_part_time_job, weekly_hours_administrative),
+        ~ sum(c(...), na.rm = TRUE)
+      ),
+    fac_prop_research = (weekly_hours_research * 10) / total_time
+  )
 
 
 facdata_all <- 
@@ -500,70 +508,37 @@ Notes:
 
 \newpage
 
-## Table 6a: Regressions for Weekly Hours on Various Teaching-Related Activities
+## Table 6: Regressions for Weekly Hours on Various Teaching-Related Activities
 
 
 ```{r, results='asis', eval=F}
-# lm_hours1 <-
-#   df_mechanism %>%
-#   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-#   lm_robust(weekly_hours_administrative ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
-
 lm_hours2 <-
   df_mechanism %>%
   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-  lm_robust(weekly_hours_advising_students ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
+  lm_robust(weekly_hours_advising_students ~ reservation_fac + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
 
 lm_hours3 <-
   df_mechanism %>%
   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-  lm_robust(weekly_hours_course ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
-
-# lm_hours4 <-
-#   df_mechanism %>%
-#   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-#   lm_robust(weekly_hours_homework_tests ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
-# 
-# lm_hours5 <-
-#   df_mechanism %>%
-#   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-#   lm_robust(weekly_hours_improving_teaching ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
+  lm_robust(weekly_hours_course ~ reservation_fac + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
 
 lm_hours6 <-
   df_mechanism %>%
   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-  lm_robust(weekly_hours_lessons_planning ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
-
-# lm_hours7 <-
-#   df_mechanism %>%
-#   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-#   lm_robust(weekly_hours_part_time_job ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
-
-# lm_hours8 <-
-#   df_mechanism %>%
-#   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-#   lm_robust(weekly_hours_research ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
+  lm_robust(weekly_hours_lessons_planning ~ reservation_fac + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
 
 lm_hours9 <-
   df_mechanism %>%
   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-  lm_robust(weekly_hours_teaching_class ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
-
-# lm_hours10 <-
-#   df_mechanism %>%
-#   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-#   lm_robust(weekly_hours_teaching_related ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
+  lm_robust(weekly_hours_teaching_class ~ reservation_fac + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
 
 lm_hours11 <-
   df_mechanism %>%
   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-  lm_robust(weekly_hours_tutoring ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
+  lm_robust(weekly_hours_tutoring ~ reservation_fac + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
 
 
-# knitreg(list(lm_hours1, lm_hours2, lm_hours3, lm_hours4, lm_hours5, lm_hours6, lm_hours7, lm_hours8, lm_hours9, lm_hours10, lm_hours11), custom.note = "%stars \n Standard errors clustered at faculty level.", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, dcolumn = TRUE, booktabs = TRUE, float.pos = "H", caption = "", digits = 2, custom.model.names = c("Administrative", "Advising students", "Course related work", "Homework/tests", "Improving teaching", "Lesson planning", "Part-time job", "Research", "Teaching class", "Teaching related", "Tutoring"))
-
-
-texreg(list(lm_hours2, lm_hours3, lm_hours6, lm_hours9, lm_hours11), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, dcolumn = TRUE, booktabs = TRUE, float.pos = "H", caption = "", digits = 2, custom.model.names = c("Advising students", "Course related work", "Lesson planning", "Teaching class", "Tutoring"), custom.coef.names = c("Reservation faculty", "Highest degree is PhD", "Highest degree is PhD in progress", "Degree college elite", "Associate professor", "Professor", "Experience in years", "Female"))
+texreg(list(lm_hours2, lm_hours3, lm_hours6, lm_hours9, lm_hours11), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, dcolumn = TRUE, booktabs = TRUE, float.pos = "H", caption = "", digits = 2, custom.model.names = c("Advising students", "Course related work", "Lesson planning", "Teaching class", "Tutoring"), custom.coef.names = c("Reservation faculty", "Associate professor", "Professor", "Experience in years", "Highest degree is PhD", "Highest degree is PhD in progress", "Degree college elite", "Female"))
 ```
 
 
@@ -588,18 +563,18 @@ df_mechanism %>%
 \midrule
 Reservation faculty               & -0.40  & 0.00       & 0.09       & -0.24  & -0.10      \\
                                   & (0.30) & (0.48)     & (0.92)     & (1.25) & (0.30)     \\
-Highest degree is PhD             & 0.58   & 3.75^{**}  & -0.54      & 0.42   & 0.58       \\
-                                  & (0.49) & (1.64)     & (1.39)     & (1.17) & (0.44)     \\
-Highest degree is PhD in progress & 0.52   & -0.45      & -0.65      & 1.15   & 0.43       \\
-                                  & (0.54) & (0.56)     & (0.97)     & (1.11) & (0.36)     \\
-Degree college elite              & -0.23  & -1.81^{**} & 0.69       & -0.83  & -0.72^{**} \\
-                                  & (0.44) & (0.88)     & (0.99)     & (1.04) & (0.33)     \\
 Associate professor               & -0.09  & -2.74^{**} & 0.11       & -0.20  & 0.26       \\
                                   & (0.38) & (1.26)     & (1.08)     & (1.60) & (0.40)     \\
 Professor                         & -0.60  & -0.57      & -2.28      & -1.46  & -0.20      \\
                                   & (0.59) & (1.39)     & (1.67)     & (1.57) & (0.51)     \\
 Experience in years               & 0.01   & 0.02       & -0.16^{**} & 0.10   & 0.04^{*}   \\
                                   & (0.03) & (0.03)     & (0.08)     & (0.08) & (0.02)     \\
+Highest degree is PhD             & 0.58   & 3.75^{**}  & -0.54      & 0.42   & 0.58       \\
+                                  & (0.49) & (1.64)     & (1.39)     & (1.17) & (0.44)     \\
+Highest degree is PhD in progress & 0.52   & -0.45      & -0.65      & 1.15   & 0.43       \\
+                                  & (0.54) & (0.56)     & (0.97)     & (1.11) & (0.36)     \\
+Degree college elite              & -0.23  & -1.81^{**} & 0.69       & -0.83  & -0.72^{**} \\
+                                  & (0.44) & (0.88)     & (0.99)     & (1.04) & (0.33)     \\
 Female                            & -0.10  & -0.97      & -0.75      & -0.33  & 0.20       \\
                                   & (0.22) & (0.68)     & (0.87)     & (1.01) & (0.26)     \\
 \midrule
@@ -623,59 +598,31 @@ Notes:
 
 \newpage
 
-## Table 6b: Regressions for TPI Measures on Use of Teaching Practices
+## Table 7: Regressions for TPI Measures on Use of Teaching Practices
 
 
 ```{r, results='asis', eval=F}
-# lm_tpi1 <-
-#   df_mechanism %>%
-#   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-#   lm_robust(tpi_score1 ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
-# 
-# lm_tpi2 <-
-#   df_mechanism %>%
-#   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-#   lm_robust(tpi_score2 ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
-
 lm_tpi3 <-
   df_mechanism %>%
   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-  lm_robust(tpi_score3 ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
+  lm_robust(tpi_score3 ~ reservation_fac + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
 
 lm_tpi4 <-
   df_mechanism %>%
   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-  lm_robust(tpi_score4 ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
+  lm_robust(tpi_score4 ~ reservation_fac + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
 
 lm_tpi5 <-
   df_mechanism %>%
   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-  lm_robust(tpi_score5 ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
-
-# lm_tpi6 <-
-#   df_mechanism %>%
-#   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-#   lm_robust(tpi_score6 ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
-# 
-# lm_tpi7 <-
-#   df_mechanism %>%
-#   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-#   lm_robust(tpi_score7 ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
+  lm_robust(tpi_score5 ~ reservation_fac + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
 
 lm_tpi8 <-
   df_mechanism %>%
   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-  lm_robust(tpi_score8 ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
+  lm_robust(tpi_score8 ~ reservation_fac + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
 
-# lm_tpi_total <-
-#   df_mechanism %>%
-#   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-#   lm_robust(tpi_score_total ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
-
-
-# knitreg(list(lm_tpi1, lm_tpi2, lm_tpi3, lm_tpi4, lm_tpi5, lm_tpi6, lm_tpi7, lm_tpi8, lm_tpi_total), custom.note = "%stars \n Standard errors clustered at faculty level.", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, dcolumn = TRUE, booktabs = TRUE, float.pos = "H", caption = "", digits = 2, custom.model.names = c("Course info provided", "Supporting info provided", "In-class features and activities", "Assignments", "Feedback and testing", "Other", "Train/guide TAs", "Collaboration", "Total"))
-
-texreg(list(lm_tpi3, lm_tpi4, lm_tpi5, lm_tpi8), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, dcolumn = TRUE, booktabs = TRUE, float.pos = "H", caption = "", digits = 2, custom.model.names = c("In-class features and activities", "Assignments", "Feedback and testing", "Collaboration"), custom.coef.names = c("Reservation faculty", "Highest degree is PhD", "Highest degree is PhD in progress", "Degree college elite", "Associate professor", "Professor", "Experience in years", "Female"))
+texreg(list(lm_tpi3, lm_tpi4, lm_tpi5, lm_tpi8), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, dcolumn = TRUE, booktabs = TRUE, float.pos = "H", caption = "", digits = 2, custom.model.names = c("In-class features and activities", "Assignments", "Feedback and testing", "Collaboration"), custom.coef.names = c("Reservation faculty", "Associate professor", "Professor", "Experience in years", "Highest degree is PhD", "Highest degree is PhD in progress", "Degree college elite", "Female"))
 ```
 
 
@@ -699,18 +646,18 @@ df_mechanism %>%
 \midrule
 Reservation faculty               & -0.23       & -0.20     & -0.13      & -0.21     \\
                                   & (0.35)      & (0.26)    & (0.38)     & (0.22)    \\
-Highest degree is PhD             & -0.21       & -0.46     & -0.63      & -0.30     \\
-                                  & (0.51)      & (0.32)    & (0.54)     & (0.32)    \\
-Highest degree is PhD in progress & 1.16^{**}   & -0.04     & 1.30^{***} & 0.28      \\
-                                  & (0.45)      & (0.30)    & (0.40)     & (0.23)    \\
-Degree college elite              & -0.31       & 0.34      & -0.41      & -0.01     \\
-                                  & (0.30)      & (0.27)    & (0.33)     & (0.21)    \\
 Associate professor               & 0.10        & 0.16      & 0.46       & -0.17     \\
                                   & (0.43)      & (0.30)    & (0.52)     & (0.26)    \\
 Professor                         & 0.81        & 0.04      & 1.10       & -0.10     \\
                                   & (0.55)      & (0.45)    & (0.69)     & (0.31)    \\
 Experience in years               & 0.02        & 0.04^{**} & 0.08^{**}  & 0.04^{**} \\
                                   & (0.02)      & (0.02)    & (0.03)     & (0.02)    \\
+Highest degree is PhD             & -0.21       & -0.46     & -0.63      & -0.30     \\
+                                  & (0.51)      & (0.32)    & (0.54)     & (0.32)    \\
+Highest degree is PhD in progress & 1.16^{**}   & -0.04     & 1.30^{***} & 0.28      \\
+                                  & (0.45)      & (0.30)    & (0.40)     & (0.23)    \\
+Degree college elite              & -0.31       & 0.34      & -0.41      & -0.01     \\
+                                  & (0.30)      & (0.27)    & (0.33)     & (0.21)    \\
 Female                            & -1.11^{***} & 0.33      & -0.09      & 0.25      \\
                                   & (0.35)      & (0.24)    & (0.35)     & (0.19)    \\
 \midrule
@@ -736,7 +683,7 @@ Notes:
 
 \newpage
 
-## Table 8: Regressions for Number of Publications per Year
+## Table 8: Regressions for Total Number of Publications per Year
 
 
 ```{r, results='asis', eval=F}
@@ -750,27 +697,27 @@ lm_pub2 <-
   df_mechanism %>% 
   left_join(read_dta(here::here("data/fac_covariates.dta")) %>% select(facid, fac_publications), by = "facid") %>% 
   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-  lm_robust(fac_publications ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
+  lm_robust(fac_publications ~ reservation_fac + fac_associate_professor + fac_professor + fac_yearsinhighed, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
 
 lm_pub3 <-
   df_mechanism %>% 
   left_join(read_dta(here::here("data/fac_covariates.dta")) %>% select(facid, fac_publications), by = "facid") %>% 
   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-  lm_robust(fac_publications ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
+  lm_robust(fac_publications ~ reservation_fac + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
 
 lm_pub4 <-
   df_mechanism %>% 
   left_join(read_dta(here::here("data/fac_covariates.dta")) %>% select(facid, fac_publications), by = "facid") %>% 
   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-  lm_robust(fac_publications ~ reservation_fac + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
+  lm_robust(fac_publications ~ reservation_fac + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
 
-texreg(list(lm_pub1, lm_pub2, lm_pub3, lm_pub4), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, dcolumn = TRUE, booktabs = TRUE, float.pos = "H", caption = "", digits = 2, custom.model.names = c("I", "II", "III", "IV"), custom.coef.names = c("Reservation faculty", "Highest degree is PhD", "Highest degree is PhD in progress", "Degree college elite", "Associate professor", "Professor", "Experience in years", "Female"))
+texreg(list(lm_pub1, lm_pub2, lm_pub3, lm_pub4), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, dcolumn = TRUE, booktabs = TRUE, float.pos = "H", caption = "", digits = 2, custom.model.names = c("I", "II", "III", "IV"), custom.coef.names = c("Reservation faculty", "Associate professor", "Professor", "Experience in years", "Highest degree is PhD", "Highest degree is PhD in progress", "Degree college elite", "Female"))
 ```
 
 ```{r, eval=F}
 df_mechanism %>% 
-  distinct(facid, .keep_all = F) %>% 
-  left_join(read_dta(here::here("data/fac_covariates.dta")) %>% select(facid, fac_publications), by = "facid") %>% 
+  distinct(facid, .keep_all = T) %>% 
+  left_join(read_dta(here::here("data/fac_covariates.dta")) %>% select(facid, efac_pub_intl), by = "facid") %>% 
   summary()
 ```
 
@@ -782,25 +729,25 @@ df_mechanism %>%
 \toprule
  & \multicolumn{1}{c}{I} & \multicolumn{1}{c}{II} & \multicolumn{1}{c}{III} & \multicolumn{1}{c}{IV} \\
 \midrule
-Reservation faculty               & -3.31^{**} & -1.41       & -1.71       & -1.72       \\
-                                  & (1.46)     & (1.27)      & (1.28)      & (1.28)      \\
-Highest degree is PhD             &            & 12.35^{***} & 5.17^{*}    & 5.34^{*}    \\
-                                  &            & (2.31)      & (2.84)      & (2.85)      \\
-Highest degree is PhD in progress &            & 2.66^{**}   & 2.80^{*}    & 2.98^{**}   \\
-                                  &            & (1.18)      & (1.43)      & (1.44)      \\
-Degree college elite              &            & 1.21        & 1.38        & 1.43        \\
-                                  &            & (1.47)      & (1.49)      & (1.50)      \\
-Associate professor               &            &             & 7.22^{***}  & 7.21^{***}  \\
-                                  &            &             & (1.75)      & (1.74)      \\
-Professor                         &            &             & 16.30^{***} & 16.10^{***} \\
-                                  &            &             & (4.27)      & (4.25)      \\
-Experience in years               &            &             & -0.32^{**}  & -0.32^{**}  \\
-                                  &            &             & (0.14)      & (0.14)      \\
+Reservation faculty               & -3.31^{**} & -2.38^{*}   & -1.71       & -1.72       \\
+                                  & (1.46)     & (1.35)      & (1.28)      & (1.28)      \\
+Associate professor               &            & 9.00^{***}  & 7.22^{***}  & 7.21^{***}  \\
+                                  &            & (1.66)      & (1.75)      & (1.74)      \\
+Professor                         &            & 19.37^{***} & 16.30^{***} & 16.10^{***} \\
+                                  &            & (3.98)      & (4.27)      & (4.25)      \\
+Experience in years               &            & -0.27^{*}   & -0.32^{**}  & -0.32^{**}  \\
+                                  &            & (0.15)      & (0.14)      & (0.14)      \\
+Highest degree is PhD             &            &             & 5.17^{*}    & 5.34^{*}    \\
+                                  &            &             & (2.84)      & (2.85)      \\
+Highest degree is PhD in progress &            &             & 2.80^{*}    & 2.98^{**}   \\
+                                  &            &             & (1.43)      & (1.44)      \\
+Degree college elite              &            &             & 1.38        & 1.43        \\
+                                  &            &             & (1.49)      & (1.50)      \\
 Female                            &            &             &             & -1.02       \\
                                   &            &             &             & (1.08)      \\
 \midrule
-Num. obs.                         & 38021      & 38021       & 37970       & 37970       \\
-N Clusters                        & 499        & 499         & 497         & 497         \\
+Num. obs.                         & 38021      & 37970       & 37970       & 37970       \\
+N Clusters                        & 499        & 497         & 497         & 497         \\
 \midrule
 Mean value                         & 10.34      & 10.34       & 10.34       & 10.34       \\
 \bottomrule
@@ -820,9 +767,162 @@ Notes:
 
 \newpage
 
+## Table 9: Regressions for Number of International Publications per Year
+
+
+```{r, results='asis', eval=F}
+lm_pub1 <-
+  df_mechanism %>% 
+  left_join(read_dta(here::here("data/fac_covariates.dta")) %>% select(facid, efac_pub_intl), by = "facid") %>% 
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(efac_pub_intl ~ reservation_fac, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
+
+lm_pub2 <-
+  df_mechanism %>% 
+  left_join(read_dta(here::here("data/fac_covariates.dta")) %>% select(facid, efac_pub_intl), by = "facid") %>% 
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(efac_pub_intl ~ reservation_fac + fac_associate_professor + fac_professor + fac_yearsinhighed, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
+
+lm_pub3 <-
+  df_mechanism %>% 
+  left_join(read_dta(here::here("data/fac_covariates.dta")) %>% select(facid, efac_pub_intl), by = "facid") %>% 
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(efac_pub_intl ~ reservation_fac + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
+
+lm_pub4 <-
+  df_mechanism %>% 
+  left_join(read_dta(here::here("data/fac_covariates.dta")) %>% select(facid, efac_pub_intl), by = "facid") %>% 
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(efac_pub_intl ~ reservation_fac + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
+
+texreg(list(lm_pub1, lm_pub2, lm_pub3, lm_pub4), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, dcolumn = TRUE, booktabs = TRUE, float.pos = "H", caption = "", digits = 2, custom.model.names = c("I", "II", "III", "IV"), custom.coef.names = c("Reservation faculty", "Associate professor", "Professor", "Experience in years", "Highest degree is PhD", "Highest degree is PhD in progress", "Degree college elite", "Female"))
+```
+
+```{=latex}
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{l D{.}{.}{5.5} D{.}{.}{5.5} D{.}{.}{5.5} D{.}{.}{5.5}}
+\toprule
+ & \multicolumn{1}{c}{I} & \multicolumn{1}{c}{II} & \multicolumn{1}{c}{III} & \multicolumn{1}{c}{IV} \\
+\midrule
+Reservation faculty               & -1.51^{***} & -1.34^{***} & -1.04^{**} & -1.04^{**} \\
+                                  & (0.53)      & (0.50)      & (0.49)     & (0.50)     \\
+Associate professor               &             & 3.98^{***}  & 3.35^{***} & 3.38^{***} \\
+                                  &             & (0.79)      & (0.80)     & (0.80)     \\
+Professor                         &             & 6.39^{***}  & 5.37^{***} & 5.28^{***} \\
+                                  &             & (1.70)      & (2.00)     & (1.99)     \\
+Experience in years               &             & -0.07       & -0.09^{*}  & -0.09^{*}  \\
+                                  &             & (0.05)      & (0.05)     & (0.05)     \\
+Highest degree is PhD             &             &             & 1.93^{*}   & 1.98^{*}   \\
+                                  &             &             & (1.17)     & (1.17)     \\
+Highest degree is PhD in progress &             &             & 1.49^{**}  & 1.56^{**}  \\
+                                  &             &             & (0.66)     & (0.65)     \\
+Degree college elite              &             &             & 0.14       & 0.19       \\
+                                  &             &             & (0.68)     & (0.68)     \\
+Female                            &             &             &            & -0.54      \\
+                                  &             &             &            & (0.45)     \\
+\midrule
+Num. obs.                         & 36093       & 36093      & 36093      & 36093      \\
+N Clusters                        & 477         & 477        & 477        & 477        \\
+\midrule
+Mean value                        & 3.81        & 3.81       & 3.81       & 3.81       \\
+\bottomrule
+\multicolumn{5}{l}{\scriptsize{$^{***}p<0.01$; $^{**}p<0.05$; $^{*}p<0.1$}}
+\end{tabular}
+\caption{}
+\label{table:coefficients}
+\end{center}
+\end{table}
+```
+
+
+Notes:
+
+1. The dependent variable is the total number of international journal publications for faculty.
+2. The model includes course and student fixed effects.
+3. Standard errors are clustered at faculty level.
+
+
+
+\newpage
+
+## Table 10: Regressions for Proportion of Time Spent on Research
+
+
+```{r, results='asis', eval=F}
+lm_pub1 <-
+  df_mechanism %>% 
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(fac_prop_research ~ reservation_fac, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
+
+lm_pub2 <-
+  df_mechanism %>% 
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(fac_prop_research ~ reservation_fac + fac_associate_professor + fac_professor + fac_yearsinhighed, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
+
+lm_pub3 <-
+  df_mechanism %>% 
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(fac_prop_research ~ reservation_fac + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
+
+lm_pub4 <-
+  df_mechanism %>% 
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(fac_prop_research ~ reservation_fac + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata", clusters = facid)
+
+texreg(list(lm_pub1, lm_pub2, lm_pub3, lm_pub4), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, dcolumn = TRUE, booktabs = TRUE, float.pos = "H", caption = "", digits = 2, custom.model.names = c("I", "II", "III", "IV"), custom.coef.names = c("Reservation faculty", "Associate professor", "Professor", "Experience in years", "Highest degree is PhD", "Highest degree is PhD in progress", "Degree college elite", "Female"))
+```
+
+```{=latex}
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{l D{.}{.}{5.3} D{.}{.}{5.4} D{.}{.}{5.5} D{.}{.}{5.5}}
+\toprule
+ & \multicolumn{1}{c}{I} & \multicolumn{1}{c}{II} & \multicolumn{1}{c}{III} & \multicolumn{1}{c}{IV} \\
+\midrule
+Reservation faculty               & -0.13  & -0.16     & -0.07      & -0.07      \\
+                                  & (0.22) & (0.22)    & (0.19)     & (0.19)     \\
+Associate professor               &        & 0.55^{**} & 0.52^{**}  & 0.52^{**}  \\
+                                  &        & (0.23)    & (0.25)     & (0.25)     \\
+Professor                         &        & -0.37     & -0.34      & -0.31      \\
+                                  &        & (0.34)    & (0.37)     & (0.37)     \\
+Experience in years               &        & 0.00      & -0.02      & -0.02      \\
+                                  &        & (0.02)    & (0.02)     & (0.02)     \\
+Highest degree is PhD             &        &           & 0.37       & 0.34       \\
+                                  &        &           & (0.35)     & (0.35)     \\
+Highest degree is PhD in progress &        &           & 0.95^{***} & 0.93^{***} \\
+                                  &        &           & (0.27)     & (0.28)     \\
+Degree college elite              &        &           & 0.28       & 0.27       \\
+                                  &        &           & (0.24)     & (0.24)     \\
+Female                            &        &           &            & 0.16       \\
+                                  &        &           &            & (0.20)     \\
+\midrule
+Num. obs.                         & 37632  & 37624     & 37624      & 37624      \\
+N Clusters                        & 493    & 492       & 492        & 492        \\
+\midrule
+Mean value                        & 2.12   & 2.12       & 2.12       & 2.12       \\
+\bottomrule
+\multicolumn{5}{l}{\scriptsize{$^{***}p<0.01$; $^{**}p<0.05$; $^{*}p<0.1$}}
+\end{tabular}
+\caption{}
+\label{table:coefficients}
+\end{center}
+\end{table}
+```
+
+
+Notes:
+
+1. The dependent variable is the proportion of weekly research time (units of 10% of working time per week) for faculty. We construct a measure of faculty's time spent on research by dividing their reported research hours on the sum of hours from all the categories of work.
+2. The model includes course and student fixed effects.
+3. Standard errors are clustered at faculty level.
+
+
+\newpage
+
 # Appendix Tables
 
-## Table A1
+## Table A1: Comparing Analysis Sample with the Representative National Sample for India
 
 Faculty:
 
@@ -835,8 +935,12 @@ facdata_all %>%
   mutate(
     analysis_sample = as.integer(analysis_sample) - 1L,
   ) %>% 
-  compareGroups(analysis_sample ~ ., data = .) %>% 
-  createTable(show.all = F)
+  compareGroups(analysis_sample ~ ., data = .) %>%
+  createTable(show.all = F, show.p.overall = F)
+  # group_by(analysis_sample) %>% 
+  # summarise_all(~ mean(., na.rm = T)) %>% 
+  # pivot_longer(cols = -analysis_sample) %>% 
+  # pivot_wider(names_from = analysis_sample, values_from = value) 
 ```
 
 
@@ -853,23 +957,24 @@ df_stu %>%
     father_college = if_else(is.na(father_ed_ind), NA_integer_, father_college),
     mother_college = if_else(mother_ed_ind > 3 & !is.na(mother_ed_ind), 1L, 0L),
     mother_college = if_else(is.na(mother_ed_ind), NA_integer_, mother_college),
-    ses = ses %>% as.integer(),
+    #ses = ses %>% as.integer(),
   ) %>%
-  select(reservation, female, age, ses, father_college, mother_college) %>% 
+  select(reservation, female, age, father_college, mother_college) %>% 
   bind_rows(
-    df_grades %>% distinct(stdid, .keep_all = T) %>% select(reservation = reservation_stu, female, age, ses, father_college, mother_college), .id = "analysis_sample"
+    df_grades %>% distinct(stdid, .keep_all = T) %>% select(reservation = reservation_stu, female, age, father_college, mother_college), .id = "analysis_sample"
   ) %>% 
   mutate(
     analysis_sample = as.integer(analysis_sample) - 1L,
     female = female %>% as.integer()
   ) %>% 
   compareGroups(analysis_sample ~ ., data = .) %>% 
-  createTable(show.all = F)
+  createTable(show.all = F, show.p.overall = F)
 ```
 
 
+Notes:
 
-
+1. Means reported with standard deviations in parentheses.
 
 
 

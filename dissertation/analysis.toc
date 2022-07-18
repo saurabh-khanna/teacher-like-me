@@ -4,8 +4,10 @@
 \contentsline {subsection}{Table 3: Regressions for Quality of Instruction by Reservation Faculty with Reservation Student}{4}{section*.7}%
 \contentsline {subsection}{Table 4: Regressions for Quality of Instruction, Teacher-Like-Me Specifications}{5}{section*.9}%
 \contentsline {subsection}{Table 5: Regressions for Quality of Instruction by Reservation Faculty for Detailed Student Categories}{6}{section*.11}%
-\contentsline {subsection}{Table 6a: Regressions for Weekly Hours on Various Teaching-Related Activities}{7}{section*.13}%
-\contentsline {subsection}{Table 6b: Regressions for TPI Measures on Use of Teaching Practices}{8}{section*.15}%
-\contentsline {subsection}{Table 8: Regressions for Number of Publications per Year}{9}{section*.17}%
-\contentsline {section}{Appendix Tables}{10}{section*.19}%
-\contentsline {subsection}{Table A1}{10}{section*.20}%
+\contentsline {subsection}{Table 6: Regressions for Weekly Hours on Various Teaching-Related Activities}{7}{section*.13}%
+\contentsline {subsection}{Table 7: Regressions for TPI Measures on Use of Teaching Practices}{8}{section*.15}%
+\contentsline {subsection}{Table 8: Regressions for Total Number of Publications per Year}{9}{section*.17}%
+\contentsline {subsection}{Table 9: Regressions for Number of International Publications per Year}{10}{section*.19}%
+\contentsline {subsection}{Table 10: Regressions for Proportion of Time Spent on Research}{11}{section*.21}%
+\contentsline {section}{Appendix Tables}{12}{section*.23}%
+\contentsline {subsection}{Table A1: Comparing Analysis Sample with the Representative National Sample for India}{12}{section*.24}%
