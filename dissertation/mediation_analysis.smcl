@@ -1,0 +1,762 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/Users/saurabh/Everything/GitHub/teacher-like-me/dissertation/mediation_analysis.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}22 Oct 2022, 06:35:29
+{txt}
+{com}. 
+. use "/Users/saurabh/Everything/GitHub/teacher-like-me/data/mediation_analysis.dta", clear
+{txt}
+{com}. 
+. **********************************
+. ** Weekly time spent by faculty **
+. **********************************
+. 
+. * weekly hours advising students
+. 
+. medeff (regress weekly_hours_advising_students reservation_fac fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female) (regress course_rank reservation_fac weekly_hours_advising_students fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female), treat(reservation_fac) mediate(weekly_hours_advising_students) sims(1000) seed(1)
+Using 0 and 1 as treatment values
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,433
+{txt}{hline 13}{c +}{hline 34}   F(8, 37424)     = {res}   187.01
+{txt}       Model {c |} {res} 11329.3252         8  1416.16565   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 283396.276    37,424  7.57258112   {txt}R-squared       ={res}    0.0384
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0382
+{txt}       Total {c |} {res} 294725.601    37,432  7.87362687   {txt}Root MSE        =   {res} 2.7518
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}weekly_hours_advising_students{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2}-.7944268{col 44}{space 2} .0308304{col 55}{space 1}  -25.77{col 64}{space 3}0.000{col 72}{space 4}-.8548552{col 85}{space 3}-.7339984
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2} .1563698{col 44}{space 2} .0420798{col 55}{space 1}    3.72{col 64}{space 3}0.000{col 72}{space 4} .0738922{col 85}{space 3} .2388474
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2} 1.050061{col 44}{space 2} .0635637{col 55}{space 1}   16.52{col 64}{space 3}0.000{col 72}{space 4} .9254739{col 85}{space 3} 1.174647
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2} .0091437{col 44}{space 2} .0028091{col 55}{space 1}    3.26{col 64}{space 3}0.001{col 72}{space 4} .0036379{col 85}{space 3} .0146496
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2}-.9599532{col 44}{space 2} .0464232{col 55}{space 1}  -20.68{col 64}{space 3}0.000{col 72}{space 4}-1.050944{col 85}{space 3}-.8689624
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2}-.3768085{col 44}{space 2} .0415287{col 55}{space 1}   -9.07{col 64}{space 3}0.000{col 72}{space 4}-.4582058{col 85}{space 3}-.2954112
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2} .4132032{col 44}{space 2}  .035736{col 55}{space 1}   11.56{col 64}{space 3}0.000{col 72}{space 4} .3431596{col 85}{space 3} .4832468
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2}-.6311432{col 44}{space 2} .0303543{col 55}{space 1}  -20.79{col 64}{space 3}0.000{col 72}{space 4}-.6906385{col 85}{space 3}-.5716479
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 3.651564{col 44}{space 2} .0334932{col 55}{space 1}  109.02{col 64}{space 3}0.000{col 72}{space 4} 3.585917{col 85}{space 3} 3.717212
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,433
+{txt}{hline 13}{c +}{hline 34}   F(9, 37423)     = {res}     5.26
+{txt}       Model {c |} {res} 37122.7168         9  4124.74631   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res}   29328788    37,423  783.710231   {txt}R-squared       ={res}    0.0013
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0010
+{txt}       Total {c |} {res} 29365910.7    37,432  784.513537   {txt}Root MSE        =   {res} 27.995
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   course_rank{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2} 1.396046{col 44}{space 2} .3164124{col 55}{space 1}    4.41{col 64}{space 3}0.000{col 72}{space 4} .7758692{col 85}{space 3} 2.016223
+{txt}weekly_hours_advising_students {c |}{col 32}{res}{space 2} .0488348{col 44}{space 2} .0525873{col 55}{space 1}    0.93{col 64}{space 3}0.353{col 72}{space 4}-.0542377{col 85}{space 3} .1519073
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2} .3084115{col 44}{space 2} .4281635{col 55}{space 1}    0.72{col 64}{space 3}0.471{col 72}{space 4}-.5308006{col 85}{space 3} 1.147624
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2} 2.052791{col 44}{space 2} .6489973{col 55}{space 1}    3.16{col 64}{space 3}0.002{col 72}{space 4} .7807383{col 85}{space 3} 3.324843
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2} .0069489{col 44}{space 2} .0285813{col 55}{space 1}    0.24{col 64}{space 3}0.808{col 72}{space 4}-.0490712{col 85}{space 3} .0629691
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2} -1.08322{col 44}{space 2} .4749612{col 55}{space 1}   -2.28{col 64}{space 3}0.023{col 72}{space 4}-2.014157{col 85}{space 3}-.1522833
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2} .5425405{col 44}{space 2} .4229422{col 55}{space 1}    1.28{col 64}{space 3}0.200{col 72}{space 4}-.2864378{col 85}{space 3} 1.371519
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2} .1381931{col 44}{space 2} .3641972{col 55}{space 1}    0.38{col 64}{space 3}0.704{col 72}{space 4}-.5756433{col 85}{space 3} .8520295
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2} .7551141{col 44}{space 2}  .310578{col 55}{space 1}    2.43{col 64}{space 3}0.015{col 72}{space 4} .1463728{col 85}{space 3} 1.363855
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 50.47748{col 44}{space 2} .3911162{col 55}{space 1}  129.06{col 64}{space 3}0.000{col 72}{space 4} 49.71088{col 85}{space 3} 51.24407
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}(36,433 missing values generated)
+(36,433 missing values generated)
+(36,433 missing values generated)
+{hline 31}{c TT}{hline 52}
+        Effect                 {c |}  Mean           [95% Conf. Interval]
+{hline 31}{c +}{hline 52}
+{res}        ACME                   {c |} -.0386767      -.115345      .0423444
+        Direct Effect          {c |}  1.388565      .8046101      2.032679
+        Total Effect           {c |}  1.349889      .7407022      1.989688
+        % of Tot Eff mediated  {c |} -.0287442      -.052217     -.0194386
+{txt}{hline 31}{c BT}{hline 52}
+
+{com}. 
+. 
+. * weekly hours on course related work
+. 
+. medeff (regress weekly_hours_course reservation_fac fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female) (regress course_rank reservation_fac weekly_hours_course fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female), treat(reservation_fac) mediate(weekly_hours_course) sims(1000) seed(1)
+Using 0 and 1 as treatment values
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,535
+{txt}{hline 13}{c +}{hline 34}   F(8, 37526)     = {res}   202.42
+{txt}       Model {c |} {res} 21195.6774         8  2649.45967   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 491184.939    37,526  13.0891899   {txt}R-squared       ={res}    0.0414
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0412
+{txt}       Total {c |} {res} 512380.616    37,534  13.6511061   {txt}Root MSE        =   {res} 3.6179
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}           weekly_hours_course{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2} .6101777{col 44}{space 2} .0404902{col 55}{space 1}   15.07{col 64}{space 3}0.000{col 72}{space 4} .5308158{col 85}{space 3} .6895395
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2}  -.28115{col 44}{space 2} .0553146{col 55}{space 1}   -5.08{col 64}{space 3}0.000{col 72}{space 4} -.389568{col 85}{space 3}-.1727319
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2} 1.413189{col 44}{space 2} .0835588{col 55}{space 1}   16.91{col 64}{space 3}0.000{col 72}{space 4} 1.249411{col 85}{space 3} 1.576967
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2}-.0168621{col 44}{space 2}  .003692{col 55}{space 1}   -4.57{col 64}{space 3}0.000{col 72}{space 4}-.0240985{col 85}{space 3}-.0096257
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2} 1.189902{col 44}{space 2} .0610015{col 55}{space 1}   19.51{col 64}{space 3}0.000{col 72}{space 4} 1.070337{col 85}{space 3} 1.309466
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2} .1252336{col 44}{space 2} .0545642{col 55}{space 1}    2.30{col 64}{space 3}0.022{col 72}{space 4} .0182863{col 85}{space 3} .2321809
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2}-.5680749{col 44}{space 2} .0469808{col 55}{space 1}  -12.09{col 64}{space 3}0.000{col 72}{space 4}-.6601586{col 85}{space 3}-.4759912
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2} .1059723{col 44}{space 2} .0398818{col 55}{space 1}    2.66{col 64}{space 3}0.008{col 72}{space 4} .0278029{col 85}{space 3} .1841416
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 2.526729{col 44}{space 2} .0439617{col 55}{space 1}   57.48{col 64}{space 3}0.000{col 72}{space 4} 2.440562{col 85}{space 3} 2.612895
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,535
+{txt}{hline 13}{c +}{hline 34}   F(9, 37525)     = {res}     5.23
+{txt}       Model {c |} {res}  36895.998         9  4099.55533   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 29423853.3    37,525  784.113347   {txt}R-squared       ={res}    0.0013
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0010
+{txt}       Total {c |} {res} 29460749.3    37,534  784.908332   {txt}Root MSE        =   {res} 28.002
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   course_rank{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2} 1.317586{col 44}{space 2}  .314335{col 55}{space 1}    4.19{col 64}{space 3}0.000{col 72}{space 4} .7014806{col 85}{space 3} 1.933691
+{txt}{space 11}weekly_hours_course {c |}{col 32}{res}{space 2} .0416849{col 44}{space 2} .0399546{col 55}{space 1}    1.04{col 64}{space 3}0.297{col 72}{space 4}-.0366272{col 85}{space 3}  .119997
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2} .3202925{col 44}{space 2} .4282743{col 55}{space 1}    0.75{col 64}{space 3}0.455{col 72}{space 4}-.5191368{col 85}{space 3} 1.159722
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2} 2.035376{col 44}{space 2} .6491935{col 55}{space 1}    3.14{col 64}{space 3}0.002{col 72}{space 4} .7629389{col 85}{space 3} 3.307813
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2} .0088054{col 44}{space 2} .0285835{col 55}{space 1}    0.31{col 64}{space 3}0.758{col 72}{space 4}-.0472191{col 85}{space 3} .0648298
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2}-1.194777{col 44}{space 2} .4745304{col 55}{space 1}   -2.52{col 64}{space 3}0.012{col 72}{space 4}-2.124869{col 85}{space 3}-.2646844
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2} .5041612{col 44}{space 2} .4223488{col 55}{space 1}    1.19{col 64}{space 3}0.233{col 72}{space 4}-.3236539{col 85}{space 3} 1.331976
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2} .1786104{col 44}{space 2} .3643327{col 55}{space 1}    0.49{col 64}{space 3}0.624{col 72}{space 4}-.5354915{col 85}{space 3} .8927123
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2} .7089681{col 44}{space 2} .3087082{col 55}{space 1}    2.30{col 64}{space 3}0.022{col 72}{space 4} .1038917{col 85}{space 3} 1.314044
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 50.56969{col 44}{space 2} .3549179{col 55}{space 1}  142.48{col 64}{space 3}0.000{col 72}{space 4} 49.87404{col 85}{space 3} 51.26534
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}(36,535 missing values generated)
+(36,535 missing values generated)
+(36,535 missing values generated)
+{hline 31}{c TT}{hline 52}
+        Effect                 {c |}  Mean           [95% Conf. Interval]
+{hline 31}{c +}{hline 52}
+{res}        ACME                   {c |}  .0255146     -.0233491       .070494
+        Direct Effect          {c |}  1.310154      .7300327      1.950039
+        Total Effect           {c |}  1.335669      .7505873      1.975852
+        % of Tot Eff mediated  {c |}  .0190996      .0129134      .0340071
+{txt}{hline 31}{c BT}{hline 52}
+
+{com}. 
+. 
+. 
+. * weekly hours lesson planning
+. 
+. medeff (regress weekly_hours_lessons_planning reservation_fac fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female) (regress course_rank reservation_fac weekly_hours_lessons_planning fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female), treat(reservation_fac) mediate(weekly_hours_lessons_planning) sims(1000) seed(1)
+Using 0 and 1 as treatment values
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,535
+{txt}{hline 13}{c +}{hline 34}   F(8, 37526)     = {res}   191.85
+{txt}       Model {c |} {res} 41351.6234         8  5168.95292   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 1011052.35    37,526  26.9427156   {txt}R-squared       ={res}    0.0393
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0391
+{txt}       Total {c |} {res} 1052403.97    37,534  28.0386841   {txt}Root MSE        =   {res} 5.1906
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1} weekly_hours_lessons_planning{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2} .1525503{col 44}{space 2} .0580917{col 55}{space 1}    2.63{col 64}{space 3}0.009{col 72}{space 4}  .038689{col 85}{space 3} .2664115
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2}-1.143577{col 44}{space 2} .0793604{col 55}{space 1}  -14.41{col 64}{space 3}0.000{col 72}{space 4}-1.299125{col 85}{space 3} -.988028
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2}-2.805886{col 44}{space 2} .1198827{col 55}{space 1}  -23.41{col 64}{space 3}0.000{col 72}{space 4}-3.040859{col 85}{space 3}-2.570913
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2} .0140577{col 44}{space 2}  .005297{col 55}{space 1}    2.65{col 64}{space 3}0.008{col 72}{space 4} .0036755{col 85}{space 3} .0244398
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2} 1.706565{col 44}{space 2} .0875195{col 55}{space 1}   19.50{col 64}{space 3}0.000{col 72}{space 4} 1.535025{col 85}{space 3} 1.878106
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2}-.9226071{col 44}{space 2} .0782838{col 55}{space 1}  -11.79{col 64}{space 3}0.000{col 72}{space 4}-1.076046{col 85}{space 3}-.7691687
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2} -.285996{col 44}{space 2} .0674039{col 55}{space 1}   -4.24{col 64}{space 3}0.000{col 72}{space 4}-.4181094{col 85}{space 3}-.1538825
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2}-1.399559{col 44}{space 2} .0572188{col 55}{space 1}  -24.46{col 64}{space 3}0.000{col 72}{space 4} -1.51171{col 85}{space 3}-1.287409
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 7.238972{col 44}{space 2} .0630723{col 55}{space 1}  114.77{col 64}{space 3}0.000{col 72}{space 4} 7.115349{col 85}{space 3} 7.362595
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,535
+{txt}{hline 13}{c +}{hline 34}   F(9, 37525)     = {res}     5.27
+{txt}       Model {c |} {res} 37177.8512         9  4130.87236   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 29423571.5    37,525  784.105836   {txt}R-squared       ={res}    0.0013
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0010
+{txt}       Total {c |} {res} 29460749.3    37,534  784.908332   {txt}Root MSE        =   {res} 28.002
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   course_rank{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2} 1.337909{col 44}{space 2} .3134155{col 55}{space 1}    4.27{col 64}{space 3}0.000{col 72}{space 4} .7236061{col 85}{space 3} 1.952212
+{txt}{space 1}weekly_hours_lessons_planning {c |}{col 32}{res}{space 2} .0335103{col 44}{space 2} .0278484{col 55}{space 1}    1.20{col 64}{space 3}0.229{col 72}{space 4}-.0210734{col 85}{space 3}  .088094
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2} .3468944{col 44}{space 2} .4293077{col 55}{space 1}    0.81{col 64}{space 3}0.419{col 72}{space 4}-.4945605{col 85}{space 3} 1.188349
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2} 2.188311{col 44}{space 2} .6514337{col 55}{space 1}    3.36{col 64}{space 3}0.001{col 72}{space 4} .9114828{col 85}{space 3} 3.465138
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2} .0076314{col 44}{space 2} .0285781{col 55}{space 1}    0.27{col 64}{space 3}0.789{col 72}{space 4}-.0483825{col 85}{space 3} .0636453
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2}-1.202364{col 44}{space 2} .4745265{col 55}{space 1}   -2.53{col 64}{space 3}0.011{col 72}{space 4}-2.132448{col 85}{space 3}-.2722787
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2} .5402984{col 44}{space 2}  .423098{col 55}{space 1}    1.28{col 64}{space 3}0.202{col 72}{space 4}-.2889851{col 85}{space 3} 1.369582
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2} .1645141{col 44}{space 2} .3637104{col 55}{space 1}    0.45{col 64}{space 3}0.651{col 72}{space 4}-.5483683{col 85}{space 3} .8773964
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2} .7602852{col 44}{space 2} .3111286{col 55}{space 1}    2.44{col 64}{space 3}0.015{col 72}{space 4} .1504647{col 85}{space 3} 1.370106
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 50.43243{col 44}{space 2}  .395492{col 55}{space 1}  127.52{col 64}{space 3}0.000{col 72}{space 4} 49.65726{col 85}{space 3} 51.20761
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}(36,535 missing values generated)
+(36,535 missing values generated)
+(36,535 missing values generated)
+{hline 31}{c TT}{hline 52}
+        Effect                 {c |}  Mean           [95% Conf. Interval]
+{hline 31}{c +}{hline 52}
+{res}        ACME                   {c |}  .0051414     -.0032245      .0158454
+        Direct Effect          {c |}  1.330499      .7520747      1.968512
+        Total Effect           {c |}   1.33564      .7552457      1.970592
+        % of Tot Eff mediated  {c |}  .0038438      .0026091      .0068076
+{txt}{hline 31}{c BT}{hline 52}
+
+{com}. 
+. 
+. 
+. * weekly hours teaching class
+. 
+. medeff (regress weekly_hours_teaching_class reservation_fac fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female) (regress course_rank reservation_fac weekly_hours_teaching_class fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female), treat(reservation_fac) mediate(weekly_hours_teaching_class) sims(1000) seed(1)
+Using 0 and 1 as treatment values
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,535
+{txt}{hline 13}{c +}{hline 34}   F(8, 37526)     = {res}   177.07
+{txt}       Model {c |} {res}  74801.819         8  9350.22738   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 1981602.77    37,526  52.8061283   {txt}R-squared       ={res}    0.0364
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0362
+{txt}       Total {c |} {res} 2056404.59    37,534  54.7877814   {txt}Root MSE        =   {res} 7.2668
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}   weekly_hours_teaching_class{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2}-.8418138{col 44}{space 2} .0813271{col 55}{space 1}  -10.35{col 64}{space 3}0.000{col 72}{space 4}-1.001217{col 85}{space 3}-.6824104
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2}-.3250549{col 44}{space 2} .1111029{col 55}{space 1}   -2.93{col 64}{space 3}0.003{col 72}{space 4}-.5428195{col 85}{space 3}-.1072902
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2}-2.213234{col 44}{space 2} .1678333{col 55}{space 1}  -13.19{col 64}{space 3}0.000{col 72}{space 4}-2.542192{col 85}{space 3}-1.884277
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2} .1083408{col 44}{space 2} .0074156{col 55}{space 1}   14.61{col 64}{space 3}0.000{col 72}{space 4}  .093806{col 85}{space 3} .1228756
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2} 2.434789{col 44}{space 2} .1225254{col 55}{space 1}   19.87{col 64}{space 3}0.000{col 72}{space 4} 2.194636{col 85}{space 3} 2.674942
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2} 1.603714{col 44}{space 2} .1095957{col 55}{space 1}   14.63{col 64}{space 3}0.000{col 72}{space 4} 1.388903{col 85}{space 3} 1.818524
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2}-.4263655{col 44}{space 2}  .094364{col 55}{space 1}   -4.52{col 64}{space 3}0.000{col 72}{space 4}-.6113215{col 85}{space 3}-.2414094
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2}-.8442682{col 44}{space 2} .0801051{col 55}{space 1}  -10.54{col 64}{space 3}0.000{col 72}{space 4}-1.001276{col 85}{space 3}-.6872601
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 11.27697{col 44}{space 2} .0882999{col 55}{space 1}  127.71{col 64}{space 3}0.000{col 72}{space 4}  11.1039{col 85}{space 3} 11.45004
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,535
+{txt}{hline 13}{c +}{hline 34}   F(9, 37525)     = {res}     5.12
+{txt}       Model {c |} {res} 36152.0208         9  4016.89119   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 29424597.3    37,525  784.133173   {txt}R-squared       ={res}    0.0012
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0010
+{txt}       Total {c |} {res} 29460749.3    37,534  784.908332   {txt}Root MSE        =   {res} 28.002
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   course_rank{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2} 1.336763{col 44}{space 2} .3138392{col 55}{space 1}    4.26{col 64}{space 3}0.000{col 72}{space 4} .7216293{col 85}{space 3} 1.951896
+{txt}{space 3}weekly_hours_teaching_class {c |}{col 32}{res}{space 2}-.0074343{col 44}{space 2} .0198924{col 55}{space 1}   -0.37{col 64}{space 3}0.709{col 72}{space 4}-.0464239{col 85}{space 3} .0315553
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2} .3061562{col 44}{space 2} .4281812{col 55}{space 1}    0.72{col 64}{space 3}0.475{col 72}{space 4}-.5330906{col 85}{space 3} 1.145403
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2} 2.077831{col 44}{space 2} .6482384{col 55}{space 1}    3.21{col 64}{space 3}0.001{col 72}{space 4} .8072658{col 85}{space 3} 3.348396
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2} .0089079{col 44}{space 2} .0286571{col 55}{space 1}    0.31{col 64}{space 3}0.756{col 72}{space 4}-.0472607{col 85}{space 3} .0650766
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2}-1.127075{col 44}{space 2} .4746265{col 55}{space 1}   -2.37{col 64}{space 3}0.018{col 72}{space 4}-2.057356{col 85}{space 3}-.1967942
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2}  .521304{col 44}{space 2} .4235277{col 55}{space 1}    1.23{col 64}{space 3}0.218{col 72}{space 4}-.3088217{col 85}{space 3}  1.35143
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2} .1517605{col 44}{space 2} .3637285{col 55}{space 1}    0.42{col 64}{space 3}0.677{col 72}{space 4}-.5611571{col 85}{space 3} .8646782
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2}  .707109{col 44}{space 2} .3091396{col 55}{space 1}    2.29{col 64}{space 3}0.022{col 72}{space 4}  .101187{col 85}{space 3} 1.313031
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 50.75885{col 44}{space 2} .4075535{col 55}{space 1}  124.55{col 64}{space 3}0.000{col 72}{space 4} 49.96003{col 85}{space 3} 51.55767
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}(36,535 missing values generated)
+(36,535 missing values generated)
+(36,535 missing values generated)
+{hline 31}{c TT}{hline 52}
+        Effect                 {c |}  Mean           [95% Conf. Interval]
+{hline 31}{c +}{hline 52}
+{res}        ACME                   {c |}  .0062335     -.0249612      .0368219
+        Direct Effect          {c |}  1.329343      .7501364      1.968219
+        Total Effect           {c |}  1.335576      .7489946       1.96959
+        % of Tot Eff mediated  {c |}  .0046765      .0031649      .0083226
+{txt}{hline 31}{c BT}{hline 52}
+
+{com}. 
+. 
+. * weekly hours tutoring
+. 
+. medeff (regress weekly_hours_tutoring reservation_fac fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female) (regress course_rank reservation_fac weekly_hours_tutoring fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female), treat(reservation_fac) mediate(weekly_hours_tutoring) sims(1000) seed(1)
+Using 0 and 1 as treatment values
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,535
+{txt}{hline 13}{c +}{hline 34}   F(8, 37526)     = {res}   279.94
+{txt}       Model {c |} {res} 12451.9112         8   1556.4889   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 208648.531    37,526  5.56010581   {txt}R-squared       ={res}    0.0563
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0561
+{txt}       Total {c |} {res} 221100.442    37,534  5.89067091   {txt}Root MSE        =   {res}  2.358
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}         weekly_hours_tutoring{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2}-.1432484{col 44}{space 2} .0263897{col 55}{space 1}   -5.43{col 64}{space 3}0.000{col 72}{space 4} -.194973{col 85}{space 3}-.0915238
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2}-.1527583{col 44}{space 2} .0360516{col 55}{space 1}   -4.24{col 64}{space 3}0.000{col 72}{space 4}-.2234204{col 85}{space 3}-.0820961
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2} .2967911{col 44}{space 2}   .05446{col 55}{space 1}    5.45{col 64}{space 3}0.000{col 72}{space 4}  .190048{col 85}{space 3} .4035341
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2} .0332947{col 44}{space 2} .0024063{col 55}{space 1}   13.84{col 64}{space 3}0.000{col 72}{space 4} .0285783{col 85}{space 3} .0380111
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2} .9636262{col 44}{space 2} .0397581{col 55}{space 1}   24.24{col 64}{space 3}0.000{col 72}{space 4} .8856993{col 85}{space 3} 1.041553
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2} .2547017{col 44}{space 2} .0355625{col 55}{space 1}    7.16{col 64}{space 3}0.000{col 72}{space 4} .1849981{col 85}{space 3} .3244052
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2}-.6381161{col 44}{space 2}   .03062{col 55}{space 1}  -20.84{col 64}{space 3}0.000{col 72}{space 4}-.6981322{col 85}{space 3}   -.5781
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2} .1509758{col 44}{space 2} .0259932{col 55}{space 1}    5.81{col 64}{space 3}0.000{col 72}{space 4} .1000284{col 85}{space 3} .2019231
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 2.358641{col 44}{space 2} .0286523{col 55}{space 1}   82.32{col 64}{space 3}0.000{col 72}{space 4} 2.302482{col 85}{space 3}   2.4148
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,535
+{txt}{hline 13}{c +}{hline 34}   F(9, 37525)     = {res}     5.69
+{txt}       Model {c |} {res} 40153.7936         9  4461.53262   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 29420595.5    37,525   784.02653   {txt}R-squared       ={res}    0.0014
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0011
+{txt}       Total {c |} {res} 29460749.3    37,534  784.908332   {txt}Root MSE        =   {res}     28
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   course_rank{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2} 1.363129{col 44}{space 2} .3134938{col 55}{space 1}    4.35{col 64}{space 3}0.000{col 72}{space 4} .7486727{col 85}{space 3} 1.977586
+{txt}{space 9}weekly_hours_tutoring {c |}{col 32}{res}{space 2} .1403724{col 44}{space 2} .0612996{col 55}{space 1}    2.29{col 64}{space 3}0.022{col 72}{space 4} .0202234{col 85}{space 3} .2605213
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2} .3300158{col 44}{space 2} .4282056{col 55}{space 1}    0.77{col 64}{space 3}0.441{col 72}{space 4}-.5092789{col 85}{space 3} 1.169311
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2} 2.052623{col 44}{space 2} .6469535{col 55}{space 1}    3.17{col 64}{space 3}0.002{col 72}{space 4} .7845769{col 85}{space 3}  3.32067
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2} .0034288{col 44}{space 2} .0286468{col 55}{space 1}    0.12{col 64}{space 3}0.905{col 72}{space 4}-.0527196{col 85}{space 3} .0595773
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2}-1.280442{col 44}{space 2} .4757977{col 55}{space 1}   -2.69{col 64}{space 3}0.007{col 72}{space 4}-2.213019{col 85}{space 3}-.3478661
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2} .4736285{col 44}{space 2} .4225843{col 55}{space 1}    1.12{col 64}{space 3}0.262{col 72}{space 4}-.3546482{col 85}{space 3} 1.301905
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2} .2445041{col 44}{space 2} .3657028{col 55}{space 1}    0.67{col 64}{space 3}0.504{col 72}{space 4}-.4722834{col 85}{space 3} .9612916
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2} .6921927{col 44}{space 2} .3088008{col 55}{space 1}    2.24{col 64}{space 3}0.025{col 72}{space 4} .0869348{col 85}{space 3} 1.297451
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 50.34393{col 44}{space 2} .3696844{col 55}{space 1}  136.18{col 64}{space 3}0.000{col 72}{space 4} 49.61933{col 85}{space 3} 51.06852
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}(36,535 missing values generated)
+(36,535 missing values generated)
+(36,535 missing values generated)
+{hline 31}{c TT}{hline 52}
+        Effect                 {c |}  Mean           [95% Conf. Interval]
+{hline 31}{c +}{hline 52}
+{res}        ACME                   {c |} -.0200408     -.0397919     -.0022057
+        Direct Effect          {c |}  1.355717      .7771484       1.99389
+        Total Effect           {c |}  1.335677      .7528362      1.975103
+        % of Tot Eff mediated  {c |} -.0149696     -.0266205     -.0101468
+{txt}{hline 31}{c BT}{hline 52}
+
+{com}. 
+. 
+. **********************************
+. ** Teaching practices inventory **
+. **********************************
+. 
+. * in class activities
+. 
+. medeff (regress tpi_in_class_activities reservation_fac fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female) (regress course_rank reservation_fac tpi_in_class_activities fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female), treat(reservation_fac) mediate(tpi_in_class_activities) sims(1000) seed(1)
+Using 0 and 1 as treatment values
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,716
+{txt}{hline 13}{c +}{hline 34}   F(8, 37707)     = {res}   209.61
+{txt}       Model {c |} {res} 11706.8318         8  1463.35397   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 263241.468    37,707  6.98123607   {txt}R-squared       ={res}    0.0426
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0424
+{txt}       Total {c |} {res}   274948.3    37,715  7.29015777   {txt}Root MSE        =   {res} 2.6422
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}       tpi_in_class_activities{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2}-.2077064{col 44}{space 2} .0295079{col 55}{space 1}   -7.04{col 64}{space 3}0.000{col 72}{space 4}-.2655427{col 85}{space 3}-.1498701
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2} .6832677{col 44}{space 2} .0403625{col 55}{space 1}   16.93{col 64}{space 3}0.000{col 72}{space 4} .6041561{col 85}{space 3} .7623792
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2} 1.495126{col 44}{space 2} .0609807{col 55}{space 1}   24.52{col 64}{space 3}0.000{col 72}{space 4} 1.375603{col 85}{space 3}  1.61465
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2}-.0173391{col 44}{space 2} .0026822{col 55}{space 1}   -6.46{col 64}{space 3}0.000{col 72}{space 4}-.0225963{col 85}{space 3}-.0120819
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2}-1.252585{col 44}{space 2} .0445052{col 55}{space 1}  -28.14{col 64}{space 3}0.000{col 72}{space 4}-1.339816{col 85}{space 3}-1.165354
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2} .0425264{col 44}{space 2} .0397947{col 55}{space 1}    1.07{col 64}{space 3}0.285{col 72}{space 4}-.0354723{col 85}{space 3}  .120525
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2} .6045187{col 44}{space 2} .0343021{col 55}{space 1}   17.62{col 64}{space 3}0.000{col 72}{space 4} .5372856{col 85}{space 3} .6717517
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2}-.6209036{col 44}{space 2} .0290958{col 55}{space 1}  -21.34{col 64}{space 3}0.000{col 72}{space 4}-.6779321{col 85}{space 3}-.5638751
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 10.31248{col 44}{space 2} .0320529{col 55}{space 1}  321.73{col 64}{space 3}0.000{col 72}{space 4} 10.24966{col 85}{space 3} 10.37531
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,716
+{txt}{hline 13}{c +}{hline 34}   F(9, 37706)     = {res}     5.10
+{txt}       Model {c |} {res} 36031.4475         9  4003.49417   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 29572718.5    37,706  784.297418   {txt}R-squared       ={res}    0.0012
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0010
+{txt}       Total {c |} {res} 29608749.9    37,715  785.065621   {txt}Root MSE        =   {res} 28.005
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   course_rank{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2} 1.339418{col 44}{space 2} .3129663{col 55}{space 1}    4.28{col 64}{space 3}0.000{col 72}{space 4} .7259952{col 85}{space 3}  1.95284
+{txt}{space 7}tpi_in_class_activities {c |}{col 32}{res}{space 2} .0034694{col 44}{space 2} .0545837{col 55}{space 1}    0.06{col 64}{space 3}0.949{col 72}{space 4}-.1035162{col 85}{space 3}  .110455
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2} .3023099{col 44}{space 2} .4294339{col 55}{space 1}    0.70{col 64}{space 3}0.481{col 72}{space 4}-.5393921{col 85}{space 3} 1.144012
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2}  2.08598{col 44}{space 2} .6514803{col 55}{space 1}    3.20{col 64}{space 3}0.001{col 72}{space 4}  .809061{col 85}{space 3} 3.362899
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2} .0085959{col 44}{space 2} .0284451{col 55}{space 1}    0.30{col 64}{space 3}0.763{col 72}{space 4}-.0471573{col 85}{space 3}  .064349
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2}-1.149064{col 44}{space 2} .4766494{col 55}{space 1}   -2.41{col 64}{space 3}0.016{col 72}{space 4} -2.08331{col 85}{space 3}-.2148186
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2} .5017759{col 44}{space 2} .4217994{col 55}{space 1}    1.19{col 64}{space 3}0.234{col 72}{space 4}-.3249622{col 85}{space 3} 1.328514
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2} .1558037{col 44}{space 2}   .36507{col 55}{space 1}    0.43{col 64}{space 3}0.670{col 72}{space 4}-.5597434{col 85}{space 3} .8713508
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2} .7148077{col 44}{space 2} .3102494{col 55}{space 1}    2.30{col 64}{space 3}0.021{col 72}{space 4} .1067106{col 85}{space 3} 1.322905
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 50.64312{col 44}{space 2} .6574727{col 55}{space 1}   77.03{col 64}{space 3}0.000{col 72}{space 4} 49.35446{col 85}{space 3} 51.93179
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}(36,716 missing values generated)
+(36,716 missing values generated)
+(36,716 missing values generated)
+{hline 31}{c TT}{hline 52}
+        Effect                 {c |}  Mean           [95% Conf. Interval]
+{hline 31}{c +}{hline 52}
+{res}        ACME                   {c |} -.0007365     -.0218008      .0203552
+        Direct Effect          {c |}  1.332018      .7544229      1.969117
+        Total Effect           {c |}  1.331282      .7483174      1.966797
+        % of Tot Eff mediated  {c |} -.0005531     -.0009843     -.0003745
+{txt}{hline 31}{c BT}{hline 52}
+
+{com}. 
+. 
+. * assignments
+. 
+. medeff (regress tpi_assignments reservation_fac fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female) (regress course_rank reservation_fac tpi_assignments fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female), treat(reservation_fac) mediate(tpi_assignments) sims(1000) seed(1)
+Using 0 and 1 as treatment values
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,716
+{txt}{hline 13}{c +}{hline 34}   F(8, 37707)     = {res}   237.67
+{txt}       Model {c |} {res} 5206.21151         8  650.776439   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 103245.914    37,707  2.73811001   {txt}R-squared       ={res}    0.0480
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0478
+{txt}       Total {c |} {res} 108452.126    37,715  2.87557008   {txt}Root MSE        =   {res} 1.6547
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}               tpi_assignments{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2} .0872244{col 44}{space 2} .0184798{col 55}{space 1}    4.72{col 64}{space 3}0.000{col 72}{space 4} .0510035{col 85}{space 3} .1234453
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2} .2358204{col 44}{space 2} .0252777{col 55}{space 1}    9.33{col 64}{space 3}0.000{col 72}{space 4} .1862754{col 85}{space 3} .2853653
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2} .1759388{col 44}{space 2} .0381902{col 55}{space 1}    4.61{col 64}{space 3}0.000{col 72}{space 4}  .101085{col 85}{space 3} .2507926
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2}  .015749{col 44}{space 2} .0016798{col 55}{space 1}    9.38{col 64}{space 3}0.000{col 72}{space 4} .0124566{col 85}{space 3} .0190414
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2} -.898832{col 44}{space 2} .0278721{col 55}{space 1}  -32.25{col 64}{space 3}0.000{col 72}{space 4}-.9534621{col 85}{space 3} -.844202
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2}-.1513469{col 44}{space 2} .0249221{col 55}{space 1}   -6.07{col 64}{space 3}0.000{col 72}{space 4}-.2001949{col 85}{space 3}-.1024989
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2} .5156037{col 44}{space 2} .0214823{col 55}{space 1}   24.00{col 64}{space 3}0.000{col 72}{space 4} .4734979{col 85}{space 3} .5577095
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2} .2178286{col 44}{space 2} .0182217{col 55}{space 1}   11.95{col 64}{space 3}0.000{col 72}{space 4} .1821136{col 85}{space 3} .2535437
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 3.432927{col 44}{space 2} .0200737{col 55}{space 1}  171.02{col 64}{space 3}0.000{col 72}{space 4} 3.393582{col 85}{space 3} 3.472272
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,716
+{txt}{hline 13}{c +}{hline 34}   F(9, 37706)     = {res}     5.12
+{txt}       Model {c |} {res} 36108.4976         9  4012.05529   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 29572641.4    37,706  784.295375   {txt}R-squared       ={res}    0.0012
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0010
+{txt}       Total {c |} {res} 29608749.9    37,715  785.065621   {txt}Root MSE        =   {res} 28.005
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   course_rank{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2} 1.341128{col 44}{space 2} .3128528{col 55}{space 1}    4.29{col 64}{space 3}0.000{col 72}{space 4} .7279282{col 85}{space 3} 1.954328
+{txt}{space 15}tpi_assignments {c |}{col 32}{res}{space 2}-.0278741{col 44}{space 2} .0871572{col 55}{space 1}   -0.32{col 64}{space 3}0.749{col 72}{space 4}-.1987046{col 85}{space 3} .1429564
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2} .3112537{col 44}{space 2} .4283042{col 55}{space 1}    0.73{col 64}{space 3}0.467{col 72}{space 4}-.5282341{col 85}{space 3} 1.150742
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2} 2.096071{col 44}{space 2} .6465296{col 55}{space 1}    3.24{col 64}{space 3}0.001{col 72}{space 4} .8288559{col 85}{space 3} 3.363287
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2} .0089747{col 44}{space 2} .0284624{col 55}{space 1}    0.32{col 64}{space 3}0.753{col 72}{space 4}-.0468124{col 85}{space 3} .0647619
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2}-1.178464{col 44}{space 2} .4781805{col 55}{space 1}   -2.46{col 64}{space 3}0.014{col 72}{space 4}-2.115711{col 85}{space 3}-.2412174
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2} .4977048{col 44}{space 2} .4219987{col 55}{space 1}    1.18{col 64}{space 3}0.238{col 72}{space 4}-.3294239{col 85}{space 3} 1.324833
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2}  .172273{col 44}{space 2}  .366342{col 55}{space 1}    0.47{col 64}{space 3}0.638{col 72}{space 4}-.5457672{col 85}{space 3} .8903132
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2} .7187254{col 44}{space 2} .3089761{col 55}{space 1}    2.33{col 64}{space 3}0.020{col 72}{space 4} .1131238{col 85}{space 3} 1.324327
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 50.77459{col 44}{space 2} .4527071{col 55}{space 1}  112.16{col 64}{space 3}0.000{col 72}{space 4} 49.88727{col 85}{space 3} 51.66191
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}(36,716 missing values generated)
+(36,716 missing values generated)
+(36,716 missing values generated)
+{hline 31}{c TT}{hline 52}
+        Effect                 {c |}  Mean           [95% Conf. Interval]
+{hline 31}{c +}{hline 52}
+{res}        ACME                   {c |} -.0024552      -.018278      .0120018
+        Direct Effect          {c |}  1.333732      .7563456        1.9706
+        Total Effect           {c |}  1.331276      .7521886       1.96196
+        % of Tot Eff mediated  {c |} -.0018428     -.0032641     -.0012514
+{txt}{hline 31}{c BT}{hline 52}
+
+{com}. 
+. 
+. * feedback and testing
+. 
+. medeff (regress tpi_feedback_testing reservation_fac fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female) (regress course_rank reservation_fac tpi_feedback_testing fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female), treat(reservation_fac) mediate(tpi_feedback_testing) sims(1000) seed(1)
+Using 0 and 1 as treatment values
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,716
+{txt}{hline 13}{c +}{hline 34}   F(8, 37707)     = {res}   456.33
+{txt}       Model {c |} {res} 22657.2573         8  2832.15716   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 234021.962    37,707  6.20632674   {txt}R-squared       ={res}    0.0883
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0881
+{txt}       Total {c |} {res}  256679.22    37,715   6.8057595   {txt}Root MSE        =   {res} 2.4913
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}          tpi_feedback_testing{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2} .8917436{col 44}{space 2} .0278221{col 55}{space 1}   32.05{col 64}{space 3}0.000{col 72}{space 4} .8372116{col 85}{space 3} .9462756
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2} .7819027{col 44}{space 2} .0380565{col 55}{space 1}   20.55{col 64}{space 3}0.000{col 72}{space 4} .7073108{col 85}{space 3} .8564945
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2} .3230819{col 44}{space 2} .0574968{col 55}{space 1}    5.62{col 64}{space 3}0.000{col 72}{space 4} .2103866{col 85}{space 3} .4357772
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2} .0257844{col 44}{space 2}  .002529{col 55}{space 1}   10.20{col 64}{space 3}0.000{col 72}{space 4} .0208276{col 85}{space 3} .0307413
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2}-1.002947{col 44}{space 2} .0419625{col 55}{space 1}  -23.90{col 64}{space 3}0.000{col 72}{space 4}-1.085194{col 85}{space 3}-.9206989
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2} .5306407{col 44}{space 2} .0375212{col 55}{space 1}   14.14{col 64}{space 3}0.000{col 72}{space 4} .4570983{col 85}{space 3} .6041832
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2} .2800973{col 44}{space 2} .0323424{col 55}{space 1}    8.66{col 64}{space 3}0.000{col 72}{space 4} .2167053{col 85}{space 3} .3434892
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2}-.0322316{col 44}{space 2} .0274335{col 55}{space 1}   -1.17{col 64}{space 3}0.240{col 72}{space 4} -.086002{col 85}{space 3} .0215388
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 7.835455{col 44}{space 2} .0302217{col 55}{space 1}  259.27{col 64}{space 3}0.000{col 72}{space 4}  7.77622{col 85}{space 3} 7.894691
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,716
+{txt}{hline 13}{c +}{hline 34}   F(9, 37706)     = {res}     5.23
+{txt}       Model {c |} {res} 36940.6465         9  4104.51628   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 29571809.3    37,706  784.273306   {txt}R-squared       ={res}    0.0012
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0010
+{txt}       Total {c |} {res} 29608749.9    37,715  785.065621   {txt}Root MSE        =   {res} 28.005
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   course_rank{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2} 1.283017{col 44}{space 2} .3169879{col 55}{space 1}    4.05{col 64}{space 3}0.000{col 72}{space 4} .6617125{col 85}{space 3} 1.904322
+{txt}{space 10}tpi_feedback_testing {c |}{col 32}{res}{space 2} .0624391{col 44}{space 2} .0578902{col 55}{space 1}    1.08{col 64}{space 3}0.281{col 72}{space 4}-.0510273{col 85}{space 3} .1759055
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2} .2558591{col 44}{space 2} .4301927{col 55}{space 1}    0.59{col 64}{space 3}0.552{col 72}{space 4}-.5873302{col 85}{space 3} 1.099048
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2} 2.070994{col 44}{space 2} .6466092{col 55}{space 1}    3.20{col 64}{space 3}0.001{col 72}{space 4} .8036228{col 85}{space 3} 3.338366
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2} .0069258{col 44}{space 2} .0284681{col 55}{space 1}    0.24{col 64}{space 3}0.808{col 72}{space 4}-.0488724{col 85}{space 3}  .062724
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2}-1.090787{col 44}{space 2} .4752729{col 55}{space 1}   -2.30{col 64}{space 3}0.022{col 72}{space 4}-2.022335{col 85}{space 3}-.1592393
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2} .4687907{col 44}{space 2} .4229037{col 55}{space 1}    1.11{col 64}{space 3}0.268{col 72}{space 4}-.3601119{col 85}{space 3} 1.297693
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2}  .140412{col 44}{space 2} .3639316{col 55}{space 1}    0.39{col 64}{space 3}0.700{col 72}{space 4}-.5729037{col 85}{space 3} .8537277
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2} .7146661{col 44}{space 2} .3083936{col 55}{space 1}    2.32{col 64}{space 3}0.020{col 72}{space 4} .1102063{col 85}{space 3} 1.319126
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 50.18966{col 44}{space 2}  .566716{col 55}{space 1}   88.56{col 64}{space 3}0.000{col 72}{space 4} 49.07888{col 85}{space 3} 51.30044
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}(36,716 missing values generated)
+(36,716 missing values generated)
+(36,716 missing values generated)
+{hline 31}{c TT}{hline 52}
+        Effect                 {c |}  Mean           [95% Conf. Interval]
+{hline 31}{c +}{hline 52}
+{res}        ACME                   {c |}  .0559316     -.0467866      .1506624
+        Direct Effect          {c |}  1.275523      .6905055      1.920808
+        Total Effect           {c |}  1.331455       .753913      1.971535
+        % of Tot Eff mediated  {c |}  .0421681      .0283702      .0741891
+{txt}{hline 31}{c BT}{hline 52}
+
+{com}. 
+. 
+. * collaboration
+. 
+. medeff (regress tpi_collaboration_among_teachers reservation_fac fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female) (regress course_rank reservation_fac tpi_collaboration_among_teachers fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female), treat(reservation_fac) mediate(tpi_collaboration_among_teachers) sims(1000) seed(1)
+Using 0 and 1 as treatment values
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,716
+{txt}{hline 13}{c +}{hline 34}   F(8, 37707)     = {res}   294.24
+{txt}       Model {c |} {res} 4909.12605         8  613.640757   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 78638.8047    37,707  2.08552271   {txt}R-squared       ={res}    0.0588
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0586
+{txt}       Total {c |} {res} 83547.9307    37,715  2.21524409   {txt}Root MSE        =   {res} 1.4441
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}tpi_collaboration_among_teac~s{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2}-.0728028{col 44}{space 2}  .016128{col 55}{space 1}   -4.51{col 64}{space 3}0.000{col 72}{space 4}-.1044141{col 85}{space 3}-.0411916
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2} .1935295{col 44}{space 2} .0220607{col 55}{space 1}    8.77{col 64}{space 3}0.000{col 72}{space 4}   .15029{col 85}{space 3} .2367691
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2}-.3941402{col 44}{space 2} .0333299{col 55}{space 1}  -11.83{col 64}{space 3}0.000{col 72}{space 4}-.4594676{col 85}{space 3}-.3288127
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2} .0179807{col 44}{space 2}  .001466{col 55}{space 1}   12.27{col 64}{space 3}0.000{col 72}{space 4} .0151073{col 85}{space 3} .0208541
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2} -.440744{col 44}{space 2} .0243249{col 55}{space 1}  -18.12{col 64}{space 3}0.000{col 72}{space 4}-.4884215{col 85}{space 3}-.3930664
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2} .2582639{col 44}{space 2} .0217504{col 55}{space 1}   11.87{col 64}{space 3}0.000{col 72}{space 4} .2156326{col 85}{space 3} .3008952
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2} .1881957{col 44}{space 2} .0187483{col 55}{space 1}   10.04{col 64}{space 3}0.000{col 72}{space 4} .1514486{col 85}{space 3} .2249429
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2} .3929259{col 44}{space 2} .0159027{col 55}{space 1}   24.71{col 64}{space 3}0.000{col 72}{space 4} .3617562{col 85}{space 3} .4240957
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 4.026542{col 44}{space 2}  .017519{col 55}{space 1}  229.84{col 64}{space 3}0.000{col 72}{space 4} 3.992204{col 85}{space 3}  4.06088
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,716
+{txt}{hline 13}{c +}{hline 34}   F(9, 37706)     = {res}     5.56
+{txt}       Model {c |} {res} 39258.3753         9   4362.0417   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 29569491.5    37,706  784.211837   {txt}R-squared       ={res}    0.0013
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0011
+{txt}       Total {c |} {res} 29608749.9    37,715  785.065621   {txt}Root MSE        =   {res} 28.004
+
+{txt}{hline 33}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                     course_rank{col 34}{c |} Coefficient{col 46}  Std. err.{col 58}      t{col 66}   P>|t|{col 74}     [95% con{col 87}f. interval]
+{hline 33}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 17}reservation_fac {c |}{col 34}{res}{space 2} 1.353452{col 46}{space 2} .3128283{col 57}{space 1}    4.33{col 66}{space 3}0.000{col 74}{space 4}    .7403{col 87}{space 3} 1.966604
+{txt}tpi_collaboration_among_teachers {c |}{col 34}{res}{space 2} .2026699{col 46}{space 2} .0998615{col 57}{space 1}    2.03{col 66}{space 3}0.042{col 74}{space 4} .0069386{col 87}{space 3} .3984012
+{txt}{space 9}fac_associate_professor {c |}{col 34}{res}{space 2} .2654578{col 46}{space 2} .4282243{col 57}{space 1}    0.62{col 66}{space 3}0.535{col 74}{space 4}-.5738734{col 87}{space 3} 1.104789
+{txt}{space 19}fac_professor {c |}{col 34}{res}{space 2} 2.171047{col 46}{space 2} .6475106{col 57}{space 1}    3.35{col 66}{space 3}0.001{col 74}{space 4} .9019092{col 87}{space 3} 3.440186
+{txt}{space 15}fac_yearsinhighed {c |}{col 34}{res}{space 2} .0048916{col 46}{space 2} .0284845{col 57}{space 1}    0.17{col 66}{space 3}0.864{col 74}{space 4}-.0509387{col 87}{space 3} .0607219
+{txt}{space 10}fac_highest_degree_phd {c |}{col 34}{res}{space 2}-1.064084{col 46}{space 2} .4737436{col 57}{space 1}   -2.25{col 66}{space 3}0.025{col 74}{space 4}-1.992635{col 87}{space 3}-.1355343
+{txt}{space 2}fac_highest_degree_phd_in_prog {c |}{col 34}{res}{space 2} .4495811{col 46}{space 2} .4225578{col 57}{space 1}    1.06{col 66}{space 3}0.287{col 74}{space 4}-.3786435{col 87}{space 3} 1.277806
+{txt}{space 8}fac_degree_college_elite {c |}{col 34}{res}{space 2} .1197594{col 46}{space 2} .3640413{col 57}{space 1}    0.33{col 66}{space 3}0.742{col 74}{space 4}-.5937714{col 87}{space 3} .8332902
+{txt}{space 22}fac_female {c |}{col 34}{res}{space 2} .6330193{col 46}{space 2} .3108622{col 57}{space 1}    2.04{col 66}{space 3}0.042{col 74}{space 4}  .023721{col 87}{space 3} 1.242318
+{txt}{space 27}_cons {c |}{col 34}{res}{space 2} 49.86284{col 46}{space 2} .5263933{col 57}{space 1}   94.73{col 66}{space 3}0.000{col 74}{space 4}  48.8311{col 87}{space 3} 50.89459
+{txt}{hline 33}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}(36,716 missing values generated)
+(36,716 missing values generated)
+(36,716 missing values generated)
+{hline 31}{c TT}{hline 52}
+        Effect                 {c |}  Mean           [95% Conf. Interval]
+{hline 31}{c +}{hline 52}
+{res}        ACME                   {c |} -.0146988     -.0316379     -.0001564
+        Direct Effect          {c |}  1.346056      .7687151      1.982874
+        Total Effect           {c |}  1.331357      .7507066      1.969361
+        % of Tot Eff mediated  {c |} -.0110093     -.0195799     -.0074637
+{txt}{hline 31}{c BT}{hline 52}
+
+{com}. 
+. 
+. **************
+. ** Research **
+. **************
+. 
+. * total publications
+. 
+. medeff (regress total_publications reservation_fac fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female) (regress course_rank reservation_fac total_publications fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female), treat(reservation_fac) mediate(total_publications) sims(1000) seed(1)
+Using 0 and 1 as treatment values
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,716
+{txt}{hline 13}{c +}{hline 34}   F(8, 37707)     = {res}  2095.35
+{txt}       Model {c |} {res} 663941.003         8  82992.6254   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 1493499.32    37,707  39.6080124   {txt}R-squared       ={res}    0.3077
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.3076
+{txt}       Total {c |} {res} 2157440.33    37,715  57.2037738   {txt}Root MSE        =   {res} 6.2935
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}            total_publications{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2}-2.250605{col 44}{space 2} .0702851{col 55}{space 1}  -32.02{col 64}{space 3}0.000{col 72}{space 4}-2.388366{col 85}{space 3}-2.112844
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2} 1.907604{col 44}{space 2} .0961398{col 55}{space 1}   19.84{col 64}{space 3}0.000{col 72}{space 4} 1.719167{col 85}{space 3} 2.096041
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2} 5.691299{col 44}{space 2} .1452506{col 55}{space 1}   39.18{col 64}{space 3}0.000{col 72}{space 4} 5.406604{col 85}{space 3} 5.975994
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2}-.1332359{col 44}{space 2} .0063888{col 55}{space 1}  -20.85{col 64}{space 3}0.000{col 72}{space 4}-.1457581{col 85}{space 3}-.1207138
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2} 6.373083{col 44}{space 2} .1060073{col 55}{space 1}   60.12{col 64}{space 3}0.000{col 72}{space 4} 6.165306{col 85}{space 3}  6.58086
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2}   .88225{col 44}{space 2} .0947874{col 55}{space 1}    9.31{col 64}{space 3}0.000{col 72}{space 4} .6964642{col 85}{space 3} 1.068036
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2} 1.807731{col 44}{space 2} .0817045{col 55}{space 1}   22.13{col 64}{space 3}0.000{col 72}{space 4} 1.647588{col 85}{space 3} 1.967874
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2}-.6332294{col 44}{space 2} .0693035{col 55}{space 1}   -9.14{col 64}{space 3}0.000{col 72}{space 4}-.7690662{col 85}{space 3}-.4973927
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 5.032646{col 44}{space 2} .0763472{col 55}{space 1}   65.92{col 64}{space 3}0.000{col 72}{space 4} 4.883004{col 85}{space 3} 5.182289
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,716
+{txt}{hline 13}{c +}{hline 34}   F(9, 37706)     = {res}     5.52
+{txt}       Model {c |} {res} 38971.5975         9   4330.1775   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 29569778.3    37,706  784.219443   {txt}R-squared       ={res}    0.0013
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0011
+{txt}       Total {c |} {res} 29608749.9    37,715  785.065621   {txt}Root MSE        =   {res} 28.004
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   course_rank{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2} 1.438608{col 44}{space 2}  .316969{col 55}{space 1}    4.54{col 64}{space 3}0.000{col 72}{space 4} .8173407{col 85}{space 3} 2.059876
+{txt}{space 12}total_publications {c |}{col 32}{res}{space 2} .0443932{col 44}{space 2} .0229148{col 55}{space 1}    1.94{col 64}{space 3}0.053{col 72}{space 4}-.0005205{col 85}{space 3} .0893068
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2} .2199958{col 44}{space 2} .4300176{col 55}{space 1}    0.51{col 64}{space 3}0.609{col 72}{space 4}-.6228502{col 85}{space 3} 1.062842
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2} 1.838512{col 44}{space 2} .6593429{col 55}{space 1}    2.79{col 64}{space 3}0.005{col 72}{space 4} .5461826{col 85}{space 3} 3.130842
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2} .0144505{col 44}{space 2} .0285914{col 55}{space 1}    0.51{col 64}{space 3}0.613{col 72}{space 4}-.0415895{col 85}{space 3} .0704904
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2}-1.436331{col 44}{space 2} .4937865{col 55}{space 1}   -2.91{col 64}{space 3}0.004{col 72}{space 4}-2.404166{col 85}{space 3}-.4684966
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2} .4627576{col 44}{space 2} .4222563{col 55}{space 1}    1.10{col 64}{space 3}0.273{col 72}{space 4}-.3648761{col 85}{space 3} 1.290391
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2} .0776501{col 44}{space 2}   .36591{col 55}{space 1}    0.21{col 64}{space 3}0.832{col 72}{space 4}-.6395433{col 85}{space 3} .7948435
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2} .7407646{col 44}{space 2} .3087186{col 55}{space 1}    2.40{col 64}{space 3}0.016{col 72}{space 4} .1356679{col 85}{space 3} 1.345861
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 50.45548{col 44}{space 2} .3587597{col 55}{space 1}  140.64{col 64}{space 3}0.000{col 72}{space 4} 49.75231{col 85}{space 3} 51.15866
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}(36,716 missing values generated)
+(36,716 missing values generated)
+(36,716 missing values generated)
+{hline 31}{c TT}{hline 52}
+        Effect                 {c |}  Mean           [95% Conf. Interval]
+{hline 31}{c +}{hline 52}
+{res}        ACME                   {c |}  -.099692     -.1933706     -.0003573
+        Direct Effect          {c |}  1.431115       .846132      2.076362
+        Total Effect           {c |}  1.331423      .7279502      1.965763
+        % of Tot Eff mediated  {c |} -.0751929     -.1369511     -.0507142
+{txt}{hline 31}{c BT}{hline 52}
+
+{com}. 
+. * international publications
+. 
+. medeff (regress international_publications reservation_fac fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female) (regress course_rank reservation_fac international_publications fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female), treat(reservation_fac) mediate(international_publications) sims(1000) seed(1)
+Using 0 and 1 as treatment values
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    35,868
+{txt}{hline 13}{c +}{hline 34}   F(8, 35859)     = {res}  1247.65
+{txt}       Model {c |} {res} 150589.381         8  18823.6727   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 541014.098    35,859  15.0872612   {txt}R-squared       ={res}    0.2177
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.2176
+{txt}       Total {c |} {res}  691603.48    35,867  19.2824457   {txt}Root MSE        =   {res} 3.8842
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}    international_publications{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2}-.6332232{col 44}{space 2} .0445522{col 55}{space 1}  -14.21{col 64}{space 3}0.000{col 72}{space 4}-.7205468{col 85}{space 3}-.5458995
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2} .6786671{col 44}{space 2} .0603747{col 55}{space 1}   11.24{col 64}{space 3}0.000{col 72}{space 4} .5603308{col 85}{space 3} .7970033
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2} 2.705372{col 44}{space 2} .0912735{col 55}{space 1}   29.64{col 64}{space 3}0.000{col 72}{space 4} 2.526473{col 85}{space 3} 2.884271
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2}-.0589577{col 44}{space 2} .0039709{col 55}{space 1}  -14.85{col 64}{space 3}0.000{col 72}{space 4}-.0667408{col 85}{space 3}-.0511745
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2} 3.330888{col 44}{space 2}  .066161{col 55}{space 1}   50.35{col 64}{space 3}0.000{col 72}{space 4}  3.20121{col 85}{space 3} 3.460565
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2} .6738102{col 44}{space 2} .0614861{col 55}{space 1}   10.96{col 64}{space 3}0.000{col 72}{space 4} .5532957{col 85}{space 3} .7943247
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2} .7932408{col 44}{space 2} .0515503{col 55}{space 1}   15.39{col 64}{space 3}0.000{col 72}{space 4} .6922007{col 85}{space 3} .8942809
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2}-1.004916{col 44}{space 2} .0438221{col 55}{space 1}  -22.93{col 64}{space 3}0.000{col 72}{space 4}-1.090808{col 85}{space 3}-.9190231
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 1.915639{col 44}{space 2} .0481719{col 55}{space 1}   39.77{col 64}{space 3}0.000{col 72}{space 4} 1.821221{col 85}{space 3} 2.010057
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    35,868
+{txt}{hline 13}{c +}{hline 34}   F(9, 35858)     = {res}     5.73
+{txt}       Model {c |} {res} 40620.8081         9  4513.42313   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 28234292.7    35,858  787.391732   {txt}R-squared       ={res}    0.0014
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0012
+{txt}       Total {c |} {res} 28274913.5    35,867  788.326694   {txt}Root MSE        =   {res} 28.061
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   course_rank{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2} 1.513727{col 44}{space 2} .3227595{col 55}{space 1}    4.69{col 64}{space 3}0.000{col 72}{space 4} .8811088{col 85}{space 3} 2.146345
+{txt}{space 4}international_publications {c |}{col 32}{res}{space 2} .0784909{col 44}{space 2} .0381497{col 55}{space 1}    2.06{col 64}{space 3}0.040{col 72}{space 4} .0037163{col 85}{space 3} .1532654
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2} .2013715{col 44}{space 2} .4369272{col 55}{space 1}    0.46{col 64}{space 3}0.645{col 72}{space 4}-.6550189{col 85}{space 3} 1.057762
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2} 1.795092{col 44}{space 2} .6674074{col 55}{space 1}    2.69{col 64}{space 3}0.007{col 72}{space 4}  .486953{col 85}{space 3}  3.10323
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2}  .016104{col 44}{space 2}  .028775{col 55}{space 1}    0.56{col 64}{space 3}0.576{col 72}{space 4}-.0402959{col 85}{space 3} .0725038
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2}-1.358305{col 44}{space 2} .4945644{col 55}{space 1}   -2.75{col 64}{space 3}0.006{col 72}{space 4}-2.327666{col 85}{space 3}-.3889438
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2} .4210938{col 44}{space 2} .4449312{col 55}{space 1}    0.95{col 64}{space 3}0.344{col 72}{space 4}-.4509848{col 85}{space 3} 1.293172
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2} .2373824{col 44}{space 2} .3736374{col 55}{space 1}    0.64{col 64}{space 3}0.525{col 72}{space 4}-.4949581{col 85}{space 3} .9697229
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2} .8346321{col 44}{space 2} .3188927{col 55}{space 1}    2.62{col 64}{space 3}0.009{col 72}{space 4} .2095928{col 85}{space 3} 1.459671
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 50.34033{col 44}{space 2} .3555945{col 55}{space 1}  141.57{col 64}{space 3}0.000{col 72}{space 4} 49.64336{col 85}{space 3} 51.03731
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}(34,868 missing values generated)
+(34,868 missing values generated)
+(34,868 missing values generated)
+{hline 31}{c TT}{hline 52}
+        Effect                 {c |}  Mean           [95% Conf. Interval]
+{hline 31}{c +}{hline 52}
+{res}        ACME                   {c |} -.0496136     -.0941925     -.0019592
+        Direct Effect          {c |}  1.506096      .9104271      2.163131
+        Total Effect           {c |}  1.456483      .8529617      2.107822
+        % of Tot Eff mediated  {c |}   -.03413     -.0581666     -.0235379
+{txt}{hline 31}{c BT}{hline 52}
+
+{com}. 
+. * proportion of time spent on research
+. 
+. medeff (regress prop_time_research reservation_fac fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female) (regress course_rank reservation_fac prop_time_research fac_associate_professor fac_professor fac_yearsinhighed fac_highest_degree_phd fac_highest_degree_phd_in_prog fac_degree_college_elite fac_female), treat(reservation_fac) mediate(prop_time_research) sims(1000) seed(1)
+Using 0 and 1 as treatment values
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,370
+{txt}{hline 13}{c +}{hline 34}   F(8, 37361)     = {res}   486.85
+{txt}       Model {c |} {res} 7282.14649         8  910.268312   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 69853.8001    37,361  1.86969835   {txt}R-squared       ={res}    0.0944
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0942
+{txt}       Total {c |} {res} 77135.9466    37,369  2.06416941   {txt}Root MSE        =   {res} 1.3674
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}            prop_time_research{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2}-.0964839{col 44}{space 2} .0153397{col 55}{space 1}   -6.29{col 64}{space 3}0.000{col 72}{space 4}-.1265501{col 85}{space 3}-.0664178
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2} .2752212{col 44}{space 2} .0209169{col 55}{space 1}   13.16{col 64}{space 3}0.000{col 72}{space 4} .2342236{col 85}{space 3} .3162189
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2}-.2123184{col 44}{space 2} .0315887{col 55}{space 1}   -6.72{col 64}{space 3}0.000{col 72}{space 4}-.2742331{col 85}{space 3}-.1504036
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2}-.0468692{col 44}{space 2} .0013959{col 55}{space 1}  -33.58{col 64}{space 3}0.000{col 72}{space 4}-.0496052{col 85}{space 3}-.0441332
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2} .8080228{col 44}{space 2} .0230674{col 55}{space 1}   35.03{col 64}{space 3}0.000{col 72}{space 4}   .76281{col 85}{space 3} .8532356
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2} .5951245{col 44}{space 2} .0206395{col 55}{space 1}   28.83{col 64}{space 3}0.000{col 72}{space 4} .5546705{col 85}{space 3} .6355784
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2} .3848112{col 44}{space 2} .0177593{col 55}{space 1}   21.67{col 64}{space 3}0.000{col 72}{space 4} .3500026{col 85}{space 3} .4196199
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2}-.1001511{col 44}{space 2} .0150879{col 55}{space 1}   -6.64{col 64}{space 3}0.000{col 72}{space 4}-.1297237{col 85}{space 3}-.0705784
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 1.927932{col 44}{space 2} .0166448{col 55}{space 1}  115.83{col 64}{space 3}0.000{col 72}{space 4} 1.895308{col 85}{space 3} 1.960557
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    37,370
+{txt}{hline 13}{c +}{hline 34}   F(9, 37360)     = {res}     5.20
+{txt}       Model {c |} {res} 36636.5968         9  4070.73298   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 29271328.7    37,360   783.49381   {txt}R-squared       ={res}    0.0013
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0010
+{txt}       Total {c |} {res} 29307965.3    37,369  784.285513   {txt}Root MSE        =   {res} 27.991
+
+{txt}{hline 31}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   course_rank{col 32}{c |} Coefficient{col 44}  Std. err.{col 56}      t{col 64}   P>|t|{col 72}     [95% con{col 85}f. interval]
+{hline 31}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}reservation_fac {c |}{col 32}{res}{space 2} 1.373242{col 44}{space 2} .3141792{col 55}{space 1}    4.37{col 64}{space 3}0.000{col 72}{space 4} .7574425{col 85}{space 3} 1.989042
+{txt}{space 12}prop_time_research {c |}{col 32}{res}{space 2}  .007494{col 44}{space 2} .1059065{col 55}{space 1}    0.07{col 64}{space 3}0.944{col 72}{space 4}-.2000857{col 85}{space 3} .2150737
+{txt}{space 7}fac_associate_professor {c |}{col 32}{res}{space 2} .3030109{col 44}{space 2} .4291731{col 55}{space 1}    0.71{col 64}{space 3}0.480{col 72}{space 4}-.5381802{col 85}{space 3} 1.144202
+{txt}{space 17}fac_professor {c |}{col 32}{res}{space 2} 2.095566{col 44}{space 2} .6470333{col 55}{space 1}    3.24{col 64}{space 3}0.001{col 72}{space 4} .8273631{col 85}{space 3} 3.363769
+{txt}{space 13}fac_yearsinhighed {c |}{col 32}{res}{space 2} .0080294{col 44}{space 2} .0290028{col 55}{space 1}    0.28{col 64}{space 3}0.782{col 72}{space 4}-.0488169{col 85}{space 3} .0648758
+{txt}{space 8}fac_highest_degree_phd {c |}{col 32}{res}{space 2} -1.13602{col 44}{space 2} .4798972{col 55}{space 1}   -2.37{col 64}{space 3}0.018{col 72}{space 4}-2.076632{col 85}{space 3}-.1954087
+{txt}fac_highest_degree_phd_in_prog {c |}{col 32}{res}{space 2} .5116564{col 44}{space 2} .4271796{col 55}{space 1}    1.20{col 64}{space 3}0.231{col 72}{space 4}-.3256273{col 85}{space 3}  1.34894
+{txt}{space 6}fac_degree_college_elite {c |}{col 32}{res}{space 2} .1500343{col 44}{space 2} .3658209{col 55}{space 1}    0.41{col 64}{space 3}0.682{col 72}{space 4}-.5669848{col 85}{space 3} .8670534
+{txt}{space 20}fac_female {c |}{col 32}{res}{space 2} .7175259{col 44}{space 2} .3090408{col 55}{space 1}    2.32{col 64}{space 3}0.020{col 72}{space 4} .1117973{col 85}{space 3} 1.323254
+{txt}{space 25}_cons {c |}{col 32}{res}{space 2} 50.64665{col 44}{space 2} .3972241{col 55}{space 1}  127.50{col 64}{space 3}0.000{col 72}{space 4} 49.86808{col 85}{space 3} 51.42522
+{txt}{hline 31}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}(36,370 missing values generated)
+(36,370 missing values generated)
+(36,370 missing values generated)
+{hline 31}{c TT}{hline 52}
+        Effect                 {c |}  Mean           [95% Conf. Interval]
+{hline 31}{c +}{hline 52}
+{res}        ACME                   {c |}   -.00074      -.019818       .018535
+        Direct Effect          {c |}  1.365814      .7859805      2.005382
+        Total Effect           {c |}  1.365074        .78043      2.004624
+        % of Tot Eff mediated  {c |} -.0005414     -.0009482     -.0003691
+{txt}{hline 31}{c BT}{hline 52}
+
+{com}. 
+. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}/Users/saurabh/Everything/GitHub/teacher-like-me/dissertation/mediation_analysis.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}22 Oct 2022, 06:42:11
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

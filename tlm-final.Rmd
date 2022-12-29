@@ -96,22 +96,28 @@ df_stu %>%
   transmute(
     department_id,
     state_india,
-    stu_res_official = (ea_seats_reserved_students_obc + ea_seats_reserved_students_sc + ea_seats_reserved_students_st) / 100,
-    fac_res_official = (ea_seats_reserved_faculty_obc + ea_seats_reserved_faculty_sc + ea_seats_reserved_faculty_st) / 100,
+    stu_res_admin = (ea_seats_reserved_students_obc + ea_seats_reserved_students_sc + ea_seats_reserved_students_st) / 100,
+    fac_res_admin = (ea_seats_reserved_faculty_obc + ea_seats_reserved_faculty_sc + ea_seats_reserved_faculty_st) / 100,
   ) %>%
   arrange(department_id) %>% 
   distinct() %>% 
   left_join(
     df_grades %>% 
-      select(department_id, reservation_stu, reservation_fac) %>% 
+      distinct(stdid, .keep_all = T) %>% 
+      left_join(read_csv("/Users/saurabh/Everything/GitHub/teacher-like-me/data/depweights.csv"), by = "department_id") %>% 
       group_by(department_id) %>% 
-      summarize_all(~ mean(., na.rm = TRUE))
+      summarize_at(vars(reservation_stu), ~ weighted.mean(., w = sw_f, na.rm = TRUE))
+  ) %>% 
+  left_join(
+    df_grades %>% 
+      distinct(facid, .keep_all = T) %>%
+      left_join(read_csv("/Users/saurabh/Everything/GitHub/teacher-like-me/data/depweights.csv"), by = "department_id") %>% 
+      group_by(department_id) %>% 
+      summarize_at(vars(reservation_fac), ~ weighted.mean(., w = sw_f, na.rm = TRUE))
   ) %>% 
   mutate_if(is.numeric, ~ round(. * 100, 2) %>% as.character() %>% str_c("%")) %>%
-  select(department_id, state = state_india, stu_res_admin = stu_res_official, stu_res_sample = reservation_stu, fac_res_admin = fac_res_official, fac_res_sample = reservation_fac) %>% 
-  xtable()
-  
-df_stu %>% count(ea_seats_reserved_students_other)
+  select(department_id, state = state_india, stu_res_admin, fac_res_admin, stu_res_sample = reservation_stu, fac_res_sample = reservation_fac) %>% 
+  knitr::kable(format = "pipe")
 ```
 
 
@@ -504,7 +510,7 @@ df_grades %>%
   pivot_longer(cols = -reservation_stu) %>% 
   pivot_wider(names_from = reservation_stu, values_from = value) %>% 
   mutate_if(is.numeric, ~ round(., 2)) %>% 
-  select(`Variable` = name, `Reservation Students` = `1`, `Non-reservation Students` = `0`) %>% 
+  select(`Variable` = name, `Reservation Students` = `1`, `Non-reservation Students` = `0`) %>% view()
   knitr::kable()
 ```
 
