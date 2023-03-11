@@ -245,6 +245,53 @@ knitreg(list(lm_fe1, lm_fe2, lm_fe3), custom.note = "%stars \n HC1 standard erro
 ```
 
 
+```{r, results='asis'}
+lm_fe1 <-
+  df_grades %>%
+  lm_robust(course_rank ~ female_stu * female_fac, data = ., se_type = "stata")
+
+lm_fe2 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>% 
+  lm_robust(course_rank ~ female_stu * female_fac , data = ., fixed_effects = ~ fe_var, se_type = "stata")
+
+lm_fe3 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, facid, sep = "_")) %>%
+  select(-starts_with("fac"), -course_grade_clean) %>%
+  lm_robust(course_rank ~ female_stu * female_fac, data = ., fixed_effects = ~ fe_var, se_type = "stata")
+
+knitreg(list(lm_fe1, lm_fe2, lm_fe3), custom.note = "%stars \n HC1 standard errors used.", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, custom.model.names = c("Student FE", "Student and course FE", "Student and classroom FE"), dcolumn = TRUE, booktabs = TRUE, float.pos = "h", caption = "", omit.coef = "^female_stu$")
+```
+
+
+```{r}
+lm1 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>% 
+  lm_robust(course_rank ~ female_stu * female_fac, data = ., fixed_effects = ~ fe_var, se_type = "stata")
+
+lm2 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>% 
+  lm_robust(course_rank ~ female_stu * female_fac + reservation_stu + age + father_college + mother_college, data = ., fixed_effects = ~ fe_var, se_type = "stata")
+
+lm3 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>% 
+  lm_robust(course_rank ~ female_stu * female_fac + reservation_stu + age + father_college + mother_college + reservation_fac + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite, data = ., fixed_effects = ~ fe_var, se_type = "stata")
+
+lm4 <-
+  df_grades %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>% 
+  lm_robust(course_rank ~ female_stu * female_fac + reservation_fac + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite, data = ., fixed_effects = ~ stdid + fe_var, se_type = "stata")
+
+knitreg(list(lm1, lm2, lm3, lm4), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, custom.model.names = c("I", "II", "III", "IV"), dcolumn = TRUE, booktabs = TRUE, float.pos = "H", caption = "", digits = 2, include.rsquared = F, include.adjrs = F, include.rmse = F)
+```
+
+
+
+
 \newpage
 
 
