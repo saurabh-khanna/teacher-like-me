@@ -21,6 +21,15 @@ knitr::opts_chunk$set(echo = F, message = F, warning = F, fig.retina = 4)
 pacman::p_load(haven, estimatr, extrafont, texreg, janitor, hrbrthemes, xtable, papeR, tidyverse, compareGroups, Hmisc, skimr)
 ```
 
+
+# Defining models
+
+- Model 1: student female, faculty female, gender student*gender faculty interaction, course fes (level of randomization)
+- Model 2: add student controls and faculty controls to Model 1
+- Model 3: add student fes to Model 2 (student controls drop out)
+- Model 4: add faculty fes to Model 3 (faculty controls drop out)
+- Model 5: add classroom fes to Model 4 (faculty fes should drop out)
+
 \newpage
 
 # Main Tables
@@ -58,13 +67,16 @@ df <-
     course_name = if_else(!is.na(course_clean_sk), course_clean_sk, course_name)
   ) %>%
   distinct(stdid, course_name, facid, .keep_all = T)
+```
 
 
+
+```{r}
 # grade data after veda's work
 df_grades <-
   read_dta(here::here("data/30jan2022/df_gradefac.dta")) %>% 
   filter(facid != "") %>%
-  left_join(df_stu %>% select(stdid, department_id, reservation, caste, b_i_jeemain_score, b_math_g1_score, b_physics_g1_score, e_math_g3_score, e_physics_g3_score, elite), by = "stdid") %>%
+  left_join(df_stu %>% select(stdid, department_id, reservation, caste, b_i_jeemain_score, b_math_g1_score, b_physics_g1_score, b_ses_1, b_ses_2, b_ses_3, b_ses_4, b_ses_5, b_ses_6, b_i_ses_1, b_i_ses_2, b_i_ses_3), by = "stdid") %>%
   left_join(read_dta(here::here("data/controls.dta")), by = "stdid") %>%
   left_join(read_dta(here::here("data/fac_covariates.dta")), by = "facid") %>% 
   arrange(department_id, course_name, course_grade_clean) %>% 
@@ -80,58 +92,114 @@ df_grades <-
     mother_college = if_else(is.na(mother_ed_ind), NA_integer_, mother_college),
     ses = ses %>% as.integer(),
     female = female %>% as.integer(),
-    univcode = str_sub(department_id, 1, 5)
+    age = age %>% as.integer(),
+    univcode = str_sub(department_id, 1, 5),
   ) %>%
   relocate(department_id, course_name, stdid, course_rank) %>% 
   rename(reservation_stu = reservation, fac_teaching = fac_tpi_score7_z) %>% 
-  filter(univcode != "IR036")
+  filter(univcode != "IR036") %>% 
+  mutate(
+    
+    # student variables
+    miss_age = if_else(is.na(age), 1L, 0L),
+    age = if_else(is.na(age), 0L, age),
+    
+    miss_reservation_stu = if_else(is.na(reservation_stu), 1L, 0L),
+    reservation_stu = if_else(is.na(reservation_stu), 0L, reservation_stu),
+    
+    miss_father_college = if_else(is.na(father_college), 1L, 0L),
+    father_college = if_else(is.na(father_college), 0L, father_college),
+    
+    miss_mother_college = if_else(is.na(mother_college), 1L, 0L),
+    mother_college = if_else(is.na(mother_college), 0L, mother_college),
+    
+    miss_b_i_jeemain_score = if_else(is.na(b_i_jeemain_score), 1L, 0L),
+    b_i_jeemain_score = if_else(is.na(b_i_jeemain_score), 0, b_i_jeemain_score),
+    
+    miss_b_math_g1_score = if_else(is.na(b_math_g1_score), 1L, 0L),
+    b_math_g1_score = if_else(is.na(b_math_g1_score), 0, b_math_g1_score),
+    
+    miss_b_physics_g1_score = if_else(is.na(b_physics_g1_score), 1L, 0L),
+    b_physics_g1_score = if_else(is.na(b_physics_g1_score), 0, b_physics_g1_score),
+    
+    # faculty variables
+    miss_fac_associate_professor = if_else(is.na(fac_associate_professor), 1L, 0L),
+    fac_associate_professor = if_else(is.na(fac_associate_professor), 0, fac_associate_professor),
+    
+    miss_fac_professor = if_else(is.na(fac_professor), 1L, 0L),
+    fac_professor = if_else(is.na(fac_professor), 0, fac_professor),
+    
+    miss_fac_yearsinhighed = if_else(is.na(fac_yearsinhighed), 1L, 0L),
+    fac_yearsinhighed = if_else(is.na(fac_yearsinhighed), 0, fac_yearsinhighed),
+    
+    miss_fac_highest_degree_phd = if_else(is.na(fac_highest_degree_phd), 1L, 0L),
+    fac_highest_degree_phd = if_else(is.na(fac_highest_degree_phd), 0, fac_highest_degree_phd),
+    
+    miss_fac_highest_degree_phd_in_prog = if_else(is.na(fac_highest_degree_phd_in_prog), 1L, 0L),
+    fac_highest_degree_phd_in_prog = if_else(is.na(fac_highest_degree_phd_in_prog), 0, fac_highest_degree_phd_in_prog),
+    
+    miss_fac_degree_college_elite = if_else(is.na(fac_degree_college_elite), 1L, 0L),
+    fac_degree_college_elite = if_else(is.na(fac_degree_college_elite), 0, fac_degree_college_elite),
+    
+    miss_reservation_fac = if_else(is.na(reservation_fac), 1L, 0L),
+    reservation_fac = if_else(is.na(reservation_fac), 0, reservation_fac)
+  ) %>% 
+  mutate_at(vars(b_ses_1, b_ses_2, b_ses_3, b_ses_4, b_ses_5, b_ses_6, b_i_ses_1, b_i_ses_2, b_i_ses_3), ~ as.integer(.)) %>%
+  mutate(
+    b_ses_1 = if_else(b_ses_1 == 1L, 1L, 0L) %>% replace_na(0L),
+    b_ses_2 = if_else(b_ses_2 == 1L, 1L, 0L) %>% replace_na(0L),
+    b_ses_3 = if_else(b_ses_3 == 1L, 1L, 0L) %>% replace_na(0L),
+    b_ses_4 = if_else(b_ses_4 == 1L, 1L, 0L) %>% replace_na(0L),
+    b_ses_5 = if_else(b_ses_5 == 1L, 1L, 0L) %>% replace_na(0L),
+    b_ses_6 = if_else(b_ses_6 == 1L, 1L, 0L) %>% replace_na(0L),
+    b_i_ses_1 = if_else(b_i_ses_1 == 1L, 1L, 0L) %>% replace_na(0L),
+    b_i_ses_2 = if_else(b_i_ses_2 == 1L, 1L, 0L) %>% replace_na(0L),
+    b_i_ses_3 = if_else(b_i_ses_3 == 1L, 1L, 0L) %>% replace_na(0L)
+  )
   
-
 # df_grades %>% drop_na() %>% glimpse()
-# df_grades %>% select(contains("college"))
+# df_grades %>% skim()
 
 rm(df)
-
-df_mechanism <-
-  df_grades %>%
-  select(facid, reservation_fac, department_id, course_name, stdid, course_rank) %>% 
-  left_join(
-    read_dta(here::here("data/fac_covars1.dta")), 
-    by = "facid"
-  ) %>% 
-  left_join(read_dta(here::here("data/fac_covars3.dta")), by = "facid") %>% 
-  left_join(read_dta(here::here("data/fac_covars2.dta")), by = "facid") %>% 
-  mutate_at(vars(starts_with("weekly")), ~ parse_number(.)) %>%
-  mutate(
-    total_time =
-      pmap_dbl(
-        select(., weekly_hours_teaching_related, weekly_hours_advising_students, weekly_hours_research, weekly_hours_part_time_job, weekly_hours_administrative),
-        ~ sum(c(...), na.rm = TRUE)
-      ),
-    fac_prop_research = (weekly_hours_research * 10) / total_time
-  )
-
-
-# filtering to all faculty surveyed during the endline phase who were also mentioned by students
-facdata_mentions <-
-  read_dta(here::here("data/all_appended.dta")) %>%
-  filter(tag > 1) %>%  # endline only
-  left_join(df_stu %>% select(stdid, department_id), by = "stdid") %>%  # get dep_id
-  select(facid, department_id) %>% 
-  count(facid, department_id) %>% 
-  arrange(facid, desc(n)) %>% 
-  distinct(facid, .keep_all = T) %>% 
-  select(-n) %>% 
-  left_join(read_dta(here::here("data/endline_faculty_data_final.dta")), by = "facid")
-
-
-df_grades %>% 
-  distinct(facid, .keep_all = T) %>% 
-  get_dupes(facid, reservation_fac)
 ```
 
 
-```{r, results='asis', eval=F}
+```{r}
+# excluding students facing no gender variation
+df_grades_sfix <-
+  df_grades %>% 
+  arrange(stdid, fac_female) %>% 
+  group_by(stdid) %>% 
+  mutate(prop_female = mean(fac_female, na.rm = T)) %>% 
+  ungroup() %>% 
+  relocate(stdid, fac_female, prop_female) %>%
+  filter(prop_female > 0, prop_female < 1)
+
+# excluding courses with no gender variation
+df_grades_cfix <-
+  df_grades %>% 
+  mutate(course_composite = str_c(department_id, course_name, sep = "_")) %>%
+  arrange(course_composite, fac_female) %>% 
+  group_by(course_composite) %>% 
+  mutate(prop_female = mean(fac_female, na.rm = T)) %>% 
+  ungroup() %>% 
+  relocate(course_composite, fac_female, prop_female) %>%
+  filter(prop_female > 0, prop_female < 1)
+
+# excluding both courses and students with no gender variation
+df_grades_csfix <-
+  df_grades_cfix %>% 
+  select(-prop_female) %>% 
+  group_by(stdid) %>% 
+  mutate(prop_female = mean(fac_female, na.rm = T)) %>% 
+  ungroup() %>% 
+  filter(prop_female > 0, prop_female < 1)
+```
+
+
+No rows dropped:
+
+```{r, results='asis'}
 lm1 <-
   df_grades %>%
   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
@@ -140,17 +208,17 @@ lm1 <-
 lm2 <-
   df_grades %>%
   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-  lm_robust(course_rank ~ female * fac_female + reservation_stu + female + age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + reservation_fac, data = ., fixed_effects = ~ fe_var, se_type = "stata")
+  lm_robust(course_rank ~ female * fac_female + reservation_stu + age + father_college + mother_college + b_i_jeemain_score + b_math_g1_score + b_physics_g1_score + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + reservation_fac + miss_reservation_stu + miss_age + miss_father_college + miss_mother_college + miss_b_i_jeemain_score + miss_b_math_g1_score + miss_b_physics_g1_score +  miss_fac_associate_professor + miss_fac_professor + miss_fac_yearsinhighed + miss_fac_highest_degree_phd + miss_fac_highest_degree_phd_in_prog + miss_fac_degree_college_elite + miss_reservation_fac + b_ses_1 + b_ses_2 + b_ses_3 + b_ses_4 + b_ses_5 + b_ses_6 + b_i_ses_1 + b_i_ses_2 + b_i_ses_3, data = ., fixed_effects = ~ fe_var, se_type = "stata")
 
 lm3 <-
   df_grades %>%
   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-  lm_robust(course_rank ~ female * fac_female + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + reservation_fac, data = ., fixed_effects = ~ fe_var + stdid, se_type = "stata")
+  lm_robust(course_rank ~ female * fac_female + reservation_stu + age + father_college + mother_college + b_i_jeemain_score + b_math_g1_score + b_physics_g1_score + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + reservation_fac + miss_reservation_stu + miss_age + miss_father_college + miss_mother_college + miss_b_i_jeemain_score + miss_b_math_g1_score + miss_b_physics_g1_score +  miss_fac_associate_professor + miss_fac_professor + miss_fac_yearsinhighed + miss_fac_highest_degree_phd + miss_fac_highest_degree_phd_in_prog + miss_fac_degree_college_elite + miss_reservation_fac + b_ses_1 + b_ses_2 + b_ses_3 + b_ses_4 + b_ses_5 + b_ses_6 + b_i_ses_1 + b_i_ses_2 + b_i_ses_3, data = ., fixed_effects = ~ fe_var + stdid, se_type = "stata")
 
 lm4 <-
   df_grades %>%
   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-  lm_robust(course_rank ~ female * fac_female, data = ., fixed_effects = ~ fe_var + stdid + facid, se_type = "stata")
+  lm_robust(course_rank ~ female * fac_female + reservation_stu + age + father_college + mother_college + b_i_jeemain_score + b_math_g1_score + b_physics_g1_score + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + reservation_fac + miss_reservation_stu + miss_age + miss_father_college + miss_mother_college + miss_b_i_jeemain_score + miss_b_math_g1_score + miss_b_physics_g1_score +  miss_fac_associate_professor + miss_fac_professor + miss_fac_yearsinhighed + miss_fac_highest_degree_phd + miss_fac_highest_degree_phd_in_prog + miss_fac_degree_college_elite + miss_reservation_fac + b_ses_1 + b_ses_2 + b_ses_3 + b_ses_4 + b_ses_5 + b_ses_6 + b_i_ses_1 + b_i_ses_2 + b_i_ses_3, data = ., fixed_effects = ~ fe_var + stdid + facid, se_type = "stata")
 
 lm5 <-
   df_grades %>%
@@ -158,22 +226,115 @@ lm5 <-
     fe_var = str_c(department_id, course_name, sep = "_"),
     class_fe_var = str_c(fe_var, facid, sep = "_")
   ) %>%
-  lm_robust(course_rank ~ female * fac_female, data = ., fixed_effects = ~ fe_var + stdid + class_fe_var, se_type = "stata")
+  lm_robust(course_rank ~ female * fac_female + reservation_stu + age + father_college + mother_college + b_i_jeemain_score + b_math_g1_score + b_physics_g1_score + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + reservation_fac + miss_reservation_stu + miss_age + miss_father_college + miss_mother_college + miss_b_i_jeemain_score + miss_b_math_g1_score + miss_b_physics_g1_score +  miss_fac_associate_professor + miss_fac_professor + miss_fac_yearsinhighed + miss_fac_highest_degree_phd + miss_fac_highest_degree_phd_in_prog + miss_fac_degree_college_elite + miss_reservation_fac + b_ses_1 + b_ses_2 + b_ses_3 + b_ses_4 + b_ses_5 + b_ses_6 + b_i_ses_1 + b_i_ses_2 + b_i_ses_3, data = ., fixed_effects = ~ fe_var + stdid + class_fe_var, se_type = "stata")
 
-texreg(list(lm1, lm2, lm3, lm4, lm5), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = F, dcolumn = T, booktabs = T, float.pos = "H", caption = "", digits = 2, include.nclust = F, include.rsquared = F, include.adjrs = F, include.rmse = F)
+knitreg(list(lm1, lm2, lm3, lm4, lm5), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = F, dcolumn = T, booktabs = T, float.pos = "H", caption = "", digits = 2, include.nclust = F, include.rsquared = F, include.adjrs = F, include.rmse = F, custom.coef.map = list("female:fac_female" = "Stu Female x Fac Female"))
 ```
 
 
-```{r}
-df_grades %>%
+Students with no variation in faculty gender dropped:
+
+```{r, results='asis'}
+lm1 <-
+  df_grades_sfix %>%
   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-  lm_robust(course_rank ~ female * fac_female + stdid, data = ., fixed_effects = ~ fe_var, se_type = "stata") %>% 
-  summary()
+  lm_robust(course_rank ~ female * fac_female, data = ., fixed_effects = ~ fe_var, se_type = "stata")
+
+lm2 <-
+  df_grades_sfix %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(course_rank ~ female * fac_female + reservation_stu + age + father_college + mother_college + b_i_jeemain_score + b_math_g1_score + b_physics_g1_score + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + reservation_fac + miss_reservation_stu + miss_age + miss_father_college + miss_mother_college + miss_b_i_jeemain_score + miss_b_math_g1_score + miss_b_physics_g1_score +  miss_fac_associate_professor + miss_fac_professor + miss_fac_yearsinhighed + miss_fac_highest_degree_phd + miss_fac_highest_degree_phd_in_prog + miss_fac_degree_college_elite + miss_reservation_fac + b_ses_1 + b_ses_2 + b_ses_3 + b_ses_4 + b_ses_5 + b_ses_6 + b_i_ses_1 + b_i_ses_2 + b_i_ses_3, data = ., fixed_effects = ~ fe_var, se_type = "stata")
+
+lm3 <-
+  df_grades_sfix %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(course_rank ~ female * fac_female + reservation_stu + age + father_college + mother_college + b_i_jeemain_score + b_math_g1_score + b_physics_g1_score + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + reservation_fac + miss_reservation_stu + miss_age + miss_father_college + miss_mother_college + miss_b_i_jeemain_score + miss_b_math_g1_score + miss_b_physics_g1_score +  miss_fac_associate_professor + miss_fac_professor + miss_fac_yearsinhighed + miss_fac_highest_degree_phd + miss_fac_highest_degree_phd_in_prog + miss_fac_degree_college_elite + miss_reservation_fac + b_ses_1 + b_ses_2 + b_ses_3 + b_ses_4 + b_ses_5 + b_ses_6 + b_i_ses_1 + b_i_ses_2 + b_i_ses_3, data = ., fixed_effects = ~ fe_var + stdid, se_type = "stata")
+
+lm4 <-
+  df_grades_sfix %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(course_rank ~ female * fac_female + reservation_stu + age + father_college + mother_college + b_i_jeemain_score + b_math_g1_score + b_physics_g1_score + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + reservation_fac + miss_reservation_stu + miss_age + miss_father_college + miss_mother_college + miss_b_i_jeemain_score + miss_b_math_g1_score + miss_b_physics_g1_score +  miss_fac_associate_professor + miss_fac_professor + miss_fac_yearsinhighed + miss_fac_highest_degree_phd + miss_fac_highest_degree_phd_in_prog + miss_fac_degree_college_elite + miss_reservation_fac + b_ses_1 + b_ses_2 + b_ses_3 + b_ses_4 + b_ses_5 + b_ses_6 + b_i_ses_1 + b_i_ses_2 + b_i_ses_3, data = ., fixed_effects = ~ fe_var + stdid + facid, se_type = "stata")
+
+lm5 <-
+  df_grades_sfix %>%
+  mutate(
+    fe_var = str_c(department_id, course_name, sep = "_"),
+    class_fe_var = str_c(fe_var, facid, sep = "_")
+  ) %>%
+  lm_robust(course_rank ~ female * fac_female + reservation_stu + age + father_college + mother_college + b_i_jeemain_score + b_math_g1_score + b_physics_g1_score + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + reservation_fac + miss_reservation_stu + miss_age + miss_father_college + miss_mother_college + miss_b_i_jeemain_score + miss_b_math_g1_score + miss_b_physics_g1_score +  miss_fac_associate_professor + miss_fac_professor + miss_fac_yearsinhighed + miss_fac_highest_degree_phd + miss_fac_highest_degree_phd_in_prog + miss_fac_degree_college_elite + miss_reservation_fac + b_ses_1 + b_ses_2 + b_ses_3 + b_ses_4 + b_ses_5 + b_ses_6 + b_i_ses_1 + b_i_ses_2 + b_i_ses_3, data = ., fixed_effects = ~ fe_var + stdid + class_fe_var, se_type = "stata")
+
+knitreg(list(lm1, lm2, lm3, lm4, lm5), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = F, dcolumn = T, booktabs = T, float.pos = "H", caption = "", digits = 2, include.nclust = F, include.rsquared = F, include.adjrs = F, include.rmse = F, custom.coef.map = list("female:fac_female" = "Stu Female x Fac Female"))
 ```
 
-```{r}
-df_grades %>% 
-  filter(stdid == "H6XTT") %>% 
-  glimpse()
+
+Courses with no variation in faculty gender dropped:
+
+
+```{r, results='asis'}
+lm1 <-
+  df_grades_cfix %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(course_rank ~ female * fac_female, data = ., fixed_effects = ~ fe_var, se_type = "stata")
+
+lm2 <-
+  df_grades_cfix %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(course_rank ~ female * fac_female + reservation_stu + age + father_college + mother_college + b_i_jeemain_score + b_math_g1_score + b_physics_g1_score + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + reservation_fac + miss_reservation_stu + miss_age + miss_father_college + miss_mother_college + miss_b_i_jeemain_score + miss_b_math_g1_score + miss_b_physics_g1_score +  miss_fac_associate_professor + miss_fac_professor + miss_fac_yearsinhighed + miss_fac_highest_degree_phd + miss_fac_highest_degree_phd_in_prog + miss_fac_degree_college_elite + miss_reservation_fac + b_ses_1 + b_ses_2 + b_ses_3 + b_ses_4 + b_ses_5 + b_ses_6 + b_i_ses_1 + b_i_ses_2 + b_i_ses_3, data = ., fixed_effects = ~ fe_var, se_type = "stata")
+
+lm3 <-
+  df_grades_cfix %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(course_rank ~ female * fac_female + reservation_stu + age + father_college + mother_college + b_i_jeemain_score + b_math_g1_score + b_physics_g1_score + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + reservation_fac + miss_reservation_stu + miss_age + miss_father_college + miss_mother_college + miss_b_i_jeemain_score + miss_b_math_g1_score + miss_b_physics_g1_score +  miss_fac_associate_professor + miss_fac_professor + miss_fac_yearsinhighed + miss_fac_highest_degree_phd + miss_fac_highest_degree_phd_in_prog + miss_fac_degree_college_elite + miss_reservation_fac + b_ses_1 + b_ses_2 + b_ses_3 + b_ses_4 + b_ses_5 + b_ses_6 + b_i_ses_1 + b_i_ses_2 + b_i_ses_3, data = ., fixed_effects = ~ fe_var + stdid, se_type = "stata")
+
+lm4 <-
+  df_grades_cfix %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(course_rank ~ female * fac_female + reservation_stu + age + father_college + mother_college + b_i_jeemain_score + b_math_g1_score + b_physics_g1_score + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + reservation_fac + miss_reservation_stu + miss_age + miss_father_college + miss_mother_college + miss_b_i_jeemain_score + miss_b_math_g1_score + miss_b_physics_g1_score +  miss_fac_associate_professor + miss_fac_professor + miss_fac_yearsinhighed + miss_fac_highest_degree_phd + miss_fac_highest_degree_phd_in_prog + miss_fac_degree_college_elite + miss_reservation_fac + b_ses_1 + b_ses_2 + b_ses_3 + b_ses_4 + b_ses_5 + b_ses_6 + b_i_ses_1 + b_i_ses_2 + b_i_ses_3, data = ., fixed_effects = ~ fe_var + stdid + facid, se_type = "stata")
+
+lm5 <-
+  df_grades_cfix %>%
+  mutate(
+    fe_var = str_c(department_id, course_name, sep = "_"),
+    class_fe_var = str_c(fe_var, facid, sep = "_")
+  ) %>%
+  lm_robust(course_rank ~ female * fac_female + reservation_stu + age + father_college + mother_college + b_i_jeemain_score + b_math_g1_score + b_physics_g1_score + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + reservation_fac + miss_reservation_stu + miss_age + miss_father_college + miss_mother_college + miss_b_i_jeemain_score + miss_b_math_g1_score + miss_b_physics_g1_score +  miss_fac_associate_professor + miss_fac_professor + miss_fac_yearsinhighed + miss_fac_highest_degree_phd + miss_fac_highest_degree_phd_in_prog + miss_fac_degree_college_elite + miss_reservation_fac + b_ses_1 + b_ses_2 + b_ses_3 + b_ses_4 + b_ses_5 + b_ses_6 + b_i_ses_1 + b_i_ses_2 + b_i_ses_3, data = ., fixed_effects = ~ fe_var + stdid + class_fe_var, se_type = "stata")
+
+knitreg(list(lm1, lm2, lm3, lm4, lm5), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = F, dcolumn = T, booktabs = T, float.pos = "H", caption = "", digits = 2, include.nclust = F, include.rsquared = F, include.adjrs = F, include.rmse = F, custom.coef.map = list("female:fac_female" = "Stu Female x Fac Female"))
 ```
+
+
+Course with no variation dropped, then students with no variation dropped:
+
+```{r, results='asis'}
+lm1 <-
+  df_grades_csfix %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(course_rank ~ female * fac_female, data = ., fixed_effects = ~ fe_var, se_type = "stata")
+
+lm2 <-
+  df_grades_csfix %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(course_rank ~ female * fac_female + reservation_stu + age + father_college + mother_college + b_i_jeemain_score + b_math_g1_score + b_physics_g1_score + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + reservation_fac + miss_reservation_stu + miss_age + miss_father_college + miss_mother_college + miss_b_i_jeemain_score + miss_b_math_g1_score + miss_b_physics_g1_score +  miss_fac_associate_professor + miss_fac_professor + miss_fac_yearsinhighed + miss_fac_highest_degree_phd + miss_fac_highest_degree_phd_in_prog + miss_fac_degree_college_elite + miss_reservation_fac + b_ses_1 + b_ses_2 + b_ses_3 + b_ses_4 + b_ses_5 + b_ses_6 + b_i_ses_1 + b_i_ses_2 + b_i_ses_3, data = ., fixed_effects = ~ fe_var, se_type = "stata")
+
+lm3 <-
+  df_grades_csfix %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(course_rank ~ female * fac_female + reservation_stu + age + father_college + mother_college + b_i_jeemain_score + b_math_g1_score + b_physics_g1_score + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + reservation_fac + miss_reservation_stu + miss_age + miss_father_college + miss_mother_college + miss_b_i_jeemain_score + miss_b_math_g1_score + miss_b_physics_g1_score +  miss_fac_associate_professor + miss_fac_professor + miss_fac_yearsinhighed + miss_fac_highest_degree_phd + miss_fac_highest_degree_phd_in_prog + miss_fac_degree_college_elite + miss_reservation_fac + b_ses_1 + b_ses_2 + b_ses_3 + b_ses_4 + b_ses_5 + b_ses_6 + b_i_ses_1 + b_i_ses_2 + b_i_ses_3, data = ., fixed_effects = ~ fe_var + stdid, se_type = "stata")
+
+lm4 <-
+  df_grades_csfix %>%
+  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
+  lm_robust(course_rank ~ female * fac_female + reservation_stu + age + father_college + mother_college + b_i_jeemain_score + b_math_g1_score + b_physics_g1_score + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + reservation_fac + miss_reservation_stu + miss_age + miss_father_college + miss_mother_college + miss_b_i_jeemain_score + miss_b_math_g1_score + miss_b_physics_g1_score +  miss_fac_associate_professor + miss_fac_professor + miss_fac_yearsinhighed + miss_fac_highest_degree_phd + miss_fac_highest_degree_phd_in_prog + miss_fac_degree_college_elite + miss_reservation_fac + b_ses_1 + b_ses_2 + b_ses_3 + b_ses_4 + b_ses_5 + b_ses_6 + b_i_ses_1 + b_i_ses_2 + b_i_ses_3, data = ., fixed_effects = ~ fe_var + stdid + facid, se_type = "stata")
+
+lm5 <-
+  df_grades_csfix %>%
+  mutate(
+    fe_var = str_c(department_id, course_name, sep = "_"),
+    class_fe_var = str_c(fe_var, facid, sep = "_")
+  ) %>%
+  lm_robust(course_rank ~ female * fac_female + reservation_stu + age + father_college + mother_college + b_i_jeemain_score + b_math_g1_score + b_physics_g1_score + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + reservation_fac + miss_reservation_stu + miss_age + miss_father_college + miss_mother_college + miss_b_i_jeemain_score + miss_b_math_g1_score + miss_b_physics_g1_score +  miss_fac_associate_professor + miss_fac_professor + miss_fac_yearsinhighed + miss_fac_highest_degree_phd + miss_fac_highest_degree_phd_in_prog + miss_fac_degree_college_elite + miss_reservation_fac + b_ses_1 + b_ses_2 + b_ses_3 + b_ses_4 + b_ses_5 + b_ses_6 + b_i_ses_1 + b_i_ses_2 + b_i_ses_3, data = ., fixed_effects = ~ fe_var + stdid + class_fe_var, se_type = "stata")
+
+knitreg(list(lm1, lm2, lm3, lm4, lm5), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = F, dcolumn = T, booktabs = T, float.pos = "H", caption = "", digits = 2, include.nclust = F, include.rsquared = F, include.adjrs = F, include.rmse = F, custom.coef.map = list("female:fac_female" = "Stu Female x Fac Female"))
+```
+
 
