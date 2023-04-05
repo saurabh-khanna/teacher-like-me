@@ -120,25 +120,25 @@ facdata_mentions <-
   select(-n) %>% 
   left_join(read_dta(here::here("data/endline_faculty_data_final.dta")), by = "facid")
 
-df_stu %>% 
-  select(univcode, gender) %>% 
-  mutate(
-    gender = as.integer(gender),
-    female = gender - 1
-  ) %>%
-  group_by(univcode) %>% 
-  summarise(female_perc = mean(female, na.rm = TRUE)) %>% 
-  arrange(-female_perc)
-
-
-df_stu %>% 
-  filter(univcode %in% c("IR024", "IR036")) %>% 
-  tabyl(univcode, grade)
-
-df_grades %>% 
-  distinct(stdid, .keep_all = T) %>%
-  transmute(univcode = substr(department_id, 1, 5)) %>% 
-  count(univcode)
+# df_stu %>% 
+#   select(univcode, gender) %>% 
+#   mutate(
+#     gender = as.integer(gender),
+#     female = gender - 1
+#   ) %>%
+#   group_by(univcode) %>% 
+#   summarise(female_perc = mean(female, na.rm = TRUE)) %>% 
+#   arrange(-female_perc)
+# 
+# 
+# df_stu %>% 
+#   filter(univcode %in% c("IR024", "IR036")) %>% 
+#   tabyl(univcode, grade)
+# 
+# df_grades %>% 
+#   distinct(stdid, .keep_all = T) %>%
+#   transmute(univcode = substr(department_id, 1, 5)) %>% 
+#   count(univcode)
 ```
 
 
