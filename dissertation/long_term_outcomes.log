@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.9)  5 APR 2023 16:58
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.9)  6 APR 2023 19:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**gender_paper_models_2_3.tex
-(./gender_paper_models_2_3.tex
+**long_term_outcomes.tex
+(./long_term_outcomes.tex
 LaTeX2e <2022-11-01>
 L3 programming layer <2022-11-02> (/Users/saurabh/Library/TinyTeX/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2022/07/02 v1.4n Standard LaTeX document class
@@ -483,7 +483,19 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 28
 File: l3backend-pdftex.def 2022-10-26 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count312
 \l__pdf_internal_box=\box73
-) (./gender_paper_models_2_3.aux
+) (./long_term_outcomes.aux
+
+LaTeX Warning: Label `table:coefficients' multiply defined.
+
+
+LaTeX Warning: Label `table:coefficients' multiply defined.
+
+
+LaTeX Warning: Label `table:coefficients' multiply defined.
+
+
+LaTeX Warning: Label `table:coefficients' multiply defined.
+
 
 LaTeX Warning: Label `table:coefficients' multiply defined.
 
@@ -506,7 +518,7 @@ LaTeX Warning: Label `table:coefficients' multiply defined.
 LaTeX Warning: Label `table:coefficients' multiply defined.
 
 )
-\openout1 = `gender_paper_models_2_3.aux'.
+\openout1 = `long_term_outcomes.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 85.
 LaTeX Font Info:    ... okay on input line 85.
@@ -594,9 +606,9 @@ Package caption Info: threeparttable package is loaded.
 Package caption Info: wrapfig package is loaded.
 Package caption Info: End \AtBeginDocument code.
 Package hyperref Info: Link coloring OFF on input line 85.
-(./gender_paper_models_2_3.out) (./gender_paper_models_2_3.out)
+(./long_term_outcomes.out) (./long_term_outcomes.out)
 \@outlinefile=\write3
-\openout3 = `gender_paper_models_2_3.out'.
+\openout3 = `long_term_outcomes.out'.
 
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 87.
 (/Users/saurabh/Library/TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
@@ -631,42 +643,45 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 87.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (/Users/saurabh/Library/TinyTeX/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
-) (./gender_paper_models_2_3.toc
+) (./long_term_outcomes.toc
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 3.
+(Font)              <10> on input line 2.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 3.
+(Font)              <7> on input line 2.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 3.
+(Font)              <5> on input line 2.
 )
 \tf@toc=\write4
-\openout4 = `gender_paper_models_2_3.toc'.
+\openout4 = `long_term_outcomes.toc'.
 
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 100.
-(/Users/saurabh/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
-File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [1
+[1
 
-{/Users/saurabh/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] [4] [5] [6] [7] [8] [9] (./gender_paper_models_2_3.aux)
+{/Users/saurabh/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+<long_term_outcomes_files/figure-latex/unnamed-chunk-3-1.pdf, id=95, 469.755pt x 325.215pt>
+File: long_term_outcomes_files/figure-latex/unnamed-chunk-3-1.pdf Graphic file (type pdf)
+<use long_term_outcomes_files/figure-latex/unnamed-chunk-3-1.pdf>
+Package pdftex.def Info: long_term_outcomes_files/figure-latex/unnamed-chunk-3-1.pdf  used on input line 99.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+[2 <./long_term_outcomes_files/figure-latex/unnamed-chunk-3-1.pdf>] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13] [14] (./long_term_outcomes.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package rerunfilecheck Info: File `gender_paper_models_2_3.out' has not changed.
-(rerunfilecheck)             Checksum: E4A2604A68D15D7E010A9116FB710882;1126.
+Package rerunfilecheck Info: File `long_term_outcomes.out' has not changed.
+(rerunfilecheck)             Checksum: B67BE4C638B61864002BD70BFA30CF77;4960.
  ) 
 Here is how much of TeX's memory you used:
- 15768 strings out of 476931
- 259509 string characters out of 5824502
- 634569 words of memory out of 5000000
- 36629 multiletter control sequences out of 15000+600000
- 525453 words of font info for 106 fonts, out of 8000000 for 9000
+ 15757 strings out of 476931
+ 260530 string characters out of 5824502
+ 648427 words of memory out of 5000000
+ 36616 multiletter control sequences out of 15000+600000
+ 520056 words of font info for 96 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 72i,12n,77p,1020b,443s stack positions out of 10000i,1000n,20000p,200000b,200000s
-{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}</Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy5.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb>
-Output written on gender_paper_models_2_3.pdf (9 pages, 204279 bytes).
+ 72i,12n,77p,1015b,445s stack positions out of 10000i,1000n,20000p,200000b,200000s
+{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}</Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy5.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb>
+Output written on long_term_outcomes.pdf (14 pages, 194903 bytes).
 PDF statistics:
- 201 PDF objects out of 1000 (max. 8388607)
- 161 compressed objects within 2 object streams
- 39 named destinations out of 1000 (max. 500000)
- 32849 words of extra memory for PDF output out of 35830 (max. 10000000)
+ 265 PDF objects out of 1000 (max. 8388607)
+ 220 compressed objects within 3 object streams
+ 60 named destinations out of 1000 (max. 500000)
+ 28806 words of extra memory for PDF output out of 29859 (max. 10000000)
 

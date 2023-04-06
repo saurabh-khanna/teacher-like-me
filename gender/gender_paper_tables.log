@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.9)  26 MAR 2023 05:36
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.9)  5 APR 2023 19:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**gender_paper.tex
-(./gender_paper.tex
+**gender_paper_tables.tex
+(./gender_paper_tables.tex
 LaTeX2e <2022-11-01>
 L3 programming layer <2022-11-02> (/Users/saurabh/Library/TinyTeX/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2022/07/02 v1.4n Standard LaTeX document class
@@ -483,18 +483,12 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 28
 File: l3backend-pdftex.def 2022-10-26 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count312
 \l__pdf_internal_box=\box73
-) (./gender_paper.aux
-
-LaTeX Warning: Label `table:coefficients' multiply defined.
-
-
-LaTeX Warning: Label `table:coefficients' multiply defined.
-
+) (./gender_paper_tables.aux
 
 LaTeX Warning: Label `table:coefficients' multiply defined.
 
 )
-\openout1 = `gender_paper.aux'.
+\openout1 = `gender_paper_tables.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 85.
 LaTeX Font Info:    ... okay on input line 85.
@@ -582,9 +576,9 @@ Package caption Info: threeparttable package is loaded.
 Package caption Info: wrapfig package is loaded.
 Package caption Info: End \AtBeginDocument code.
 Package hyperref Info: Link coloring OFF on input line 85.
-(./gender_paper.out) (./gender_paper.out)
+(./gender_paper_tables.out) (./gender_paper_tables.out)
 \@outlinefile=\write3
-\openout3 = `gender_paper.out'.
+\openout3 = `gender_paper_tables.out'.
 
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 87.
 (/Users/saurabh/Library/TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
@@ -619,42 +613,56 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 87.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (/Users/saurabh/Library/TinyTeX/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
-) (./gender_paper.toc)
+) (./gender_paper_tables.toc
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 3.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 3.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 3.
+)
 \tf@toc=\write4
-\openout4 = `gender_paper.toc'.
+\openout4 = `gender_paper_tables.toc'.
 
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 100.
-(/Users/saurabh/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
-File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [1
+[1
 
 {/Users/saurabh/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 121.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 121.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 121.
-[2] (./gender_paper.aux)
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 102.
+(/Users/saurabh/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
+File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) [2]
+Overfull \hbox (8.41217pt too wide) in paragraph at lines 151--166
+ [] 
+ []
+
+[3]
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 179.
+(/Users/saurabh/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 211.
+(/Users/saurabh/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmtt.fd
+File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) [4] [5] [6] [7] (./gender_paper_tables.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package rerunfilecheck Info: File `gender_paper.out' has not changed.
-(rerunfilecheck)             Checksum: A4B1FC9DD85DE811C68751A350B31F20;224.
+Package rerunfilecheck Info: File `gender_paper_tables.out' has not changed.
+(rerunfilecheck)             Checksum: 09EE719EDEA8F83205BFE943C9AA72DA;969.
  ) 
 Here is how much of TeX's memory you used:
- 15705 strings out of 476931
- 258525 string characters out of 5824502
- 647120 words of memory out of 5000000
- 36608 multiletter control sequences out of 15000+600000
- 517442 words of font info for 97 fonts, out of 8000000 for 9000
+ 15829 strings out of 476931
+ 260587 string characters out of 5824502
+ 646504 words of memory out of 5000000
+ 36699 multiletter control sequences out of 15000+600000
+ 521424 words of font info for 104 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 72i,12n,77p,1009b,443s stack positions out of 10000i,1000n,20000p,200000b,200000s
-{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}</Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy5.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb>
-Output written on gender_paper.pdf (2 pages, 169112 bytes).
+ 72i,12n,77p,1016b,443s stack positions out of 10000i,1000n,20000p,200000b,200000s
+{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}</Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy5.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
+Output written on gender_paper_tables.pdf (7 pages, 213200 bytes).
 PDF statistics:
- 106 PDF objects out of 1000 (max. 8388607)
- 76 compressed objects within 1 object stream
- 12 named destinations out of 1000 (max. 500000)
- 28689 words of extra memory for PDF output out of 29859 (max. 10000000)
+ 175 PDF objects out of 1000 (max. 8388607)
+ 136 compressed objects within 2 object streams
+ 28 named destinations out of 1000 (max. 500000)
+ 30785 words of extra memory for PDF output out of 35830 (max. 10000000)
 
