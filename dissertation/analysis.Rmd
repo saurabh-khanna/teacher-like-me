@@ -64,7 +64,7 @@ df <-
 df_grades <-
   read_dta(here::here("data/30jan2022/df_gradefac.dta")) %>% 
   filter(facid != "") %>%
-  left_join(df_stu %>% select(stdid, department_id, reservation, caste, b_i_jeemain_score, b_math_g1_score, b_physics_g1_score, e_math_g3_score, e_physics_g3_score, elite), by = "stdid") %>%
+  left_join(df_stu %>% select(stdid, department_id, reservation, took_jee, b_i_jeemain_score, b_math_g1_score, b_physics_g1_score, e_math_g3_score, e_physics_g3_score, elite), by = "stdid") %>%
   left_join(read_dta(here::here("data/controls.dta")), by = "stdid") %>%
   left_join(read_dta(here::here("data/fac_covariates.dta")), by = "facid") %>% 
   arrange(department_id, course_name, course_grade_clean) %>% 
@@ -139,6 +139,8 @@ facdata_mentions <-
 #   distinct(stdid, .keep_all = T) %>%
 #   transmute(univcode = substr(department_id, 1, 5)) %>% 
 #   count(univcode)
+
+df %>% glimpse()
 ```
 
 
@@ -272,17 +274,15 @@ read_dta(here::here("data/efac_new_controls.dta")) %>%
 
 ```{r, eval = F}
 df_grades %>% 
-  distinct(facid, .keep_all = T) %>%  # consider unique student/faculty observations
-  filter(reservation_fac == 0) %>% 
-  summarise_at(
-    vars(reservation_fac, fac_assistant_professor, fac_associate_professor, fac_professor, fac_yearsinhighed, fac_highest_degree_masters, fac_highest_degree_phd, fac_highest_degree_phd_in_prog, fac_degree_college_elite, fac_female),
-    ~ round(sd(., na.rm = T), 2)
-  ) %>% 
-  glimpse()
+  distinct(stdid, .keep_all = T) %>%  # consider unique student/faculty observations
+  select(b_math_g1_score, b_physics_g1_score, b_i_jeemain_score, took_jee) %>% 
+  skim() %>% 
+  as_tibble() %>% 
+  mutate_if(is.numeric, ~ round(., 2))
 
 df_grades %>%
   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-  lm_robust(fac_female ~ reservation_fac , data = ., fixed_effects = ~ fe_var, se_type = "stata", clusters = facid) %>%
+  lm_robust(took_jee ~ reservation_fac , data = ., fixed_effects = ~ fe_var, se_type = "stata", clusters = facid) %>%
   knitreg(include.ci = F, digits = 3, stars = c(0.01, 0.05, 0.1))
 ```
 
