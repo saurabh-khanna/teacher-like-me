@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = F, message = F, warning = F, fig.retina = 4)
 
 ```{r message=FALSE, warning=FALSE}
 # Libraries
-pacman::p_load(haven, estimatr, extrafont, texreg, janitor, hrbrthemes, xtable, papeR, tidyverse, compareGroups, Hmisc, skimr)
+pacman::p_load(haven, estimatr, extrafont, texreg, janitor, xtable, papeR, tidyverse, compareGroups, Hmisc, skimr)
 ```
 
 \newpage
