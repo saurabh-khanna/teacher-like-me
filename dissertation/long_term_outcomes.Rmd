@@ -480,3 +480,39 @@ knitreg(list(lm1, lm2, lm3, lm4), custom.note = "%stars", stars = c(0.01, 0.05, 
   \end{tabular}
 \end{table}
 ```
+
+\newpage
+
+# Teaching Introductory Courses
+
+Sample restricted to first cohort of students and their instructors in the 12-college sample.
+
+```{r, eval=F}
+read_dta(here::here("data/30jan2022/semesters.dta")) %>% 
+  inner_join(df_grades %>% distinct(facid)) %>%
+  drop_na(reservation_fac, semester) %>% 
+  filter(semester <= 4) %>% 
+  #filter(semester == 1) %>% 
+  tabyl(reservation_fac)
+```
+
+```{=latex}
+\begin{table}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lll@{}}
+\toprule
+                & Reservation category \% & N     \\ \midrule
+First semester  & 32.89\%                 & 13560 \\
+Second semester & 39.64\%                 & 12323 \\
+Third semester  & 41.36\%                 & 14060 \\
+Fourth semester & 44.76\%                 & 11855 \\\\
+Total           & 39.51\%                 & 51798 \\ \bottomrule
+\end{tabular}%
+}
+\caption{}
+\label{tab:semester-table}
+\end{table}
+```
+
+
