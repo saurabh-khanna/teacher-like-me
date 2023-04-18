@@ -168,12 +168,12 @@ lm1 <-
 lm2 <-
   df_temp %>% 
   drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_g3_score ~ reservation_fac + subject + b_g1_score + female + age + miss_age + father_college + mother_college, data = ., se_type = "stata", fixed_effects = ~ department_id)
+  lm_robust(e_g3_score ~ reservation_fac + subject + b_g1_score + reservation_stu + female + age + miss_age + father_college + mother_college, data = ., se_type = "stata", fixed_effects = ~ department_id)
 
 lm3 <-
   df_temp %>% 
   drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_g3_score ~ reservation_fac + subject + b_g1_score + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
+  lm_robust(e_g3_score ~ reservation_fac + subject + b_g1_score + reservation_stu + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
 
 lm4 <-
   df_temp %>% 
@@ -275,12 +275,12 @@ lm1 <-
 lm2 <-
   df_temp %>% 
   drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_g3_score ~ reservation_fac + subject + b_g1_score + female + age + miss_age + father_college + mother_college, data = ., se_type = "stata", fixed_effects = ~ department_id)
+  lm_robust(e_g3_score ~ reservation_fac + subject + b_g1_score + reservation_stu + female + age + miss_age + father_college + mother_college, data = ., se_type = "stata", fixed_effects = ~ department_id)
 
 lm3 <-
   df_temp %>% 
   drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_g3_score ~ reservation_fac + subject + b_g1_score + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
+  lm_robust(e_g3_score ~ reservation_fac + subject + b_g1_score + reservation_stu + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
 
 lm4 <-
   df_temp %>% 
@@ -368,12 +368,12 @@ lm1 <-
 lm2 <-
   df_temp %>% 
   drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_attend ~ reservation_fac + subject + female + age + miss_age + father_college + mother_college, data = ., se_type = "stata", fixed_effects = ~ department_id)
+  lm_robust(e_attend ~ reservation_fac + subject + reservation_stu + female + age + miss_age + father_college + mother_college, data = ., se_type = "stata", fixed_effects = ~ department_id)
 
 lm3 <-
   df_temp %>% 
   drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_attend ~ reservation_fac + subject + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
+  lm_robust(e_attend ~ reservation_fac + subject + reservation_stu + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
 
 lm4 <-
   df_temp %>% 
@@ -423,12 +423,12 @@ lm1 <-
 lm2 <-
   df_temp %>% 
   drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_hot_attend ~ reservation_fac + female + age + miss_age + father_college + mother_college, data = ., se_type = "stata", fixed_effects = ~ department_id)
+  lm_robust(e_hot_attend ~ reservation_fac + reservation_stu + female + age + miss_age + father_college + mother_college, data = ., se_type = "stata", fixed_effects = ~ department_id)
 
 lm3 <-
   df_temp %>% 
   drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_hot_attend ~ reservation_fac + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
+  lm_robust(e_hot_attend ~ reservation_fac + reservation_stu + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
 
 lm4 <-
   df_temp %>% 
@@ -473,12 +473,12 @@ lm1 <-
 lm2 <-
   df_temp %>% 
   drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_college_satisfied ~ reservation_fac + female + age + miss_age + father_college + mother_college, data = ., se_type = "stata", fixed_effects = ~ department_id)
+  lm_robust(e_college_satisfied ~ reservation_fac + reservation_stu + female + age + miss_age + father_college + mother_college, data = ., se_type = "stata", fixed_effects = ~ department_id)
 
 lm3 <-
   df_temp %>% 
   drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_college_satisfied ~ reservation_fac + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
+  lm_robust(e_college_satisfied ~ reservation_fac + reservation_stu + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
 
 lm4 <-
   df_temp %>% 
@@ -523,12 +523,12 @@ lm1 <-
 lm2 <-
   df_temp %>% 
   drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_attend_grad_school ~ reservation_fac + female + age + miss_age + father_college + mother_college, data = ., se_type = "stata", fixed_effects = ~ department_id)
+  lm_robust(e_attend_grad_school ~ reservation_fac + reservation_stu + female + age + miss_age + father_college + mother_college, data = ., se_type = "stata", fixed_effects = ~ department_id)
 
 lm3 <-
   df_temp %>% 
   drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_attend_grad_school ~ reservation_fac + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
+  lm_robust(e_attend_grad_school ~ reservation_fac + reservation_stu + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
 
 lm4 <-
   df_temp %>% 
@@ -572,12 +572,12 @@ lm1 <-
 lm2 <-
   df_temp %>% 
   drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_dropped_out ~ reservation_fac + female + age + miss_age + father_college + mother_college, data = ., se_type = "stata", fixed_effects = ~ department_id)
+  lm_robust(e_dropped_out ~ reservation_fac + reservation_stu + female + age + miss_age + father_college + mother_college, data = ., se_type = "stata", fixed_effects = ~ department_id)
 
 lm3 <-
   df_temp %>% 
   drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_dropped_out ~ reservation_fac + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
+  lm_robust(e_dropped_out ~ reservation_fac + reservation_stu + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
 
 lm4 <-
   df_temp %>% 
@@ -637,10 +637,9 @@ Sample restricted to first cohort of students and their instructors in the 12-co
 
 ```{r, eval=F}
 read_dta(here::here("data/30jan2022/semesters.dta")) %>% 
-  inner_join(df_grades %>% distinct(facid)) %>%
+  inner_join(df_grades %>% distinct(facid), by = "facid") %>%
   drop_na(reservation_fac, semester) %>% 
   filter(semester <= 4) %>% 
-  #filter(semester == 1) %>% 
   tabyl(reservation_fac)
 ```
 
