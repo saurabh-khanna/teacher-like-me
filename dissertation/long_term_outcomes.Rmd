@@ -87,6 +87,15 @@ df_grades <-
   rename(reservation_stu = reservation)
 
 rm(df)
+
+df_grades %>% 
+  select(course_name, facid, fac_reservation) %>%
+  inner_join(readxl::read_xlsx(here::here("data/introductory_courses.xlsx"))) %>% 
+  group_by(facid, fac_reservation) %>% 
+  summarise(introductory = mean(introductory, na.rm = T)) %>% 
+  ungroup() %>%
+  compareGroups(fac_reservation ~ introductory, data = ., include.label = F) %>%
+  createTable(show.all = F)
 ```
 
 
@@ -295,7 +304,7 @@ knitreg(list(lm1, lm2, lm3, lm4), custom.note = "%stars", stars = c(0.01, 0.05, 
 
 # Hours attending classes
 
-The dependent variable is daily hours attending classes (0-10).
+The dependent variable is daily hours attending classes (3-10).
 
 ## Math and Physics
 
@@ -407,7 +416,7 @@ df_temp <-
     fac_female = mean(fac_female, na.rm = T),
   ) %>% 
   ungroup() %>% 
-  mutate(e_hot_attend = if_else(e_hot_attend > 10, 10, e_hot_attend)) %>% 
+  mutate(e_hot_attend = if_else(e_hot_attend > 10, 10, e_hot_attend)) %>%
   relocate(stdid, reservation_fac, e_hot_attend)
 ```
 
