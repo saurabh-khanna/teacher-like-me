@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.9)  18 MAY 2023 03:11
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.9)  1 JUN 2023 03:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -658,21 +658,21 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `long_term_outcomes.out' has not changed.
-(rerunfilecheck)             Checksum: 3814B4032147861A6F8F931EBF6AA875;2822.
+(rerunfilecheck)             Checksum: 8ACE389788EABBF21D295BB7BBBB2361;2610.
  ) 
 Here is how much of TeX's memory you used:
- 15749 strings out of 476931
- 259084 string characters out of 5824502
- 659994 words of memory out of 5000000
- 36609 multiletter control sequences out of 15000+600000
- 520056 words of font info for 96 fonts, out of 8000000 for 9000
+ 15761 strings out of 476931
+ 259144 string characters out of 5824502
+ 659925 words of memory out of 5000000
+ 36607 multiletter control sequences out of 15000+600000
+ 520734 words of font info for 104 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  72i,12n,77p,1015b,445s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/Users/saurabh/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}</Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy5.pfb></Users/saurabh/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb>
-Output written on long_term_outcomes.pdf (14 pages, 204723 bytes).
+Output written on long_term_outcomes.pdf (14 pages, 205854 bytes).
 PDF statistics:
- 259 PDF objects out of 1000 (max. 8388607)
- 216 compressed objects within 3 object streams
- 61 named destinations out of 1000 (max. 500000)
- 28801 words of extra memory for PDF output out of 29859 (max. 10000000)
+ 252 PDF objects out of 1000 (max. 8388607)
+ 209 compressed objects within 3 object streams
+ 59 named destinations out of 1000 (max. 500000)
+ 28793 words of extra memory for PDF output out of 29859 (max. 10000000)
 

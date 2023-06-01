@@ -67,7 +67,7 @@ df <-
 df_grades <-
   read_dta(here::here("data/30jan2022/df_gradefac.dta")) %>% 
   filter(facid != "") %>%
-  left_join(df_stu %>% select(stdid, department_id, reservation, caste, b_i_jeemain_score, b_math_g1_score, b_physics_g1_score, e_math_g3_score, e_physics_g3_score, b_ct_score, b_ql_score, e_ct_score, e_ql_score, b_rr_score, e_rr_score, e_attend_grad_school, e_college_satisfied, e_dropped_out, e_math_attend = e_univtimeuse_1, e_physics_attend = e_univtimeuse_4, e_hot_attend = e_univexpr_55, e_talkprof_research, e_workprof_research, e_received_tutoring, e_growth_mindset_z), by = "stdid") %>%
+  left_join(df_stu %>% select(stdid, univcode, department_id, reservation, caste, b_i_jeemain_score, b_math_g1_score, b_physics_g1_score, e_math_g3_score, e_physics_g3_score, b_ct_score, b_ql_score, e_ct_score, e_ql_score, b_rr_score, e_rr_score, e_attend_grad_school, e_college_satisfied, e_dropped_out, e_switchmajor, e_math_attend = e_univtimeuse_1, e_physics_attend = e_univtimeuse_4, e_hot_attend = e_univexpr_55, e_talkprof_research, e_workprof_research, e_received_tutoring, e_growth_mindset_z), by = "stdid") %>%
   left_join(read_dta(here::here("data/controls.dta")), by = "stdid") %>%
   left_join(read_dta(here::here("data/fac_covariates.dta")), by = "facid") %>% 
   arrange(department_id, course_name, course_grade_clean) %>% 
@@ -96,6 +96,11 @@ rm(df)
 #   ungroup() %>%
 #   compareGroups(fac_reservation ~ introductory, data = ., include.label = F) %>%
 #   createTable(show.all = F)
+
+# df_grades %>% 
+  # distinct(univcode) %>% 
+  # inner_join(read_dta(here::here("data/univnames.dta"))) %>% 
+  # writexl::write_xlsx(here::here("data/univnames.xlsx"))
 ```
 
 
@@ -166,7 +171,7 @@ rm(df_math, df_physics)
 ```
 
 
-The dependent variables are standardized test scores. All models include baseline score controls and department fixed effects.
+The dependent variables are standardized test scores (mean 0). All models include baseline score controls and department fixed effects.
 
 ```{r, results='asis'}
 lm1 <-
@@ -273,7 +278,7 @@ rm(df_ct, df_ql)
 ```
 
 
-The dependent variables are standardized test scores. All models include baseline score controls and department fixed effects.
+The dependent variables are standardized test scores (mean 0). All models include baseline score controls and department fixed effects.
 
 ```{r, results='asis'}
 lm1 <-
@@ -304,9 +309,7 @@ knitreg(list(lm1, lm2, lm3, lm4), custom.note = "%stars", stars = c(0.01, 0.05, 
 
 # Hours attending classes
 
-The dependent variable is weekly hours attending classes (0-30).
-
-## Math and Physics
+The dependent variable is average daily hours attending classes (0-15) for HOT (all subjects), for math, or for physics. Mean of this variable is 6.17.
 
 ```{r}
 df_math <-
@@ -355,17 +358,37 @@ df_physics <-
   ungroup() %>% 
   relocate(stdid, reservation_fac, e_attend)
 
+df_hot <-
+  df_grades %>%
+  mutate(
+    miss_age = if_else(is.na(age), 1L, 0L),
+    age = if_else(is.na(age), 0, age),
+  ) %>% 
+  rename(e_attend = e_hot_attend) %>%
+  drop_na(e_attend) %>%
+  group_by(stdid, reservation_stu, female, father_college, mother_college, e_attend, age, miss_age, department_id) %>%
+  summarise(
+    reservation_fac = mean(reservation_fac, na.rm = T),
+    fac_associate_professor = mean(fac_associate_professor, na.rm = T),
+    fac_professor = mean(fac_professor, na.rm = T),
+    fac_yearsinhighed = mean(fac_yearsinhighed, na.rm = T),
+    fac_highest_degree_phd = mean(fac_highest_degree_phd, na.rm = T),
+    fac_highest_degree_phd_in_prog = mean(fac_highest_degree_phd_in_prog, na.rm = T),
+    fac_degree_college_elite = mean(fac_degree_college_elite, na.rm = T),
+    fac_female = mean(fac_female, na.rm = T),
+  ) %>% 
+  ungroup() %>%
+  mutate(subject = "HOT") %>% 
+  relocate(stdid, reservation_fac, e_attend, subject)
+
+
 df_temp <-
-  bind_rows(df_math, df_physics) %>% 
+  bind_rows(df_math, df_physics, df_hot) %>% 
   arrange(stdid, subject) %>% 
   relocate(stdid, subject) %>% 
-  mutate(
-    e_attend = e_attend * 5,
-    e_attend = if_else(e_attend > 30, 30, e_attend)
-  ) %>%
-  mutate(subject = as_factor(str_to_title(subject)))
+  mutate(subject = as_factor(str_to_title(subject)) %>% fct_relevel(sort))
 
-rm(df_math, df_physics)
+rm(df_math, df_physics, df_hot)
 ```
 
 
@@ -397,66 +420,9 @@ knitreg(list(lm1, lm2, lm3, lm4), custom.note = "%stars", stars = c(0.01, 0.05, 
 
 \newpage
 
-## Higher Order Thinking
-
-```{r}
-df_temp <-
-  df_grades %>%
-  mutate(
-    miss_age = if_else(is.na(age), 1L, 0L),
-    age = if_else(is.na(age), 0, age),
-  ) %>% 
-  drop_na(e_hot_attend) %>%
-  group_by(stdid, reservation_stu, female, father_college, mother_college, e_hot_attend, age, miss_age, department_id) %>%
-  summarise(
-    reservation_fac = mean(reservation_fac, na.rm = T),
-    fac_associate_professor = mean(fac_associate_professor, na.rm = T),
-    fac_professor = mean(fac_professor, na.rm = T),
-    fac_yearsinhighed = mean(fac_yearsinhighed, na.rm = T),
-    fac_highest_degree_phd = mean(fac_highest_degree_phd, na.rm = T),
-    fac_highest_degree_phd_in_prog = mean(fac_highest_degree_phd_in_prog, na.rm = T),
-    fac_degree_college_elite = mean(fac_degree_college_elite, na.rm = T),
-    fac_female = mean(fac_female, na.rm = T),
-  ) %>% 
-  ungroup() %>%
-  mutate(
-    e_hot_attend = e_hot_attend * 5,
-    e_hot_attend = if_else(e_hot_attend > 30, 30, e_hot_attend)
-  ) %>%
-  relocate(stdid, reservation_fac, e_hot_attend)
-```
-
-All models include department fixed effects.
-
-```{r, results='asis'}
-lm1 <-
-  df_temp %>%
-  drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_hot_attend ~ reservation_fac, data = ., se_type = "stata", fixed_effects = ~ department_id)
-
-lm2 <-
-  df_temp %>% 
-  drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_hot_attend ~ reservation_fac + reservation_stu + female + age + miss_age + father_college + mother_college, data = ., se_type = "stata", fixed_effects = ~ department_id)
-
-lm3 <-
-  df_temp %>% 
-  drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_hot_attend ~ reservation_fac + reservation_stu + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
-
-lm4 <-
-  df_temp %>% 
-  drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_hot_attend ~ reservation_fac * reservation_stu + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
-
-knitreg(list(lm1, lm2, lm3, lm4), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = F, dcolumn = T, booktabs = T, float.pos = "H", caption = "", digits = 2, include.nclust = F, include.rsquared = F, include.adjrs = F, include.rmse = F, omit.coef = "(miss_age)|(Intercept)")
-```
-
-\newpage
-
 # College satisfaction
 
-The dependent variable is college satisfaction (0/1). All models include department fixed effects.
+The dependent variable is college satisfaction (0/1). Mean is 0.70. All models include department fixed effects.
 
 ```{r, results='asis'}
 df_temp <-
@@ -506,7 +472,7 @@ knitreg(list(lm1, lm2, lm3, lm4), custom.note = "%stars", stars = c(0.01, 0.05, 
 
 # Plans for grad school
 
-The dependent variable is plans for grad school (0/1). All models include department fixed effects.
+The dependent variable is plans for grad school (0/1). Mean is 0.61. All models include department fixed effects.
 
 ```{r, results='asis'}
 df_temp <-
@@ -555,7 +521,7 @@ knitreg(list(lm1, lm2, lm3, lm4), custom.note = "%stars", stars = c(0.01, 0.05, 
 
 # College dropout
 
-The dependent variable is college dropout (0/1). All models include department fixed effects.
+The dependent variable is college dropout (0/1). Mean is 0.01. All models include department fixed effects.
 
 ```{r, results='asis'}
 df_temp <-
@@ -603,9 +569,62 @@ knitreg(list(lm1, lm2, lm3, lm4), custom.note = "%stars", stars = c(0.01, 0.05, 
 
 \newpage
 
+
+# Switch major
+
+The dependent variable is switching major (0/1). Mean is 0 (i.e., no sampled student switches major). All models include department fixed effects.
+
+```{r, results='asis'}
+df_temp <-
+  df_grades %>%
+  mutate(
+    miss_age = if_else(is.na(age), 1L, 0L),
+    age = if_else(is.na(age), 0, age),
+  ) %>%
+  group_by(stdid, e_switchmajor, reservation_stu, female, father_college, mother_college, age, miss_age, department_id) %>% 
+  summarise(
+    reservation_fac = mean(reservation_fac, na.rm = T),
+    fac_associate_professor = mean(fac_associate_professor, na.rm = T),
+    fac_professor = mean(fac_professor, na.rm = T),
+    fac_yearsinhighed = mean(fac_yearsinhighed, na.rm = T),
+    fac_highest_degree_phd = mean(fac_highest_degree_phd, na.rm = T),
+    fac_highest_degree_phd_in_prog = mean(fac_highest_degree_phd_in_prog, na.rm = T),
+    fac_degree_college_elite = mean(fac_degree_college_elite, na.rm = T),
+    fac_female = mean(fac_female, na.rm = T),
+  ) %>% 
+  ungroup()
+
+lm1 <-
+  df_temp %>%
+  drop_na(female, father_college, mother_college) %>%
+  lm_robust(e_switchmajor ~ reservation_fac, data = ., se_type = "stata", fixed_effects = ~ department_id)
+
+lm2 <-
+  df_temp %>% 
+  drop_na(female, father_college, mother_college) %>%
+  lm_robust(e_switchmajor ~ reservation_fac + reservation_stu + female + age + miss_age + father_college + mother_college, data = ., se_type = "stata", fixed_effects = ~ department_id)
+
+lm3 <-
+  df_temp %>% 
+  drop_na(female, father_college, mother_college) %>%
+  lm_robust(e_switchmajor ~ reservation_fac + reservation_stu + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
+
+lm4 <-
+  df_temp %>% 
+  drop_na(female, father_college, mother_college) %>%
+  lm_robust(e_switchmajor ~ reservation_fac * reservation_stu + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
+
+knitreg(list(lm1, lm2, lm3, lm4), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = F, dcolumn = T, booktabs = T, float.pos = "H", caption = "", digits = 2, include.nclust = F, include.rsquared = F, include.adjrs = F, include.rmse = F, omit.coef = "(miss_age)|(Intercept)")
+```
+
+
+\newpage
+
+
+
 # Closed or open mindset
 
-The dependent variable growth mindset is created by applying the Anderson index to 3 survey items on intelligence beliefs. This variable is then turned into a z-score before use in below regression models.
+The dependent variable growth mindset is created by applying the Anderson index to 3 survey items on intelligence beliefs across the national sample. This variable is then turned into a z-score before use in below regression models. Mean is -0.1 (should I standardize within our 12 college sample?).
 
 ```{r, results='asis'}
 df_temp <-
@@ -655,7 +674,9 @@ knitreg(list(lm1, lm2, lm3, lm4), custom.note = "%stars", stars = c(0.01, 0.05, 
 
 # Receiving Tutoring
 
-Dependent variable is receiving paid or unpaid tutoring (0/1). We combine data from HOT and Math surveys and use survey type as a control in the regression models.
+## Old results (HOT + Math)
+
+Dependent variable is receiving paid or unpaid tutoring (0/1). Mean is 0.736. We combine data from HOT and Math surveys and use survey type as a control in the regression models.
 
 ```{r}
 df_math <-
@@ -743,45 +764,20 @@ knitreg(list(lm1, lm2, lm3, lm4), custom.note = "%stars", stars = c(0.01, 0.05, 
 
 \newpage
 
-# Research
+## New results (HOT only)
 
-## Talking to faculty about research
-
-Dependent variable is talking to faculty about research (0/1). We combine data from HOT and Math surveys and use survey type as a control in the regression models.
+Dependent variable is receiving paid or unpaid tutoring (0/1). Mean is 0.72. We use data from HOT survey only in the regression models.
 
 ```{r}
-df_math <-
-  df_grades %>%
-  filter(subject == "math") %>% 
-  mutate(
-    miss_age = if_else(is.na(age), 1L, 0L),
-    age = if_else(is.na(age), 0, age),
-  ) %>% 
-  drop_na(e_math_g3_score, e_talkprof_research) %>%
-  group_by(stdid, reservation_stu, female, father_college, mother_college, e_talkprof_research, age, miss_age, department_id) %>% 
-  summarise(
-    reservation_fac = mean(reservation_fac, na.rm = T),
-    fac_associate_professor = mean(fac_associate_professor, na.rm = T),
-    fac_professor = mean(fac_professor, na.rm = T),
-    fac_yearsinhighed = mean(fac_yearsinhighed, na.rm = T),
-    fac_highest_degree_phd = mean(fac_highest_degree_phd, na.rm = T),
-    fac_highest_degree_phd_in_prog = mean(fac_highest_degree_phd_in_prog, na.rm = T),
-    fac_degree_college_elite = mean(fac_degree_college_elite, na.rm = T),
-    fac_female = mean(fac_female, na.rm = T),
-  ) %>% 
-  ungroup() %>% 
-  mutate(survey = "math") %>%
-  relocate(stdid, reservation_fac, e_talkprof_research)
-
-df_hot <-
+df_temp <-
   df_grades %>%
   filter(!(is.na(e_ct_score) & is.na(e_ql_score))) %>% 
   mutate(
     miss_age = if_else(is.na(age), 1L, 0L),
     age = if_else(is.na(age), 0, age),
   ) %>% 
-  drop_na(e_talkprof_research) %>%
-  group_by(stdid, reservation_stu, female, father_college, mother_college, e_talkprof_research, age, miss_age, department_id) %>% 
+  drop_na(e_received_tutoring) %>%
+  group_by(stdid, reservation_stu, female, father_college, mother_college, e_received_tutoring, age, miss_age, department_id) %>% 
   summarise(
     reservation_fac = mean(reservation_fac, na.rm = T),
     fac_associate_professor = mean(fac_associate_professor, na.rm = T),
@@ -794,17 +790,8 @@ df_hot <-
   ) %>% 
   ungroup() %>% 
   mutate(survey = "hot") %>%
-  relocate(stdid, reservation_fac, e_talkprof_research)
-
-df_temp <-
-  bind_rows(df_math, df_hot) %>% 
-  arrange(stdid, survey) %>% 
-  relocate(stdid, survey) %>% 
-  mutate(survey = as_factor(str_to_title(survey)))
-
-rm(df_math, df_hot)
+  relocate(stdid, reservation_fac, e_received_tutoring)
 ```
-
 
 All models include department fixed effects.
 
@@ -812,22 +799,22 @@ All models include department fixed effects.
 lm1 <-
   df_temp %>%
   drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_talkprof_research ~ reservation_fac + survey, data = ., se_type = "stata", fixed_effects = ~ department_id)
+  lm_robust(e_received_tutoring ~ reservation_fac, data = ., se_type = "stata", fixed_effects = ~ department_id)
 
 lm2 <-
   df_temp %>% 
   drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_talkprof_research ~ reservation_fac + survey + reservation_stu + female + age + miss_age + father_college + mother_college, data = ., se_type = "stata", fixed_effects = ~ department_id)
+  lm_robust(e_received_tutoring ~ reservation_fac + reservation_stu + female + age + miss_age + father_college + mother_college, data = ., se_type = "stata", fixed_effects = ~ department_id)
 
 lm3 <-
   df_temp %>% 
   drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_talkprof_research ~ reservation_fac + survey + reservation_stu + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
+  lm_robust(e_received_tutoring ~ reservation_fac + reservation_stu + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
 
 lm4 <-
   df_temp %>% 
   drop_na(female, father_college, mother_college) %>%
-  lm_robust(e_talkprof_research ~ reservation_fac * reservation_stu + survey + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
+  lm_robust(e_received_tutoring ~ reservation_fac * reservation_stu + female + age + miss_age + father_college + mother_college + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", fixed_effects = ~ department_id)
 
 knitreg(list(lm1, lm2, lm3, lm4), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = F, dcolumn = T, booktabs = T, float.pos = "H", caption = "", digits = 2, include.nclust = F, include.rsquared = F, include.adjrs = F, include.rmse = F, omit.coef = "(miss_age)|(Intercept)")
 ```
@@ -835,9 +822,9 @@ knitreg(list(lm1, lm2, lm3, lm4), custom.note = "%stars", stars = c(0.01, 0.05, 
 
 \newpage
 
-## Working with faculty on research
+# Working with faculty on research
 
-Dependent variable is working with faculty on their research (0/1). We combine data from HOT and Math surveys and use survey type as a control in the regression models.
+Dependent variable is working with faculty on their research (0/1). Mean is 0.21. We combine data from HOT and Math surveys and use survey type as a control in the regression models.
 
 ```{r}
 df_math <-
@@ -926,7 +913,9 @@ knitreg(list(lm1, lm2, lm3, lm4), custom.note = "%stars", stars = c(0.01, 0.05, 
 
 \newpage
 
-# Faculty and Student Characteristics, Faculty Differences, and Balance Checks [Updated]
+# Faculty and Student Characteristics, Faculty Differences, and Balance Checks
+
+Baselint test scores (Math, Physics, CT, QL, RR) are standardized to have a mean 0 and and sd 1.
 
 ```{=latex}
 \begin{table}[H]
@@ -957,11 +946,11 @@ knitreg(list(lm1, lm2, lm3, lm4), custom.note = "%stars", stars = c(0.01, 0.05, 
     Age                               &           & 17.72         & 0.80        &           & 0.001                       & 0.011       \\
     Father college                    &           & 0.50          & 0.50        &           & 0.005                       & 0.010       \\
     Mother college                    &           & 0.35          & 0.48        &           & 0.018**                     & 0.008       \\ 
-    Baseline Math score               &           & 11.64         & 4.18        &           & 0.005                       & 0.103       \\
-    Baseline Physics score            &           & 9.95          & 3.97        &           & -0.039                      & 0.103       \\
-    Baseline CT score                 &           & 6.62          & 3.04        &           & 0.239*                      & 0.126       \\
-    Baseline QL score                 &           & 9.00          & 4.57        &           & 0.393**                     & 0.169       \\
-    Baseline RR score                 &           & 13.61         & 4.88        &           & 0.261*                      & 0.154       \\
+    Baseline Math score               &           & 0.00          & 1.00        &           & 0.001                       & 0.024       \\
+    Baseline Physics score            &           & 0.00          & 1.00        &           & -0.010                      & 0.025       \\
+    Baseline CT score                 &           & 0.00          & 1.00        &           & 0.078*                      & 0.041       \\
+    Baseline QL score                 &           & 0.00          & 1.00        &           & 0.087**                     & 0.038       \\
+    Baseline RR score                 &           & 0.00          & 1.00        &           & 0.053*                      & 0.032       \\
     JEE Main score                    &           & 68.14         & 44.33       &           & 0.971                       & 0.920       \\
     Took JEE Main                     &           & 0.67          & 0.47        &           & 0.004                       & 0.008       \\ \bottomrule
   \end{tabular}

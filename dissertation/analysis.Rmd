@@ -273,14 +273,16 @@ read_dta(here::here("data/efac_new_controls.dta")) %>%
 ```{r, eval = F}
 df_grades %>% 
   distinct(stdid, .keep_all = T) %>%  # consider unique student/faculty observations
-  select(b_ct_score, b_ql_score, b_rr_score) %>% 
+  select(b_ct_score, b_ql_score, b_rr_score) %>%
+  mutate_all(~ scale(.) %>% as.vector) %>% 
   skim() %>% 
   as_tibble() %>% 
   mutate_if(is.numeric, ~ round(., 2))
 
 df_grades %>%
   mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-  lm_robust(b_ct_score ~ reservation_fac , data = ., fixed_effects = ~ fe_var, se_type = "stata", clusters = facid) %>%
+  mutate(depscore = scale(b_math_g1_score) %>% as.vector) %>%
+  lm_robust(depscore ~ reservation_fac , data = ., fixed_effects = ~ fe_var, se_type = "stata", clusters = facid) %>%
   knitreg(include.ci = F, digits = 3, stars = c(0.01, 0.05, 0.1))
 ```
 
