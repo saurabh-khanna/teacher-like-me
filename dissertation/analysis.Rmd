@@ -64,7 +64,7 @@ df <-
 df_grades <-
   read_dta(here::here("data/30jan2022/df_gradefac.dta")) %>% 
   filter(facid != "") %>%
-  left_join(df_stu %>% select(stdid, department_id, reservation, took_jee, b_i_jeemain_score, b_math_g1_score, b_physics_g1_score, e_math_g3_score, e_physics_g3_score, elite, b_ct_score, b_ql_score, b_rr_score), by = "stdid") %>%
+  left_join(df_stu %>% select(stdid, department_id, reservation, took_jee, b_i_jeemain_score, b_math_g1_score, b_physics_g1_score, e_math_g3_score, e_physics_g3_score, elite, b_ct_score, b_ql_score, b_rr_score, b_testtype), by = "stdid") %>%
   left_join(read_dta(here::here("data/controls.dta")), by = "stdid") %>%
   left_join(read_dta(here::here("data/fac_covariates.dta")), by = "facid") %>% 
   arrange(department_id, course_name, course_grade_clean) %>% 
@@ -121,6 +121,22 @@ facdata_mentions <-
   left_join(read_dta(here::here("data/endline_faculty_data_final.dta")), by = "facid")
 
 fac_in_12colleges <- df_grades %>% distinct(facid) %>% drop_na(facid) %>% pull(facid)
+
+efac_new_controls <-
+  read_dta(here::here("data/efac_new_controls.dta")) %>% 
+  transmute(
+    facid, reservation_fac,
+    govt_funding_yesno = if_else(govt_funding > 0, 1L, 0L),
+    private_funding_yesno = if_else(private_funding > 0, 1L, 0L),
+    admin_position_yesno = administrative_position,
+    admin_weekly_hours = time_week_administrative,
+    admin_weekly_hours_yesno = if_else(admin_weekly_hours > 0, 1L, 0L),
+    funding_total,
+    funding_yesno = if_else(funding_total > 0, 1L, 0L),
+    attend_intl_conference = international_conference,
+    conference_papers_yesno = if_else(publications_conference_papers > 0, 1L, 0L),
+    conference_combined = if_else(attend_intl_conference == 1 | conference_papers_yesno == 1, 1L, 0L)
+  )
 
 # df_stu %>% 
 #   select(univcode, gender) %>% 
@@ -236,22 +252,6 @@ x %>%
 
 ```{r, eval=F}
 # new faculty balance table
-efac_new_controls <-
-  read_dta(here::here("data/efac_new_controls.dta")) %>% 
-  transmute(
-    facid, reservation_fac,
-    govt_funding_yesno = if_else(govt_funding > 0, 1L, 0L),
-    private_funding_yesno = if_else(private_funding > 0, 1L, 0L),
-    admin_position_yesno = administrative_position,
-    admin_weekly_hours = time_week_administrative,
-    admin_weekly_hours_yesno = if_else(admin_weekly_hours > 0, 1L, 0L),
-    funding_total,
-    funding_yesno = if_else(funding_total > 0, 1L, 0L),
-    attend_intl_conference = international_conference,
-    conference_papers_yesno = if_else(publications_conference_papers > 0, 1L, 0L),
-    conference_combined = if_else(attend_intl_conference == 1 | conference_papers_yesno == 1, 1L, 0L)
-  )
-
 efac_new_controls %>% 
   compareGroups(reservation_fac ~ govt_funding_yesno + private_funding_yesno + admin_position_yesno + admin_weekly_hours + admin_weekly_hours_yesno + funding_total + funding_yesno + attend_intl_conference + conference_papers_yesno + conference_combined, data = ., include.label = F) %>%
   createTable(show.all = F, show.n = T)
@@ -271,9 +271,16 @@ df_grades %>%
   mutate_if(is.numeric, ~ round(., 2))
 
 df_grades %>%
-  mutate(fe_var = str_c(department_id, course_name, sep = "_")) %>%
-  mutate(depscore = scale(b_math_g1_score) %>% as.vector) %>%
-  lm_robust(depscore ~ reservation_fac , data = ., fixed_effects = ~ fe_var, se_type = "stata", clusters = facid) %>%
+  filter(!(is.na(b_ct_score) & is.na(b_ql_score))) %>%
+  transmute(
+    stdid, facid, reservation_fac,
+    fe_var = str_c(department_id, course_name, sep = "_"),
+    b_ct_score = scale(b_ct_score) %>% as.vector,
+    b_ql_score = scale(b_ql_score) %>% as.vector,
+    b_rr_score = scale(b_rr_score) %>% as.vector,
+  ) %>%
+  pivot_longer(cols = contains("score"), values_drop_na = T, names_to = "testtype", values_to = "b_hot_score") %>%
+  lm_robust(b_hot_score ~ reservation_fac + factor(testtype), data = ., fixed_effects = ~ fe_var, se_type = "stata", clusters = facid) %>%
   knitreg(include.ci = F, digits = 3, stars = c(0.01, 0.05, 0.1))
 ```
 
@@ -871,6 +878,80 @@ Notes:
 
 \newpage
 
+## New combo regressions [6-6-2023]
+
+```{r, results='asis'}
+lm1 <-
+  facdata_mentions %>%
+  filter(facid %in% fac_in_12colleges) %>%
+  mutate(
+    fac_publications = fac_publications/3,
+    fac_publications = if_else(fac_publications > 30, 30, fac_publications),
+    univcode = str_sub(department_id, 1, 5),
+    majtype = str_sub(department_id, 6, 7),
+  ) %>%
+  left_join(read_csv("/Users/saurabh/Everything/GitHub/teacher-like-me/data/depweights.csv"), by = "department_id") %>%
+  lm_robust(fac_publications ~ fac_reservation + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", weights = sw_f, fixed_effects = ~ univcode + majtype)
+
+lm2 <-
+  facdata_mentions %>%
+  filter(facid %in% fac_in_12colleges) %>%
+  left_join(read_dta(here::here("data/fac_covariates.dta")) %>% select(facid, efac_pub_intl), by = "facid") %>% 
+  mutate(
+    efac_pub_intl = efac_pub_intl/3,
+    efac_pub_intl = if_else(efac_pub_intl > 30, 30, efac_pub_intl)
+  ) %>% 
+  mutate(
+    univcode = str_sub(department_id, 1, 5),
+    majtype = str_sub(department_id, 6, 7),
+  ) %>%
+  left_join(read_csv("/Users/saurabh/Everything/GitHub/teacher-like-me/data/depweights.csv"), by = "department_id") %>%
+  lm_robust(efac_pub_intl ~ fac_reservation + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", weights = sw_f, fixed_effects = ~ univcode + majtype)
+
+lm3 <-
+  facdata_mentions %>%
+  filter(facid %in% fac_in_12colleges) %>%
+  left_join(read_dta(here::here("data/efac_new_controls.dta")) %>% select(facid, efac_pub_intl, efac_pub_sci, efac_pub_ei, efac_pub_ssci), by = "facid") %>%
+  mutate_at(vars(efac_pub_sci, efac_pub_ei, efac_pub_ssci), ~ replace_na(., 0)) %>% 
+  mutate(
+    efac_pub_intl = efac_pub_intl/3,
+    efac_pub_intl = if_else(efac_pub_intl > 30, 30, efac_pub_intl),
+    efac_pub_sci_ei_ssci = (efac_pub_sci + efac_pub_ei + efac_pub_ssci)/3,
+    efac_pub_sci_ei_ssci = if_else(efac_pub_sci_ei_ssci > efac_pub_intl, efac_pub_intl, efac_pub_sci_ei_ssci),
+    univcode = str_sub(department_id, 1, 5),
+    majtype = str_sub(department_id, 6, 7),
+  ) %>%
+  left_join(read_csv("/Users/saurabh/Everything/GitHub/teacher-like-me/data/depweights.csv"), by = "department_id") %>%
+  lm_robust(efac_pub_sci_ei_ssci ~ fac_reservation + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", weights = sw_f, fixed_effects = ~ univcode + majtype)
+
+lm4 <-
+  facdata_mentions %>%
+  filter(facid %in% fac_in_12colleges) %>%
+  left_join(efac_new_controls %>% select(facid, funding_yesno), by = "facid") %>%
+  mutate(
+    univcode = str_sub(department_id, 1, 5),
+    majtype = str_sub(department_id, 6, 7),
+  ) %>%
+  left_join(read_csv("/Users/saurabh/Everything/GitHub/teacher-like-me/data/depweights.csv"), by = "department_id") %>%
+  lm_robust(funding_yesno ~ fac_reservation + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", weights = sw_f, fixed_effects = ~ univcode + majtype)
+
+lm5 <-
+  facdata_mentions %>%
+  filter(facid %in% fac_in_12colleges) %>%
+  left_join(efac_new_controls %>% select(facid, admin_position_yesno), by = "facid") %>%
+  mutate(
+    univcode = str_sub(department_id, 1, 5),
+    majtype = str_sub(department_id, 6, 7),
+  ) %>%
+  left_join(read_csv("/Users/saurabh/Everything/GitHub/teacher-like-me/data/depweights.csv"), by = "department_id") %>%
+  lm_robust(admin_position_yesno ~ fac_reservation + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", weights = sw_f, fixed_effects = ~ univcode + majtype)
+
+texreg(list(lm1, lm2, lm3, lm4, lm5), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, dcolumn = TRUE, booktabs = TRUE, float.pos = "H", caption = "", digits = 2, include.nclust = F, include.rsquared = F, include.adjrs = F, include.rmse = F, custom.model.names = c("I", "II", "III", "IV", "V"), custom.coef.names = c("Reservation faculty", "Associate professor", "Professor", "Experience in years", "Highest degree is PhD", "Highest degree is PhD in progress", "Degree college elite", "Female"))
+```
+
+
+\newpage
+
 ## Table 6.1: Regressions for Total Number of Publications per Year
 
 
@@ -878,7 +959,7 @@ Notes:
 # OLD (stu-course level for 12 college sample)
 
 lm_pub1 <-
-  df_mechanism %>% 
+  df_mechanism %>%
   left_join(read_dta(here::here("data/fac_covariates.dta")) %>% select(facid, fac_publications), by = "facid") %>% 
   mutate(fac_publications = fac_publications/3,
          fac_publications = if_else(fac_publications > 30, 30, fac_publications)) %>% 
@@ -919,7 +1000,7 @@ texreg(list(lm_pub1, lm_pub2, lm_pub3, lm_pub4), custom.note = "%stars", stars =
 
 lm_pub1 <-
   facdata_mentions %>%
-  #filter(facid %in% fac_in_12colleges) %>% 
+  filter(facid %in% fac_in_12colleges) %>% 
   mutate(
     fac_publications = fac_publications/3,
     fac_publications = if_else(fac_publications > 30, 30, fac_publications),
@@ -1038,11 +1119,11 @@ All International:
 
 lm_pub1 <-
   facdata_mentions %>%
-  #filter(facid %in% fac_in_12colleges) %>%
   left_join(read_dta(here::here("data/fac_covariates.dta")) %>% select(facid, efac_pub_intl), by = "facid") %>% 
   mutate(
     efac_pub_intl = efac_pub_intl/3,
-    efac_pub_intl = if_else(efac_pub_intl > 30, 30, efac_pub_intl)) %>% 
+    efac_pub_intl = if_else(efac_pub_intl > 30, 30, efac_pub_intl)
+  ) %>% 
   mutate(
     univcode = str_sub(department_id, 1, 5),
     majtype = str_sub(department_id, 6, 7),
@@ -1052,10 +1133,11 @@ lm_pub1 <-
 
 lm_pub2 <-
   facdata_mentions %>%
-  #filter(facid %in% fac_in_12colleges) %>%
   left_join(read_dta(here::here("data/fac_covariates.dta")) %>% select(facid, efac_pub_intl), by = "facid") %>% 
-  mutate(efac_pub_intl = efac_pub_intl/3,
-         efac_pub_intl = if_else(efac_pub_intl > 30, 30, efac_pub_intl)) %>%
+  mutate(
+    efac_pub_intl = efac_pub_intl/3,
+    efac_pub_intl = if_else(efac_pub_intl > 30, 30, efac_pub_intl)
+  ) %>%
   mutate(
     univcode = str_sub(department_id, 1, 5),
     majtype = str_sub(department_id, 6, 7),
@@ -1065,10 +1147,11 @@ lm_pub2 <-
 
 lm_pub3 <-
   facdata_mentions %>%
-  #filter(facid %in% fac_in_12colleges) %>%
   left_join(read_dta(here::here("data/fac_covariates.dta")) %>% select(facid, efac_pub_intl), by = "facid") %>% 
-  mutate(efac_pub_intl = efac_pub_intl/3,
-         efac_pub_intl = if_else(efac_pub_intl > 30, 30, efac_pub_intl)) %>%
+  mutate(
+    efac_pub_intl = efac_pub_intl/3,
+    efac_pub_intl = if_else(efac_pub_intl > 30, 30, efac_pub_intl)
+  ) %>%
   mutate(
     univcode = str_sub(department_id, 1, 5),
     majtype = str_sub(department_id, 6, 7),
@@ -1078,10 +1161,11 @@ lm_pub3 <-
 
 lm_pub4 <-
   facdata_mentions %>%
-  #filter(facid %in% fac_in_12colleges) %>%
   left_join(read_dta(here::here("data/fac_covariates.dta")) %>% select(facid, efac_pub_intl), by = "facid") %>% 
-  mutate(efac_pub_intl = efac_pub_intl/3,
-         efac_pub_intl = if_else(efac_pub_intl > 30, 30, efac_pub_intl)) %>% 
+  mutate(
+    efac_pub_intl = efac_pub_intl/3,
+    efac_pub_intl = if_else(efac_pub_intl > 30, 30, efac_pub_intl)
+  ) %>% 
   mutate(
     univcode = str_sub(department_id, 1, 5),
     majtype = str_sub(department_id, 6, 7),
@@ -1090,7 +1174,7 @@ lm_pub4 <-
   lm_robust(efac_pub_intl ~ fac_reservation + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", weights = sw_f, fixed_effects = ~ univcode + majtype)
 
 
-texreg(list(lm_pub1, lm_pub2, lm_pub3, lm_pub4), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, dcolumn = TRUE, booktabs = TRUE, float.pos = "H", caption = "", digits = 2, include.nclust = F, include.rsquared = F, include.adjrs = F, include.rmse = F, custom.model.names = c("I", "II", "III", "IV"), custom.coef.names = c("Reservation faculty", "Associate professor", "Professor", "Experience in years", "Highest degree is PhD", "Highest degree is PhD in progress", "Degree college elite", "Female"))
+knitreg(list(lm_pub1, lm_pub2, lm_pub3, lm_pub4), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, dcolumn = TRUE, booktabs = TRUE, float.pos = "H", caption = "", digits = 2, include.nclust = F, include.rsquared = F, include.adjrs = F, include.rmse = F, custom.model.names = c("I", "II", "III", "IV"), custom.coef.names = c("Reservation faculty", "Associate professor", "Professor", "Experience in years", "Highest degree is PhD", "Highest degree is PhD in progress", "Degree college elite", "Female"))
 ```
 
 SCI International:
@@ -1142,8 +1226,7 @@ lm_pub4 <-
   left_join(read_csv("/Users/saurabh/Everything/GitHub/teacher-like-me/data/depweights.csv"), by = "department_id") %>%
   lm_robust(efac_pub_sci ~ fac_reservation + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", weights = sw_f, fixed_effects = ~ univcode + majtype)
 
-
-texreg(list(lm_pub1, lm_pub2, lm_pub3, lm_pub4), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, dcolumn = TRUE, booktabs = TRUE, float.pos = "H", caption = "", digits = 2, include.nclust = F, include.rsquared = F, include.adjrs = F, include.rmse = F, custom.model.names = c("I", "II", "III", "IV"), custom.coef.names = c("Reservation faculty", "Associate professor", "Professor", "Experience in years", "Highest degree is PhD", "Highest degree is PhD in progress", "Degree college elite", "Female"))
+knitreg(list(lm_pub1, lm_pub2, lm_pub3, lm_pub4), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, dcolumn = TRUE, booktabs = TRUE, float.pos = "H", caption = "", digits = 2, include.nclust = F, include.rsquared = F, include.adjrs = F, include.rmse = F, custom.model.names = c("I", "II", "III", "IV"), custom.coef.names = c("Reservation faculty", "Associate professor", "Professor", "Experience in years", "Highest degree is PhD", "Highest degree is PhD in progress", "Degree college elite", "Female"))
 ```
 
 
@@ -1255,6 +1338,73 @@ texreg(list(lm_pub1, lm_pub2, lm_pub3, lm_pub4), custom.note = "%stars", stars =
 ```
 
 
+SCI + EI + SSCI International:
+
+```{r, results='asis', eval=F}
+# RUN AT FACULTY LEVEL (NEW)
+
+lm_pub1 <-
+  facdata_mentions %>%
+  left_join(read_dta(here::here("data/efac_new_controls.dta")) %>% select(facid, efac_pub_intl, efac_pub_sci, efac_pub_ei, efac_pub_ssci), by = "facid") %>%
+  mutate_at(vars(efac_pub_sci, efac_pub_ei, efac_pub_ssci), ~ replace_na(., 0)) %>% 
+  mutate(
+    efac_pub_intl = efac_pub_intl/3,
+    efac_pub_intl = if_else(efac_pub_intl > 30, 30, efac_pub_intl),
+    efac_pub_sci_ei_ssci = (efac_pub_sci + efac_pub_ei + efac_pub_ssci)/3,
+    efac_pub_sci_ei_ssci = if_else(efac_pub_sci_ei_ssci > efac_pub_intl, efac_pub_intl, efac_pub_sci_ei_ssci),
+    univcode = str_sub(department_id, 1, 5),
+    majtype = str_sub(department_id, 6, 7),
+  ) %>%
+  left_join(read_csv("/Users/saurabh/Everything/GitHub/teacher-like-me/data/depweights.csv"), by = "department_id") %>%
+  lm_robust(efac_pub_sci_ei_ssci ~ fac_reservation, data = ., se_type = "stata", weights = sw_f, fixed_effects = ~ univcode + majtype)
+
+lm_pub2 <-
+  facdata_mentions %>%
+  left_join(read_dta(here::here("data/efac_new_controls.dta")) %>% select(facid, efac_pub_intl, efac_pub_sci, efac_pub_ei, efac_pub_ssci), by = "facid") %>%
+  mutate_at(vars(efac_pub_sci, efac_pub_ei, efac_pub_ssci), ~ replace_na(., 0)) %>% 
+  mutate(
+    efac_pub_intl = efac_pub_intl/3,
+    efac_pub_intl = if_else(efac_pub_intl > 30, 30, efac_pub_intl),
+    efac_pub_sci_ei_ssci = (efac_pub_sci + efac_pub_ei + efac_pub_ssci)/3,
+    efac_pub_sci_ei_ssci = if_else(efac_pub_sci_ei_ssci > efac_pub_intl, efac_pub_intl, efac_pub_sci_ei_ssci),
+    univcode = str_sub(department_id, 1, 5),
+    majtype = str_sub(department_id, 6, 7),
+  ) %>%
+  left_join(read_csv("/Users/saurabh/Everything/GitHub/teacher-like-me/data/depweights.csv"), by = "department_id") %>%
+  lm_robust(efac_pub_sci_ei_ssci ~ fac_reservation + fac_associate_professor + fac_professor + fac_yearsinhighed, data = ., se_type = "stata", weights = sw_f, fixed_effects = ~ univcode + majtype)
+
+lm_pub3 <-
+  facdata_mentions %>%
+  left_join(read_dta(here::here("data/efac_new_controls.dta")) %>% select(facid, efac_pub_intl, efac_pub_sci, efac_pub_ei, efac_pub_ssci), by = "facid") %>%
+  mutate_at(vars(efac_pub_sci, efac_pub_ei, efac_pub_ssci), ~ replace_na(., 0)) %>% 
+  mutate(
+    efac_pub_intl = efac_pub_intl/3,
+    efac_pub_intl = if_else(efac_pub_intl > 30, 30, efac_pub_intl),
+    efac_pub_sci_ei_ssci = (efac_pub_sci + efac_pub_ei + efac_pub_ssci)/3,
+    efac_pub_sci_ei_ssci = if_else(efac_pub_sci_ei_ssci > efac_pub_intl, efac_pub_intl, efac_pub_sci_ei_ssci),
+    univcode = str_sub(department_id, 1, 5),
+    majtype = str_sub(department_id, 6, 7),
+  ) %>%
+  left_join(read_csv("/Users/saurabh/Everything/GitHub/teacher-like-me/data/depweights.csv"), by = "department_id") %>%
+  lm_robust(efac_pub_sci_ei_ssci ~ fac_reservation + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite, data = ., se_type = "stata", weights = sw_f, fixed_effects = ~ univcode + majtype)
+
+lm_pub4 <-
+  facdata_mentions %>%
+  left_join(read_dta(here::here("data/efac_new_controls.dta")) %>% select(facid, efac_pub_intl, efac_pub_sci, efac_pub_ei, efac_pub_ssci), by = "facid") %>%
+  mutate_at(vars(efac_pub_sci, efac_pub_ei, efac_pub_ssci), ~ replace_na(., 0)) %>% 
+  mutate(
+    efac_pub_intl = efac_pub_intl/3,
+    efac_pub_intl = if_else(efac_pub_intl > 30, 30, efac_pub_intl),
+    efac_pub_sci_ei_ssci = (efac_pub_sci + efac_pub_ei + efac_pub_ssci)/3,
+    efac_pub_sci_ei_ssci = if_else(efac_pub_sci_ei_ssci > efac_pub_intl, efac_pub_intl, efac_pub_sci_ei_ssci),
+    univcode = str_sub(department_id, 1, 5),
+    majtype = str_sub(department_id, 6, 7),
+  ) %>%
+  left_join(read_csv("/Users/saurabh/Everything/GitHub/teacher-like-me/data/depweights.csv"), by = "department_id") %>%
+  lm_robust(efac_pub_sci_ei_ssci ~ fac_reservation + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", weights = sw_f, fixed_effects = ~ univcode + majtype)
+
+texreg(list(lm_pub1, lm_pub2, lm_pub3, lm_pub4), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, dcolumn = TRUE, booktabs = TRUE, float.pos = "H", caption = "", digits = 2, include.nclust = F, include.rsquared = F, include.adjrs = F, include.rmse = F, custom.model.names = c("I", "II", "III", "IV"), custom.coef.names = c("Reservation faculty", "Associate professor", "Professor", "Experience in years", "Highest degree is PhD", "Highest degree is PhD in progress", "Degree college elite", "Female"))
+```
 
 
 
