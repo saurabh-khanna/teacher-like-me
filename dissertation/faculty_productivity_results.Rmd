@@ -1,0 +1,280 @@
+---
+title: "Faculty Productivity Results for Caste Paper"
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    extra_dependencies: ["dcolumn", "booktabs", "caption", "float"]
+    toc: yes
+    toc_depth: 6
+    keep_tex: yes
+    number_sections: true
+---
+
+\captionsetup[table]{labelformat=empty}
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, message = F, warning = F, fig.retina = 4)
+```
+
+```{r message=FALSE, warning=FALSE}
+## Libraries
+pacman::p_load(haven, estimatr, extrafont, texreg, janitor, xtable, papeR, tidyverse, compareGroups, Hmisc, skimr)
+```
+
+\newpage
+
+
+# New tables
+
+## International Publications per year (SCI + EI + SSCI)
+
+These regressions use department-level sampling weights, and are run at the faculty level for the national sample (50 colleges). All specifications include college and department fixed effects. Dependent variable mean is 0.532, and is capped at max 10 per year.
+
+```{=latex}
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{l D{.}{.}{4.5} D{.}{.}{4.7} D{.}{.}{4.7} D{.}{.}{4.7}}
+\toprule
+ & \multicolumn{1}{c}{I} & \multicolumn{1}{c}{II} & \multicolumn{1}{c}{III} & \multicolumn{1}{c}{IV} \\
+\midrule
+Reservation faculty               & -0.0541  & 0.0036       & 0.0037       & -0.0031      \\
+                                  & (0.0427) & (0.0417)     & (0.0413)     & (0.0407)     \\
+Associate professor               &          & 0.2106^{***} & 0.1301^{*}   & 0.1336^{**}  \\
+                                  &          & (0.0744)     & (0.0681)     & (0.0667)     \\
+Professor                         &          & 0.9432^{***} & 0.7717^{***} & 0.7622^{***} \\
+                                  &          & (0.2142)     & (0.2141)     & (0.2134)     \\
+Experience in years               &          & 0.0106^{**}  & 0.0081       & 0.0078       \\
+                                  &          & (0.0053)     & (0.0054)     & (0.0053)     \\
+Highest degree is PhD             &          &              & 0.2517^{***} & 0.2554^{***} \\
+                                  &          &              & (0.0760)     & (0.0743)     \\
+Highest degree is PhD in progress &          &              & 0.0084       & 0.0061       \\
+                                  &          &              & (0.0368)     & (0.0368)     \\
+Degree college elite              &          &              & 0.0874^{*}   & 0.0844       \\
+                                  &          &              & (0.0527)     & (0.0522)     \\
+Female                            &          &              &              & -0.0648^{**} \\
+                                  &          &              &              & (0.0294)     \\
+\midrule
+Num. obs.                         & 2691     & 2685         & 2680         & 2679         \\
+\bottomrule
+\multicolumn{5}{l}{\scriptsize{$^{***}p<0.01$; $^{**}p<0.05$; $^{*}p<0.1$}}
+\end{tabular}
+\caption{}
+\label{table:coefficients}
+\end{center}
+\end{table}
+```
+
+
+\newpage
+
+## Funding
+
+These regressions use department-level sampling weights, and are run at the faculty level for the national sample (50 colleges). All specifications include college and department fixed effects.
+
+### Government funding (0/1)
+
+Dependent variable mean is 0.097.
+
+```{=latex}
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{l D{.}{.}{4.5} D{.}{.}{4.7} D{.}{.}{4.7} D{.}{.}{4.7}}
+\toprule
+ & \multicolumn{1}{c}{I} & \multicolumn{1}{c}{II} & \multicolumn{1}{c}{III} & \multicolumn{1}{c}{IV} \\
+\midrule
+Reservation faculty               & -0.0059  & 0.0026       & 0.0018       & 0.0010       \\
+                                  & (0.0090) & (0.0085)     & (0.0086)     & (0.0084)     \\
+Associate professor               &          & 0.0253       & 0.0164       & 0.0168       \\
+                                  &          & (0.0159)     & (0.0172)     & (0.0171)     \\
+Professor                         &          & 0.1536^{***} & 0.1353^{***} & 0.1341^{***} \\
+                                  &          & (0.0352)     & (0.0358)     & (0.0358)     \\
+Experience in years               &          & 0.0010       & 0.0011       & 0.0010       \\
+                                  &          & (0.0009)     & (0.0009)     & (0.0009)     \\
+Highest degree is PhD             &          &              & 0.0212       & 0.0217       \\
+                                  &          &              & (0.0169)     & (0.0168)     \\
+Highest degree is PhD in progress &          &              & -0.0184^{**} & -0.0186^{**} \\
+                                  &          &              & (0.0093)     & (0.0093)     \\
+Degree college elite              &          &              & -0.0120      & -0.0124      \\
+                                  &          &              & (0.0117)     & (0.0117)     \\
+Female                            &          &              &              & -0.0077      \\
+                                  &          &              &              & (0.0080)     \\
+\midrule
+Num. obs.                         & 2691     & 2685         & 2680         & 2679         \\
+\bottomrule
+\multicolumn{5}{l}{\scriptsize{$^{***}p<0.01$; $^{**}p<0.05$; $^{*}p<0.1$}}
+\end{tabular}
+\caption{}
+\label{}
+\end{center}
+\end{table}
+```
+
+
+\newpage
+
+### Private funding (0/1)
+
+Dependent variable mean is 0.029.
+
+```{=latex}
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{l D{.}{.}{4.5} D{.}{.}{4.5} D{.}{.}{4.6} D{.}{.}{4.7}}
+\toprule
+ & \multicolumn{1}{c}{I} & \multicolumn{1}{c}{II} & \multicolumn{1}{c}{III} & \multicolumn{1}{c}{IV} \\
+\midrule
+Reservation faculty               & -0.0021  & -0.0006  & -0.0003     & -0.0024       \\
+                                  & (0.0074) & (0.0077) & (0.0077)    & (0.0078)      \\
+Associate professor               &          & -0.0039  & -0.0131     & -0.0121       \\
+                                  &          & (0.0100) & (0.0112)    & (0.0112)      \\
+Professor                         &          & 0.0216   & 0.0036      & 0.0006        \\
+                                  &          & (0.0211) & (0.0222)    & (0.0222)      \\
+Experience in years               &          & 0.0007   & 0.0005      & 0.0004        \\
+                                  &          & (0.0007) & (0.0007)    & (0.0007)      \\
+Highest degree is PhD             &          &          & 0.0323^{**} & 0.0334^{**}   \\
+                                  &          &          & (0.0143)    & (0.0143)      \\
+Highest degree is PhD in progress &          &          & 0.0128      & 0.0121        \\
+                                  &          &          & (0.0086)    & (0.0086)      \\
+Degree college elite              &          &          & -0.0105^{*} & -0.0114^{*}   \\
+                                  &          &          & (0.0062)    & (0.0062)      \\
+Female                            &          &          &             & -0.0200^{***} \\
+                                  &          &          &             & (0.0062)      \\
+\midrule
+Num. obs.                         & 2691     & 2685     & 2680        & 2679          \\
+\bottomrule
+\multicolumn{5}{l}{\scriptsize{$^{***}p<0.01$; $^{**}p<0.05$; $^{*}p<0.1$}}
+\end{tabular}
+\caption{}
+\label{table:coefficients}
+\end{center}
+\end{table}
+```
+
+\newpage
+
+## Faculty research, position, and funding models
+
+Models below are run at the student-course level, and control for student fixed effects and course fixed effects. Standard errors are clustered at faculty level. Dependent variables are:
+
+- Model I: Total annual publications (capped at max 10)
+- Model II: Total annual international publications (capped at max 10)
+- Model III: Total annual international SCI/EI/SSCI publications (capped at max 10)
+- Model IV: Funding received (0/1)
+- Model V: Admin position held (0/1)
+
+```{=latex}
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{l D{.}{.}{5.5} D{.}{.}{5.5} D{.}{.}{5.4} D{.}{.}{5.5} D{.}{.}{5.5}}
+\toprule
+ & \multicolumn{1}{c}{I} & \multicolumn{1}{c}{II} & \multicolumn{1}{c}{III} & \multicolumn{1}{c}{IV} & \multicolumn{1}{c}{V} \\
+\midrule
+reservation\_fac                    & -0.37      & -0.29^{**} & -0.10     & -0.03       & 0.03       \\
+                                    & (0.27)     & (0.14)     & (0.09)    & (0.02)      & (0.05)     \\
+fac\_associate\_professor           & 1.11^{***} & 0.92^{***} & 0.33^{**} & 0.07        & 0.01       \\
+                                    & (0.37)     & (0.20)     & (0.16)    & (0.07)      & (0.07)     \\
+fac\_professor                      & 1.80^{***} & 1.16^{***} & 0.72^{**} & -0.01       & 0.02       \\
+                                    & (0.69)     & (0.45)     & (0.31)    & (0.07)      & (0.11)     \\
+fac\_yearsinhighed                  & -0.06^{**} & -0.02^{*}  & -0.02^{*} & 0.00        & 0.02^{***} \\
+                                    & (0.03)     & (0.01)     & (0.01)    & (0.00)      & (0.00)     \\
+fac\_highest\_degree\_phd           & 2.37^{***} & 0.92^{***} & 0.66^{**} & 0.23^{***}  & 0.19^{*}   \\
+                                    & (0.78)     & (0.29)     & (0.26)    & (0.07)      & (0.11)     \\
+fac\_highest\_degree\_phd\_in\_prog & 1.06^{***} & 0.53^{***} & 0.12      & 0.01        & -0.11^{*}  \\
+                                    & (0.39)     & (0.17)     & (0.11)    & (0.03)      & (0.06)     \\
+fac\_degree\_college\_elite         & 0.16       & 0.00       & 0.00      & -0.09^{***} & 0.00       \\
+                                    & (0.32)     & (0.18)     & (0.12)    & (0.04)      & (0.06)     \\
+fac\_female                         & -0.24      & -0.20      & -0.07     & 0.09^{***}  & 0.06       \\
+                                    & (0.24)     & (0.12)     & (0.09)    & (0.03)      & (0.05)     \\
+\midrule
+Num. obs.                           & 37970      & 37970      & 37970     & 37970       & 37970      \\
+\bottomrule
+\multicolumn{6}{l}{\scriptsize{$^{***}p<0.01$; $^{**}p<0.05$; $^{*}p<0.1$}}
+\end{tabular}
+\caption{}
+\label{table:coefficients}
+\end{center}
+\end{table}
+```
+
+\newpage
+
+# Old table changes
+
+## Total annual publications (Main Table 5.7)
+
+Total annual publications updated as upper limit is 10 now. Dependent variable mean is 2.40. The regressions use department-level sampling weights, and are run at the faculty level for the national sample (50 colleges). All specifications include college and department fixed effects.
+
+```{=latex}
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{l D{.}{.}{4.3} D{.}{.}{4.5} D{.}{.}{4.5} D{.}{.}{4.5}}
+\toprule
+ & \multicolumn{1}{c}{I} & \multicolumn{1}{c}{II} & \multicolumn{1}{c}{III} & \multicolumn{1}{c}{IV} \\
+\midrule
+Reservation faculty               & -0.12  & 0.07       & 0.09       & 0.06       \\
+                                  & (0.12) & (0.10)     & (0.10)     & (0.11)     \\
+Associate professor               &        & 0.63^{***} & 0.16       & 0.17       \\
+                                  &        & (0.18)     & (0.20)     & (0.20)     \\
+Professor                         &        & 2.49^{***} & 1.54^{***} & 1.51^{***} \\
+                                  &        & (0.37)     & (0.39)     & (0.39)     \\
+Experience in years               &        & 0.07^{***} & 0.05^{***} & 0.05^{***} \\
+                                  &        & (0.01)     & (0.01)     & (0.01)     \\
+Highest degree is PhD             &        &            & 1.66^{***} & 1.67^{***} \\
+                                  &        &            & (0.21)     & (0.21)     \\
+Highest degree is PhD in progress &        &            & 0.69^{***} & 0.69^{***} \\
+                                  &        &            & (0.14)     & (0.14)     \\
+Degree college elite              &        &            & -0.06      & -0.06      \\
+                                  &        &            & (0.14)     & (0.14)     \\
+Female                            &        &            &            & -0.20^{**} \\
+                                  &        &            &            & (0.10)     \\
+\midrule
+Num. obs.                         & 2691   & 2685       & 2680       & 2679       \\
+\bottomrule
+\multicolumn{5}{l}{\scriptsize{$^{***}p<0.01$; $^{**}p<0.05$; $^{*}p<0.1$}}
+\end{tabular}
+\caption{}
+\label{table:coefficients}
+\end{center}
+\end{table}
+```
+
+\newpage
+
+## Total annual international publications (Main Table 5.8)
+
+Total international publications updated as we mark missing values as 0 now, and upper limit is 10. Dependent variable mean is 0.98. The regressions use department-level sampling weights, and are run at the faculty level for the national sample (50 colleges). All specifications include college and department fixed effects.
+
+```{=latex}
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{l D{.}{.}{4.3} D{.}{.}{4.5} D{.}{.}{4.5} D{.}{.}{4.5}}
+\toprule
+ & \multicolumn{1}{c}{I} & \multicolumn{1}{c}{II} & \multicolumn{1}{c}{III} & \multicolumn{1}{c}{IV} \\
+\midrule
+Reservation faculty               & -0.07  & 0.03       & 0.04       & 0.03       \\
+                                  & (0.07) & (0.06)     & (0.06)     & (0.06)     \\
+Associate professor               &        & 0.40^{***} & 0.19^{**}  & 0.19^{**}  \\
+                                  &        & (0.11)     & (0.10)     & (0.10)     \\
+Professor                         &        & 1.60^{***} & 1.18^{***} & 1.17^{***} \\
+                                  &        & (0.28)     & (0.28)     & (0.27)     \\
+Experience in years               &        & 0.02^{***} & 0.01^{**}  & 0.01^{**}  \\
+                                  &        & (0.01)     & (0.01)     & (0.01)     \\
+Highest degree is PhD             &        &            & 0.73^{***} & 0.74^{***} \\
+                                  &        &            & (0.11)     & (0.11)     \\
+Highest degree is PhD in progress &        &            & 0.28^{***} & 0.28^{***} \\
+                                  &        &            & (0.06)     & (0.06)     \\
+Degree college elite              &        &            & -0.08      & -0.08      \\
+                                  &        &            & (0.07)     & (0.07)     \\
+Female                            &        &            &            & -0.06      \\
+                                  &        &            &            & (0.05)     \\
+\midrule
+Num. obs.                         & 2691   & 2685       & 2680       & 2679       \\
+\bottomrule
+\multicolumn{5}{l}{\scriptsize{$^{***}p<0.01$; $^{**}p<0.05$; $^{*}p<0.1$}}
+\end{tabular}
+\caption{}
+\label{table:coefficients}
+\end{center}
+\end{table}
+```

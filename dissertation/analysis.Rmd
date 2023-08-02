@@ -1001,10 +1001,9 @@ texreg(list(lm_pub1, lm_pub2, lm_pub3, lm_pub4), custom.note = "%stars", stars =
 
 lm_pub1 <-
   facdata_mentions %>%
-  filter(facid %in% fac_in_12colleges) %>% 
   mutate(
     fac_publications = fac_publications/3,
-    fac_publications = if_else(fac_publications > 30, 30, fac_publications),
+    fac_publications = if_else(fac_publications > 10, 10, fac_publications),
     univcode = str_sub(department_id, 1, 5),
     majtype = str_sub(department_id, 6, 7),
   ) %>%
@@ -1013,10 +1012,9 @@ lm_pub1 <-
 
 lm_pub2 <-
   facdata_mentions %>%
-  #filter(facid %in% fac_in_12colleges) %>%
   mutate(
     fac_publications = fac_publications/3,
-    fac_publications = if_else(fac_publications > 30, 30, fac_publications),
+    fac_publications = if_else(fac_publications > 10, 10, fac_publications),
     univcode = str_sub(department_id, 1, 5),
     majtype = str_sub(department_id, 6, 7),
   ) %>%
@@ -1025,10 +1023,9 @@ lm_pub2 <-
 
 lm_pub3 <-
   facdata_mentions %>%
-  #filter(facid %in% fac_in_12colleges) %>%
   mutate(
     fac_publications = fac_publications/3,
-    fac_publications = if_else(fac_publications > 30, 30, fac_publications),
+    fac_publications = if_else(fac_publications > 10, 10, fac_publications),
     univcode = str_sub(department_id, 1, 5),
     majtype = str_sub(department_id, 6, 7),
   ) %>%
@@ -1037,10 +1034,9 @@ lm_pub3 <-
 
 lm_pub4 <-
   facdata_mentions %>%
-  #filter(facid %in% fac_in_12colleges) %>%
   mutate(
     fac_publications = fac_publications/3,
-    fac_publications = if_else(fac_publications > 30, 30, fac_publications),
+    fac_publications = if_else(fac_publications > 10, 10, fac_publications),
     univcode = str_sub(department_id, 1, 5),
     majtype = str_sub(department_id, 6, 7),
   ) %>%
@@ -1179,7 +1175,7 @@ lm_pub4 <-
   lm_robust(efac_pub_intl ~ fac_reservation + fac_associate_professor + fac_professor + fac_yearsinhighed + fac_highest_degree_phd + fac_highest_degree_phd_in_prog + fac_degree_college_elite + fac_female, data = ., se_type = "stata", weights = sw_f, fixed_effects = ~ univcode + majtype)
 
 
-texreg(list(lm_pub1, lm_pub2, lm_pub3, lm_pub4), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, dcolumn = TRUE, booktabs = TRUE, float.pos = "H", caption = "", digits = 2, include.nclust = F, include.rsquared = F, include.adjrs = F, include.rmse = F, custom.model.names = c("I", "II", "III", "IV"), custom.coef.names = c("Reservation faculty", "Associate professor", "Professor", "Experience in years", "Highest degree is PhD", "Highest degree is PhD in progress", "Degree college elite", "Female"))
+knitreg(list(lm_pub1, lm_pub2, lm_pub3, lm_pub4), custom.note = "%stars", stars = c(0.01, 0.05, 0.1), include.ci = FALSE, dcolumn = TRUE, booktabs = TRUE, float.pos = "H", caption = "", digits = 2, include.nclust = F, include.rsquared = F, include.adjrs = F, include.rmse = F, custom.model.names = c("I", "II", "III", "IV"), custom.coef.names = c("Reservation faculty", "Associate professor", "Professor", "Experience in years", "Highest degree is PhD", "Highest degree is PhD in progress", "Degree college elite", "Female"))
 ```
 
 
